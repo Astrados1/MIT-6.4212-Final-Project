@@ -53,6 +53,17 @@ hash_files() {
     echo "droid-sim-evals submodules:"
     git -C "$S" submodule status --recursive 2>&1 | sed 's/^/  /'
 
+    echo; echo "## Project patches to upstream (patches/README.md)"
+    for repo in tiptop M2T2 droid-sim-evals; do
+        for p in "$REPO_ROOT"/patches/"$repo"/*.patch; do
+            [ -e "$p" ] || continue
+            if git -C "$TIPTOP_DIR/$repo" apply --reverse --check "$p" 2>/dev/null; then state=applied
+            elif git -C "$TIPTOP_DIR/$repo" apply --check "$p" 2>/dev/null; then state="NOT APPLIED"
+            else state="UNKNOWN (neither applies nor reverts cleanly)"; fi
+            echo "  $repo/$(basename "$p"): $state  sha256=$(sha256sum "$p" | cut -d' ' -f1)"
+        done
+    done
+
     echo; echo "## Installed planner versions (tiptop pixi env)"
     (cd "$T" && pixi run python - <<'PY'
 import importlib.metadata as md
@@ -75,7 +86,9 @@ PY
     echo "robot.type: $(grep -m1 -E '^\s+type:' "$T/tiptop/config/tiptop.yml" | awk '{print $2}')"
     echo "gemini default model(s) in code:"
     grep -n 'model_id: str = ' "$T/tiptop/perception/gemini.py" | sed 's/^/  /'
-    echo "expected gemini model: $EXPECTED_GEMINI_MODEL"
+    echo "expected gemini model: $EXPECTED_GEMINI_MODEL (upstream default was $UPSTREAM_GEMINI_MODEL)"
+    echo "gemini thinking config in code:"
+    grep -n 'ThinkingConfig(' "$T/tiptop/perception/gemini.py" | sed 's/^/  /'
     echo "GOOGLE_API_KEY: $( [ -n "${GOOGLE_API_KEY:-}" ] && echo set || echo unset ) (value never recorded)"
 
     echo; echo "## Lockfiles"

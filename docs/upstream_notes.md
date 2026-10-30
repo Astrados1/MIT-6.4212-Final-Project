@@ -51,7 +51,11 @@ executed yet. Items marked **CHECK** must be verified on the GPU machine before 
   The client then fails to parse JSON. This is recorded as a non-JSON server reply.
 - `cuTAMP failed to find a plan: ...` is the planning-failure message. Other errors (Gemini, SAM2, M2T2, CUDA)
   come through as exception strings and need the server log to classify.
-- The Gemini default model is `gemini-robotics-er-1.6-preview` (`tiptop/perception/gemini.py`).
+- The Gemini default model is `gemini-robotics-er-1.6-preview` (`tiptop/perception/gemini.py`), called with
+  `thinking_budget=0`. **Google shut that model down on Aug 31, 2026.** Our patch
+  `patches/tiptop/0001-gemini-robotics-er-2.patch` switches it to `gemini-robotics-er-2-preview` with
+  `thinking_level=MINIMAL` (see `patches/README.md`). No call site passes a model ID explicitly, so the defaults
+  are the only place to change. Upstream TiPToP had not updated this as of Oct 30, 2026.
   The Google key is needed by the server. The sim client imports `google.genai` and loads `.env` but did not
   appear to call Gemini in the code read.
 
