@@ -13,6 +13,11 @@ executed yet. Items marked **CHECK** must be verified on the GPU machine before 
 - **CHECK**: Panda and FR3 differ in joint limits and some link geometry. Compare FK of the cuRobo `fr3_robotiq`
   model against the simulator's link poses at several plan waypoints, and compare the TCP/grasp frame with the
   Robotiq finger geometry. Record the result in `docs/baseline_report.md`. Do not "fix" a mismatch silently.
+  TiPToP also supports `robot.type: panda_robotiq` (`tiptop/motion_planning.py`, backed by cuTAMP's
+  `load_panda_robotiq_container`), which matches the simulated arm by name. The simulation guide does not say to
+  switch, so the default `fr3_robotiq` is what upstream sim runs use. If `gripper_xy_offset_at_close_m`
+  (`docs/probes.md`) is systematically non-zero while perception error is small, test `panda_robotiq` as a
+  separate, recorded condition.
 - The client shifts the wrist-camera pose down by 1.5 cm before sending it to TiPToP
   (`world_from_cam[:3, 3] -= [0, 0, 0.015]`, `tiptop_websocket.py`), with a comment saying it matches
   TiPToP's grasp frame. Preserve it unless evidence shows a bug.
@@ -47,6 +52,13 @@ executed yet. Items marked **CHECK** must be verified on the GPU machine before 
 - `success: true` means only that a plan was produced. The response also carries `save_dir`, the per-run
   output directory (`tiptop_server_outputs/<timestamp>/` with `tiptop_run.log` and `tiptop_plan.json`).
   `observed_eval.py` stores this path, which links each episode to its server artifacts.
+- The server also saves `metadata.json` (grounded atoms, perception/planning durations, failure reason),
+  `perception/cutamp_env.pkl` (the perceived scene: movable and static objects with geometry and poses),
+  `perception/grasps.pt` (M2T2 grasps) and a copy of `tiptop.yml`. It does **not** save the RGB, depth, bounding
+  boxes or masks: `recording.save_perception_outputs` exists but the server never calls it. Stage attribution
+  therefore reads `cutamp_env.pkl` (`grasp_eval/extract_perceived_scene.py`, tiptop pixi env).
+- Plan steps carry a `label` (e.g. `Pick(Rubik's_cube, grasp1, q1)`) and trajectory steps a `dt`, which lets us
+  identify the grasped object and check the client's 50 Hz assumption without running anything.
 - If the pipeline raises outside its own handler, the server sends a plain-text error and closes the connection.
   The client then fails to parse JSON. This is recorded as a non-JSON server reply.
 - `cuTAMP failed to find a plan: ...` is the planning-failure message. Other errors (Gemini, SAM2, M2T2, CUDA)

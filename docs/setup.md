@@ -133,8 +133,11 @@ TIPTOP_DIR="$TIPTOP_DIR" TARGET_OBJECT=<name> \
   bash scripts/run_pilot.sh
 ```
 
-This schedules 15 trials, runs each in its own process with a fresh plan, and writes
-`results/pilot_scene1/{schedule.jsonl,runs.jsonl,exit_codes.tsv,summary.md}` with per-run directories.
+This schedules 15 trials and runs each in its own process with a fresh plan. After each run it extracts TiPToP's
+perceived scene and computes stage attribution (`docs/probes.md` §1). It writes
+`results/pilot_scene1/{schedule.jsonl,runs.jsonl,attribution.jsonl,exit_codes.tsv,summary.md}` with per-run
+directories. `DRY_RUN=1` prints the schedule without running anything. Time the pilot. The probe suites in step F
+are sized from it.
 Then:
 
 1. Watch every failure video, read the matching server log, and fill in `results/pilot_scene1/manual_labels.csv`.
@@ -145,3 +148,14 @@ Then:
 
 Keep TiPToP settings at their upstream defaults (RecGen off, experimental next-to goals off). Any change that
 alters behavior gets its own entry in `docs/baseline_report.md` and its own results directory.
+
+## F. Failure-mode probes
+
+Once the pilot works end to end, run the probe suites in `docs/probes.md`, in this order:
+
+1. **`displacement`**: the most important one for the project. It finds how much object-pose error the open-loop plan tolerates.
+2. **`sensor`**.
+3. **`scenes`**: fill in `configs/scenes.json` / `configs/object_aliases.json` from `--inspect-only` first.
+
+Each suite writes its own results directory and `summary.md`. Check each suite's in-suite control before reading
+the rest: `replay_0cm` for displacement, `nominal` for sensor.
