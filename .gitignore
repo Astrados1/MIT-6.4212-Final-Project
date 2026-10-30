@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+*.env.local
+
+# Large run artifacts: share separately and reference their location in docs/baseline_report.md
+results/**/*.mp4
+results/**/*.npz
+results/**/console.log
+results/**/observed_eval.log
+
+# Upstream checkouts if someone puts TIPTOP_DIR inside this repo
+tiptop/
+M2T2/
+droid-sim-evals/
