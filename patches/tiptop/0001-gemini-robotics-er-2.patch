@@ -1,0 +1,53 @@
+diff --git a/tiptop/perception/gemini.py b/tiptop/perception/gemini.py
+index 6303cf2..ac60479 100644
+--- a/tiptop/perception/gemini.py
++++ b/tiptop/perception/gemini.py
+@@ -66,7 +66,7 @@ def detect_and_translate(
+     image: Image.Image,
+     task_instruction: str,
+     client: genai.Client | None = None,
+-    model_id: str = "gemini-robotics-er-1.6-preview",
++    model_id: str = "gemini-robotics-er-2-preview",
+     temperature: float | None = None,
+ ) -> tuple[list[dict], list[dict]]:
+     """Detect objects and translate task in a single Gemini API call.
+@@ -89,7 +89,7 @@ def detect_and_translate(
+         model=model_id,
+         contents=[image, prompt],
+         config=types.GenerateContentConfig(
+-            temperature=temperature, thinking_config=types.ThinkingConfig(thinking_budget=0)
++            temperature=temperature, thinking_config=types.ThinkingConfig(thinking_level=types.ThinkingLevel.MINIMAL)
+         ),
+     )
+     return _parse_response(response.text)
+@@ -99,7 +99,7 @@ async def detect_and_translate_async(
+     image: Image.Image,
+     task_instruction: str,
+     client: genai.Client | None = None,
+-    model_id: str = "gemini-robotics-er-1.6-preview",
++    model_id: str = "gemini-robotics-er-2-preview",
+     temperature: float | None = None,
+ ) -> tuple[list[dict], list[dict]]:
+     """Asynchronously detect objects and translate task in a single Gemini API call.
+@@ -122,7 +122,7 @@ async def detect_and_translate_async(
+         model=model_id,
+         contents=[image, prompt],
+         config=types.GenerateContentConfig(
+-            temperature=temperature, thinking_config=types.ThinkingConfig(thinking_budget=0)
++            temperature=temperature, thinking_config=types.ThinkingConfig(thinking_level=types.ThinkingLevel.MINIMAL)
+         ),
+     )
+     return _parse_response(response.text)
+diff --git a/tiptop/scripts/compute_gripper_mask.py b/tiptop/scripts/compute_gripper_mask.py
+index 14c384a..267d1e6 100644
+--- a/tiptop/scripts/compute_gripper_mask.py
++++ b/tiptop/scripts/compute_gripper_mask.py
+@@ -23,7 +23,7 @@ The format should be as follows: [{"box_2d": [ymin, xmin, ymax, xmax], "label":
+ 0-1000. The values in box_2d must only be integers""".strip()
+ 
+ 
+-def compute_gripper_mask(gemini_model: str = "gemini-robotics-er-1.6-preview", dilation_iters: int = 8):
++def compute_gripper_mask(gemini_model: str = "gemini-robotics-er-2-preview", dilation_iters: int = 8):
+     """
+     Compute gripper mask using Gemini detection and SAM segmentation.
+ 

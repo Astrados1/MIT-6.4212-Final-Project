@@ -4,7 +4,9 @@
 # Usage:  TIPTOP_DIR=/path/to/workspace bash scripts/setup_upstream.sh
 #
 # Existing checkouts are never deleted or reset. If a repo already exists, the
-# script only reports its current revision and whether it matches the pin.
+# script only reports its current revision, whether it matches the pin, and
+# whether our patches (patches/<repo>/*.patch) are applied. Fresh clones get the
+# patches applied right after checkout; see patches/README.md for why each exists.
 # Dependency installation (pixi/uv) is a separate, manual step: see docs/setup.md.
 set -euo pipefail
 
@@ -14,6 +16,30 @@ source "$REPO_ROOT/provenance/pins.env"
 
 : "${TIPTOP_DIR:?Set TIPTOP_DIR to the parent directory for the upstream repositories}"
 mkdir -p "$TIPTOP_DIR"
+
+apply_patches() {
+    local name="$1" dest="$TIPTOP_DIR/$1" p
+    for p in "$REPO_ROOT"/patches/"$name"/*.patch; do
+        [ -e "$p" ] || continue
+        echo "==> Applying $(basename "$p") to $name"
+        git -C "$dest" apply "$p"
+    done
+}
+
+report_patches() {
+    local name="$1" dest="$TIPTOP_DIR/$1" p
+    for p in "$REPO_ROOT"/patches/"$name"/*.patch; do
+        [ -e "$p" ] || continue
+        if git -C "$dest" apply --reverse --check "$p" 2>/dev/null; then
+            echo "  patch $(basename "$p"): applied"
+        elif git -C "$dest" apply --check "$p" 2>/dev/null; then
+            echo "WARNING: patch $(basename "$p") is NOT applied to $dest." >&2
+            echo "  Apply it with: git -C \"$dest\" apply \"$p\"" >&2
+        else
+            echo "WARNING: patch $(basename "$p") neither applies nor reverts cleanly in $dest; inspect by hand." >&2
+        fi
+    done
+}
 
 clone_pinned() {
     local name="$1" url="$2" sha="$3" recurse="$4"
@@ -27,6 +53,7 @@ clone_pinned() {
         else
             echo "$name already present at $head"
         fi
+        report_patches "$name"
         return
     fi
     if [ -e "$dest" ]; then
@@ -44,6 +71,7 @@ clone_pinned() {
     if [ "$recurse" = "yes" ]; then
         git -C "$dest" submodule update --init --recursive
     fi
+    apply_patches "$name"
 }
 
 clone_pinned tiptop "$TIPTOP_URL" "$TIPTOP_SHA" no

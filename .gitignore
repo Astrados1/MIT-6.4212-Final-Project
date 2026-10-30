@@ -11,6 +11,6 @@ results/**/console.log
 results/**/observed_eval.log
 
 # Upstream checkouts if someone puts TIPTOP_DIR inside this repo
-tiptop/
-M2T2/
-droid-sim-evals/
+/tiptop/
+/M2T2/
+/droid-sim-evals/

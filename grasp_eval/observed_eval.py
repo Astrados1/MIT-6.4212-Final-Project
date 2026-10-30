@@ -79,6 +79,17 @@ def _git_dirty(path: Path) -> bool | None:
         return None
 
 
+def _git_diff_sha256(path: Path) -> str | None:
+    """Hash of tracked-file changes, so each run shows exactly which local patch state it used."""
+    try:
+        out = subprocess.run(
+            ["git", "-C", str(path), "diff", "HEAD"], capture_output=True, check=True
+        ).stdout
+        return sha256(out).hexdigest() if out else None
+    except Exception:
+        return None
+
+
 def _file_sha256(path: Path) -> str:
     return sha256(path.read_bytes()).hexdigest()
 
@@ -209,6 +220,8 @@ def main(argv=None) -> int:
             "sim_sha": _git_sha(sim_root),
             "sim_dirty": _git_dirty(sim_root),
             "tiptop_sha": _git_sha(args.tiptop_dir) if args.tiptop_dir else None,
+            # Non-null when tiptop has local changes (expected: the Gemini ER 2 patch).
+            "tiptop_diff_sha256": _git_diff_sha256(args.tiptop_dir) if args.tiptop_dir else None,
             "provenance_file": str(args.provenance_file) if args.provenance_file else None,
             "provenance_sha256": _file_sha256(args.provenance_file) if args.provenance_file else None,
         },

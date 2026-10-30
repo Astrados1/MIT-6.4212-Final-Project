@@ -6,8 +6,10 @@ _Template. Fill in as the runbook (`docs/setup.md`) progresses. Leave a section 
 
 - Machine record: `provenance/machine_<host>.txt`
 - Provenance record(s): `provenance/provenance_<timestamp>.txt`
-- Gemini model actually used: (exact ID; note any substitution)
-- Differences from the paper's release: current upstream code at the pins, not the original paper release.
+- Gemini model actually used: `gemini-robotics-er-2-preview` with `thinking_level=MINIMAL` (substituted; see
+  below). Confirm from the server log of the first run.
+- Differences from the paper's release: current upstream code at the pins, not the original paper release, plus the
+  Gemini model substitution below.
 
 ## Geometry check (runbook C1)
 
@@ -42,7 +44,11 @@ Paste `results/pilot_scene1/summary.md` here, or link it, along with where video
 
 ## Behavior-changing modifications
 
-None so far. List every change with its reason and the results directory it affects.
+List every change with its reason and the results directories it affects.
+
+| change | reason | affects |
+|---|---|---|
+| Gemini perception model `gemini-robotics-er-1.6-preview` → `gemini-robotics-er-2-preview`; thinking `thinking_budget=0` → `thinking_level=MINIMAL` (`patches/tiptop/0001-gemini-robotics-er-2.patch`) | ER 1.6 was shut down Aug 31, 2026, so the unmodified baseline cannot run. ER 2 is Google's documented replacement and has no zero-thinking budget documented. | every run (all results directories) |
 
 ## What the learned skill should replace
 

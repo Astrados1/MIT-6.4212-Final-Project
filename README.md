@@ -23,13 +23,16 @@ observation-only evaluator. No learning, retries or IIWA work happens this week.
 | Scoring / records / summary | [grasp_eval/](grasp_eval/) |
 
 Upstream repos are not vendored. `setup_upstream.sh` clones them next to this repo at the pinned SHAs, and the
-evaluator wraps the simulator from outside, so the upstream code stays unmodified.
+evaluator wraps the simulator from outside. The only change to upstream code is one patch in [patches/](patches/README.md):
+the pinned TiPToP calls `gemini-robotics-er-1.6-preview`, which Google shut down on Aug 31, 2026, so we switch it
+to `gemini-robotics-er-2-preview`. Results are therefore "upstream TiPToP with Gemini ER 2", not an exact reproduction.
 
 ## Status
 
 - [x] Harness, scoring, run records, summary, runbook (unit tests pass, see below)
 - [ ] Execution machine documented: **needs a Linux NVIDIA GPU machine (teammate)**
-- [ ] Gemini API key with access to `gemini-robotics-er-1.6-preview`: **not obtained yet**
+- [x] Patch for the retired Gemini model (ER 1.6 → ER 2); applies cleanly to pinned TiPToP, not yet tried against the live API
+- [ ] Gemini API key with access to `gemini-robotics-er-2-preview`: **not obtained yet**
 - [ ] Install + provenance, geometry check, replay smoke test
 - [ ] Fresh end-to-end run, target mapping verified, thresholds frozen
 - [ ] 15-run pilot with all failures recorded, report written

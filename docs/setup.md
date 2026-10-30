@@ -25,8 +25,10 @@ Gemini key: keep it out of shell history, logs and git. In the terminal that wil
 read -rs GOOGLE_API_KEY && export GOOGLE_API_KEY   # paste, press Enter; nothing is echoed
 ```
 
-Before spending time on installs, confirm the key can use `gemini-robotics-er-1.6-preview`.
-If that model is unavailable and a substitute is used, record it in `docs/baseline_report.md`. A substitution means the run is no longer an exact reproduction.
+Before spending time on installs, confirm the key can use `gemini-robotics-er-2-preview`, for example in Google
+AI Studio. The pinned TiPToP code asks for `gemini-robotics-er-1.6-preview`, which Google shut down on Aug 31, 2026.
+`setup_upstream.sh` patches TiPToP to use ER 2 instead (`patches/README.md`), so the baseline is "upstream TiPToP
+with ER 2", not an exact reproduction. That is already recorded in `docs/baseline_report.md`.
 
 ## B. Install
 
@@ -34,8 +36,9 @@ If that model is unavailable and a substitute is used, record it in `docs/baseli
 TIPTOP_DIR="$TIPTOP_DIR" bash "$PROJECT/scripts/setup_upstream.sh"
 ```
 
-This clones tiptop and droid-sim-evals at the pins in `provenance/pins.env`, plus M2T2 at its current default branch.
-It never touches an existing checkout.
+This clones tiptop and droid-sim-evals at the pins in `provenance/pins.env`, plus M2T2 at its current default branch,
+then applies our patches in `patches/` (currently only the Gemini ER 2 switch). It never modifies an existing checkout.
+For an existing checkout it reports whether each patch is applied and prints the command to apply it.
 
 ```bash
 cd "$TIPTOP_DIR/tiptop" && pixi install && pixi run setup-planners
@@ -108,6 +111,8 @@ uv run python "$PROJECT/grasp_eval/observed_eval.py" --scene 1 --variant 0 --tri
 ```
 
 Check that:
+- the server log shows the Gemini call succeeding with `gemini-robotics-er-2-preview`. If it fails because of the
+  thinking setting, follow the note in `patches/README.md`;
 - the server log shows a fresh pipeline run, and `record.json → server_save_dir` points to the new
   `tiptop_server_outputs/<timestamp>/` directory with `tiptop_plan.json` in it;
 - `results/smoke/runs/<id>/video.mp4` shows the plan executing;
