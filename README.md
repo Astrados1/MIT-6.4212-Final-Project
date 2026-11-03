@@ -20,7 +20,7 @@ observation-only evaluator. No learning, retries or IIWA work happens this week.
 | Clone upstream at pins / record machine / record provenance | `scripts/setup_upstream.sh`, `scripts/collect_env_info.sh`, `scripts/record_provenance.sh` |
 | Observed episode (runs in the simulator env) | [grasp_eval/observed_eval.py](grasp_eval/observed_eval.py) |
 | Pilot runner (scene 1, variants 0–4, 3 trials) | `scripts/run_pilot.sh` (wraps `python3 -m grasp_eval.run_suite pilot`) |
-| Failure-mode probes: stage attribution, object displacement, sensor corruption, scene survey | [docs/probes.md](docs/probes.md), `python3 -m grasp_eval.run_suite <suite>` |
+| Failure-mode probes: stage attribution, object displacement, sensor corruption, scene survey, paper failure taxonomy | [docs/probes.md](docs/probes.md), `python3 -m grasp_eval.run_suite <suite>` |
 | Scoring / records / attribution / summary | [grasp_eval/](grasp_eval/) |
 
 Upstream repos are not vendored. `setup_upstream.sh` clones them next to this repo at the pinned SHAs, and the
@@ -38,6 +38,8 @@ to `gemini-robotics-er-2-preview`. Results are therefore "upstream TiPToP with G
 - [ ] Fresh end-to-end run, target mapping verified, thresholds frozen
 - [ ] 15-run pilot with all failures recorded, report written
 - [x] Probe suites implemented (stage attribution, displacement sweep with plan replay, sensor corruption, scene survey); unit-tested with stand-ins, not run on a GPU
+- [x] Paper failure taxonomy (task success, grasp source, shape completion, goal translation, cuTAMP reason, in-hand slip), unit-tested with stand-ins, not run on a GPU
+- [ ] Goal names in `configs/scenes.json` filled in from `--inspect-only` (task success is unchecked until then)
 - [ ] Probe suites run: displacement first, then sensor, then scenes
 
 `observed_eval.py`, the shell scripts and the runbook have not been run on a GPU machine yet. Expect small fixes on first contact.

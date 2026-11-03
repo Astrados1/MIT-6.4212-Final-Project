@@ -16,6 +16,7 @@ tracing) and the cuTAMP unpickling are untested until the first real run.
 | Object displacement | How much object-pose error does the open-loop plan tolerate? | Yes: moves the object after planning | `displacement` | 49 per variant |
 | Sensor corruption | How sensitive are perception and grasping to depth noise and calibration error? | Yes: corrupts the observation sent to TiPToP | `sensor` | 27 |
 | Scene survey | Does performance hold across other objects and clutter? | No (different scenes) | `scenes` | 24 |
+| Paper failure taxonomy | Where do failures fall in the TiPToP paper's categories? | No, measurement only | every suite | 0 extra |
 
 Run time per episode has not been measured yet. Each run starts its own Isaac Sim process; replay runs skip
 perception and planning. Time the pilot first and scale the other suites from that.
@@ -121,6 +122,50 @@ Each suite writes `results/<suite>_scene<N>/` (or `results/scenes/`) containing:
 - `summary.md`.
 
 Use `manual_labels.csv` exactly as for the pilot (`docs/scoring.md`). Re-run `python3 -m grasp_eval.summarize results/<dir>` after labeling.
+
+## 5. Paper failure taxonomy (every run)
+
+This recreates the TiPToP paper's failure-analysis figure: 173 real-robot trials, 118 successes, and 55 failures
+traced to one module each. Attribution classifies every run (`grasp_eval/paper_taxonomy.py`), and the summary prints
+a table with our counts next to the paper's. It also writes `paper_taxonomy.json` (Sankey nodes and links) for plotting.
+
+| paper category | how we detect it | data source |
+|---|---|---|
+| Success | automatic task check passes (`docs/scoring.md`), or manual `task_success=true` | final poses, USD boxes |
+| Gemini → Goal Translation Failure | Gemini's grounded atoms (mapped to sim objects) differ from the expected `on(object, container)` set | `metadata.json`, `configs/scenes.json` goal |
+| Gemini → Object Detection Failure | a goal object/container has no perceived object within 5 cm, or the plan picks the wrong object | perceived scene, sim poses |
+| Scene Completion → Partial Observability | the picked object's or a goal object's/container's perceived box is too small (any axis < 0.7× true, or 3D IoU < 0.5) | `cutamp_env.pkl` meshes, USD boxes |
+| cuTAMP → cuRobo Motion Planning Failure | no plan, and cuTAMP's reason starts "Motion planning failed" | `metadata.json` failure reason |
+| Grasp → M2T2 / Heuristic Unstable Grasp | no stable lift, or the object dropped while carried. Split by whether TiPToP associated any M2T2 grasps with the picked object (cuTAMP 0.0.6 falls back to its heuristic sampler only when there are none) | trace, `perception/grasps.pt` |
+| cuTAMP → Rigid Grasp Assumption | lifted and carried, task failed, and the object moved > 1.5 cm or > 10° relative to the hand while carried | trace (object and finger poses) |
+
+Rules run in that order (Gemini → scene completion → planning → grasp → in-hand motion), and the first match wins,
+mirroring the paper's "root cause in the earliest module". Thresholds are in `PAPER_THRESHOLDS`.
+
+Labels outside the paper's figure are kept apart so they never inflate a paper category:
+
+- `cutamp_failure/no_feasible_plan`: cuTAMP gave up for a reason other than motion planning, such as the time budget.
+  The paper's text lumps this under cuTAMP failures, but its figure shows only the two subcategories above.
+- `scene_completion_failure/shape_over_approximation`: the box is too large. The paper's text mentions convex hulls
+  over-approximating concave objects, but its figure only shows partial observability.
+- `grasp_failure/unknown_grasp_source`: `grasps.pt` could not be read.
+- `gemini_vlm_failure/invalid_response`: Gemini's output could not be parsed.
+- `execution_failure/tracking_or_collision`: the arm didn't follow the plan. This label doesn't exist in the paper.
+- `infrastructure` and `needs_review` are excluded from the denominator. `needs_review` covers runs where the task
+  couldn't be checked, or that failed without a clear cause. Resolve them with `paper_category` in
+  `manual_labels.csv`, together with any wrong automatic labels.
+
+Limits to keep in mind when comparing with the paper:
+
+- **Real robot vs simulation.** The paper used a real robot; the simulator renders perfect depth, so detection and
+  shape failures should be rarer. The `sensor` suite brings back some real-sensor error, but its results are a
+  separate condition, not a reproduction.
+- **Gemini model.** We run Gemini Robotics-ER 2, not ER 1.6, because ER 1.6 was retired.
+- **Concavity.** A box can't show a convex hull filling a bowl's cavity, because the hull and the bowl have the same
+  box. That case surfaces as a placement failure (`needs_review`) for a reviewer to label.
+- **Sample size.** The paper has 55 failures. The 15-run pilot will have only a few. Comparable proportions need
+  something like the scene survey plus more trials per scene.
+- **Untested on the GPU.** Reading the USD boxes, the finger orientation and `grasps.pt` has only been tested with stand-ins.
 
 ## Not covered yet
 

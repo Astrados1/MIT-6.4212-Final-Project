@@ -185,6 +185,9 @@ def run_one(r: Run, a, out: Path, sim: Path, tiptop: Path) -> int:
         cmd += ["--provenance-file", str(Path(a.provenance_file).resolve())]
     if r.plan_from is not None:
         cmd += ["--plan-json", replay_source(out, r)]
+    goal = a.goals.get(str(r.scene))
+    if goal:
+        cmd += ["--goal-json", json.dumps(goal)]
     cmd += a.eval_args
     with open(run_dir / "console.log", "w") as log:
         code = subprocess.run(cmd, cwd=sim, stdout=log, stderr=subprocess.STDOUT).returncode
@@ -257,8 +260,19 @@ def parse_args(argv=None):
     return a
 
 
+def load_goals(scenes_config: str) -> dict[str, list]:
+    """Per-scene goal specs for the automatic task-success check (configs/scenes.json "goal")."""
+    path = Path(scenes_config)
+    if not path.exists():
+        print(f"WARNING: {path} not found; task success will be unchecked", file=sys.stderr)
+        return {}
+    cfg = json.loads(path.read_text())
+    return {k: v["goal"] for k, v in cfg.items() if isinstance(v, dict) and v.get("goal")}
+
+
 def main(argv=None) -> int:
     a = parse_args(argv)
+    a.goals = load_goals(a.scenes_config)
     runs = BUILDERS[a.suite](a)
     assign_ids(runs)
     out = PROJECT_ROOT / "results" / a.out_name

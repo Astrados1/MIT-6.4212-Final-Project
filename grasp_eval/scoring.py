@@ -133,3 +133,86 @@ def score_first_grasp(
         longest_hold_s=longest,
         failure_hint=hint,
     )
+
+
+def _quat_conj(q: np.ndarray) -> np.ndarray:
+    return q * np.array([1.0, -1.0, -1.0, -1.0])
+
+
+def _quat_mul(a: np.ndarray, b: np.ndarray) -> np.ndarray:
+    aw, ax, ay, az = a
+    bw, bx, by, bz = b
+    return np.array([
+        aw * bw - ax * bx - ay * by - az * bz,
+        aw * bx + ax * bw + ay * bz - az * by,
+        aw * by - ax * bz + ay * bw + az * bx,
+        aw * bz + ax * by - ay * bx + az * bw,
+    ])
+
+
+def _quat_rotate_inv(q: np.ndarray, v: np.ndarray) -> np.ndarray:
+    """Express world vector v in the frame whose orientation is q (w, x, y, z)."""
+    qv = np.concatenate([[0.0], v])
+    return _quat_mul(_quat_mul(_quat_conj(q), qv), q)[1:]
+
+
+def in_hand_motion(
+    t: np.ndarray,
+    obj_pos: np.ndarray,
+    obj_quat: np.ndarray,
+    gripper_pos: np.ndarray,
+    gripper_quat: np.ndarray,
+    gripper_cmd: np.ndarray,
+    baseline_z: float,
+    criteria: LiftCriteria = LiftCriteria(),
+) -> dict:
+    """How much the target moved relative to the hand while carried (rigid-grasp check).
+
+    Covers the first grasp from the first holding sample (lifted and near the closed
+    gripper, as in score_first_grasp) until the sample before the next open command.
+    The object pose is expressed in the gripper frame; shift and rotation are measured
+    against the pose at the first holding sample. A drop is a later sample, still
+    commanded closed, where the object is farther than max_obj_to_gripper_m from the hand.
+    """
+    t = np.asarray(t, dtype=float)
+    obj_pos = np.asarray(obj_pos, dtype=float).reshape(-1, 3)
+    obj_quat = np.asarray(obj_quat, dtype=float).reshape(-1, 4)
+    gripper_pos = np.asarray(gripper_pos, dtype=float).reshape(-1, 3)
+    gripper_quat = np.asarray(gripper_quat, dtype=float).reshape(-1, 4)
+    closed = np.asarray(gripper_cmd, dtype=float) > criteria.close_threshold
+    close_idx = np.flatnonzero(closed)
+    if close_idx.size == 0:
+        return {"carried": False}
+    c0 = int(close_idx[0])
+    reopen = np.flatnonzero(~closed[c0:])
+    end = c0 + int(reopen[0]) if reopen.size else len(t)
+    dist = np.linalg.norm(obj_pos - gripper_pos, axis=1)
+    holding = (dist <= criteria.max_obj_to_gripper_m) & (obj_pos[:, 2] - baseline_z >= criteria.min_rise_m)
+    held = np.flatnonzero(holding[c0:end])
+    if held.size == 0:
+        return {"carried": False}
+    h0 = c0 + int(held[0])
+
+    def rel(i: int) -> tuple[np.ndarray, np.ndarray]:
+        q_rel = _quat_mul(_quat_conj(gripper_quat[i]), obj_quat[i])
+        return _quat_rotate_inv(gripper_quat[i], obj_pos[i] - gripper_pos[i]), q_rel / np.linalg.norm(q_rel)
+
+    p0, q0 = rel(h0)
+    shifts, rots = [], []
+    for i in range(h0, end):
+        p, q = rel(i)
+        shifts.append(float(np.linalg.norm(p - p0)))
+        rots.append(float(np.degrees(2 * np.arccos(min(1.0, abs(float(np.dot(q, q0))))))))
+    far = np.flatnonzero(dist[h0:end] > criteria.max_obj_to_gripper_m)
+    return {
+        "carried": True,
+        "carry_start_t": float(t[h0]),
+        "carry_end_t": float(t[end - 1]),
+        "released_by_plan": end < len(t),
+        "max_in_hand_shift_m": round(max(shifts), 4),
+        "max_in_hand_rot_deg": round(max(rots), 2),
+        "in_hand_shift_at_release_m": round(shifts[-1], 4),
+        "in_hand_rot_at_release_deg": round(rots[-1], 2),
+        "dropped_before_release": bool(far.size),
+        "drop_t": float(t[h0 + int(far[0])]) if far.size else None,
+    }

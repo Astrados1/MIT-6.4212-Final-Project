@@ -6,22 +6,27 @@ Reads:
   schedule.jsonl       every run the pilot scheduled (written before launch)
   runs.jsonl           one record per run that got far enough to write one
   manual_labels.csv    optional reviewer overrides, columns:
-                       run_id,stable_lift,failure_category,task_success,note
-  attribution.jsonl    optional per-run stage attribution (attribute_run.py)
+                       run_id,stable_lift,failure_category,task_success,note[,paper_category]
+  attribution.jsonl    optional per-run stage attribution (attribute_run.py), including the
+                       automatic task check and the paper-taxonomy label
   skipped.jsonl        optional replays never scheduled because their source had no plan
 A scheduled run with no record counts as an infrastructure failure. Probe suites add
 per-condition and per-group tables (e.g. success rate against displacement distance).
+The paper-taxonomy section mirrors the TiPToP paper's failure-analysis figure and also
+writes paper_taxonomy.json (Sankey nodes and links) for plotting.
 """
 
 from __future__ import annotations
 
 import argparse
 import csv
+import json
 import statistics
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 
+from grasp_eval.paper_taxonomy import EXCLUDED_FROM_PAPER_DENOMINATOR, PAPER_CATEGORIES, SUCCESS, classify
 from grasp_eval.records import FAILURE_LABELS, read_jsonl
 
 _BOOL = {"true": True, "false": False, "1": True, "0": False, "yes": True, "no": False}
@@ -46,10 +51,15 @@ def load_manual_labels(path: Path) -> dict[str, dict]:
             cat = (row.get("failure_category") or "").strip()
             if cat and cat not in FAILURE_LABELS:
                 raise ValueError(f"manual_labels.csv: unknown failure_category {cat!r} for {run_id}")
+            paper = (row.get("paper_category") or "").strip()
+            if paper and paper not in PAPER_CATEGORIES:
+                raise ValueError(f"manual_labels.csv: unknown paper_category {paper!r} for {run_id} "
+                                 f"(choose from {sorted(PAPER_CATEGORIES)})")
             labels[run_id] = {
                 "stable_lift": _parse_bool(row.get("stable_lift", ""), "stable_lift", run_id),
                 "failure_category": cat or None,
                 "task_success": _parse_bool(row.get("task_success", ""), "task_success", run_id),
+                "paper_category": paper or None,
                 "note": (row.get("note") or "").strip(),
             }
     return labels
@@ -64,6 +74,7 @@ def build_rows(results_dir: Path) -> tuple[list[dict], list[str]]:
             warnings.append(f"duplicate record for {rec['run_id']}; using the last one")
         records[rec["run_id"]] = rec
     labels = load_manual_labels(results_dir / "manual_labels.csv")
+    attrs = load_attributions(results_dir)
 
     scheduled_ids = {s["run_id"] for s in schedule}
     for run_id in records.keys() - scheduled_ids:
@@ -74,6 +85,8 @@ def build_rows(results_dir: Path) -> tuple[list[dict], list[str]]:
     rows = []
     for s in schedule:
         rec = records.get(s["run_id"])
+        attr = attrs.get(s["run_id"])
+        auto_task = ((attr or {}).get("task_check") or {}).get("task_success")
         row = {
             "run_id": s["run_id"],
             "variant": s["variant"],
@@ -88,7 +101,8 @@ def build_rows(results_dir: Path) -> tuple[list[dict], list[str]]:
             ),
             "stable_lift": bool(rec and rec.get("stable_lift")),
             "failure_category": rec.get("failure_category") if rec else "infrastructure",
-            "task_success": rec.get("task_success") if rec else None,
+            "task_success": auto_task,
+            "task_success_source": "auto" if auto_task is not None else None,
             "planning_time_s": rec.get("planning_time_s") if rec else None,
             "overridden": False,
         }
@@ -104,11 +118,22 @@ def build_rows(results_dir: Path) -> tuple[list[dict], list[str]]:
                 row["failure_category"] = lab["failure_category"]
             if lab["task_success"] is not None:
                 row["task_success"] = lab["task_success"]
+                row["task_success_source"] = "manual"
             row["overridden"] = True
         if row["stable_lift"]:
             row["failure_category"] = None
         elif row["failure_category"] is None:
             row["failure_category"] = "unknown"
+        manual_outcome = bool(lab and (lab["task_success"] is not None or lab["stable_lift"] is not None))
+        if attr is not None and "paper_category" in attr and not manual_outcome:
+            paper = {"paper_category": attr["paper_category"], "evidence": attr.get("evidence", [])}
+        else:  # no attribution, or a manual outcome label that can change the classification
+            paper = classify(dict(rec, stable_lift=row["stable_lift"]) if rec else None, attr,
+                             task_success=row["task_success"])
+        row["paper_category"], row["paper_evidence"] = paper["paper_category"], paper["evidence"]
+        row["paper_category_source"] = "auto"
+        if lab and lab["paper_category"]:
+            row["paper_category"], row["paper_category_source"] = lab["paper_category"], "manual"
         rows.append(row)
     return rows, warnings
 
@@ -133,8 +158,9 @@ def render(rows: list[dict], warnings: list[str], title: str) -> str:
     out.append(f"- **Stable lift, overall (per scheduled trial): {_frac(lifts, n)}**")
     out.append(f"- **Stable lift, conditional (per valid executed plan): {_frac(lifts, valid)}**")
     out.append(
-        f"- Final task success (manually labeled runs only): "
-        f"{_frac(sum(bool(r['task_success']) for r in labeled_task), len(labeled_task))}"
+        f"- Final task success (runs with an automatic check or manual label): "
+        f"{_frac(sum(bool(r['task_success']) for r in labeled_task), len(labeled_task))}; "
+        f"unchecked: {n - len(labeled_task)}"
     )
     if times:
         out.append(f"- Planning time (s): median {sorted(times)[len(times) // 2]:.1f}, "
@@ -230,6 +256,93 @@ def render_attribution(rows: list[dict], attrs: dict[str, dict]) -> str:
     return "\n".join(out) + "\n"
 
 
+# Counts read off the TiPToP paper's failure-analysis figure (173 real-robot trials).
+PAPER_REFERENCE_COUNTS = {
+    "Success": 118, "Failure": 55,
+    "Grasp Failure": 31, "M2T2 Unstable Grasp": 20, "Heuristic Unstable Grasp": 11,
+    "Scene Completion Failure": 13, "Partial Observability": 13,
+    "Gemini VLM Failure": 6, "Object Detection Failure": 5, "Goal Translation Failure": 1,
+    "cuTAMP Failure": 5, "cuRobo Motion Planning Failure": 3, "Rigid Grasp Assumption": 2,
+}
+
+
+def _paper_comparable(rows: list[dict]) -> list[dict]:
+    return [r for r in rows if r["paper_category"] not in EXCLUDED_FROM_PAPER_DENOMINATOR]
+
+
+def paper_sankey(rows: list[dict]) -> dict:
+    """Nodes and links in the shape of the paper's figure, over paper-comparable trials."""
+    comparable = _paper_comparable(rows)
+    links: Counter = Counter()
+    for r in comparable:
+        top, sub, _ = PAPER_CATEGORIES[r["paper_category"]]
+        if r["paper_category"] == SUCCESS:
+            links[("All Trials", "Success")] += 1
+            continue
+        links[("All Trials", "Failure")] += 1
+        links[("Failure", top)] += 1
+        links[(top, sub)] += 1
+    return {
+        "comparable_trials": len(comparable),
+        "excluded": dict(Counter(r["paper_category"] for r in rows if r not in comparable)),
+        "nodes": list(dict.fromkeys(n for pair in links for n in pair)),
+        "links": [{"source": a, "target": b, "value": v} for (a, b), v in links.items()],
+        "paper_reference_counts": PAPER_REFERENCE_COUNTS,
+    }
+
+
+def render_paper_taxonomy(rows: list[dict]) -> str:
+    """Counts per node of the paper's failure-analysis figure, ours next to the paper's."""
+    if not rows:
+        return ""
+    comparable = _paper_comparable(rows)
+    n = len(comparable)
+    fails = [r for r in comparable if r["paper_category"] != SUCCESS]
+    out = ["", "## Paper failure taxonomy (TiPToP failure-analysis figure)", "",
+           f"Denominator: {n} paper-comparable trials = {len(rows)} scheduled minus {len(rows) - n} excluded "
+           "(infrastructure or needs_review). Automatic labels are first passes: confirm on video and in the "
+           "server log, and override with `paper_category` in manual_labels.csv. The paper's 173 trials ran on "
+           "a real robot, so proportions in simulation are not expected to match.", "",
+           "| node | ours | % of our trials | % of our failures | paper (of 173) | in paper figure |",
+           "|---|---|---|---|---|---|"]
+
+    def line(name: str, k: int, in_paper: bool, indent: int = 0, share_of_failures: bool = True) -> None:
+        pct = f"{100 * k / n:.0f}%" if n else "n/a"
+        fpct = f"{100 * k / len(fails):.0f}%" if share_of_failures and fails else ""
+        ref = PAPER_REFERENCE_COUNTS.get(name, "")
+        label = "&nbsp;&nbsp;" * indent + name
+        out.append(f"| {label} | {k} | {pct} | {fpct} | {ref} | {'yes' if in_paper else 'no'} |")
+
+    line("Success", n - len(fails), True, share_of_failures=False)
+    line("Failure", len(fails), True, share_of_failures=False)
+    by_top: dict[str, Counter] = defaultdict(Counter)
+    for r in fails:
+        by_top[PAPER_CATEGORIES[r["paper_category"]][0]][r["paper_category"]] += 1
+    for top in dict.fromkeys(v[0] for v in PAPER_CATEGORIES.values()):
+        if top not in by_top:
+            continue
+        subs = by_top[top]
+        line(top, sum(subs.values()), "(not in paper)" not in top, indent=1)
+        for label in (k for k in PAPER_CATEGORIES if k in subs):
+            _, sub, in_paper = PAPER_CATEGORIES[label]
+            line(sub, subs[label], in_paper, indent=2)
+
+    excluded = Counter(r["paper_category"] for r in rows if r not in comparable)
+    if excluded:
+        out += ["", "Excluded from the denominator: " + ", ".join(f"{k} {v}" for k, v in excluded.items())]
+    out.append("")
+    out.append(f"- Paper labels set manually: {sum(r['paper_category_source'] == 'manual' for r in rows)}")
+    out.append(f"- Task success source: automatic {sum(r['task_success_source'] == 'auto' for r in rows)}, "
+               f"manual {sum(r['task_success_source'] == 'manual' for r in rows)}, "
+               f"unchecked {sum(r['task_success'] is None for r in rows)}")
+    out += ["", "| run | paper category | source | evidence |", "|---|---|---|---|"]
+    for r in rows:
+        if r["paper_category"] != SUCCESS:
+            ev = "; ".join(r["paper_evidence"]).replace("|", "/")
+            out.append(f"| {r['run_id']} | {r['paper_category']} | {r['paper_category_source']} | {ev} |")
+    return "\n".join(out) + "\n"
+
+
 def load_attributions(results_dir: Path) -> dict[str, dict]:
     return {a["run_id"]: a for a in read_jsonl(results_dir / "attribution.jsonl")}
 
@@ -246,6 +359,8 @@ def main(argv: list[str] | None = None) -> int:
                         "no plan (see skipped.jsonl); they are outside all denominators")
     text = render(rows, warnings, f"Summary: {args.results_dir.name}")
     text += render_attribution(rows, load_attributions(args.results_dir))
+    text += render_paper_taxonomy(rows)
+    (args.results_dir / "paper_taxonomy.json").write_text(json.dumps(paper_sankey(rows), indent=2))
     out = args.out or args.results_dir / "summary.md"
     out.write_text(text, encoding="utf-8")
     sys.stdout.write(text)
