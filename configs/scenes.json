@@ -1,0 +1,8 @@
+{
+  "_comment": "Scene survey config for `run_suite scenes`. Instructions are the droid-sim-evals README examples. target_object null means the scored object is the plan's first Pick, matched to a sim rigid-body name (see object_aliases). Fill in target_object or aliases after running observed_eval.py --inspect-only for each scene.",
+  "1": {"instruction": "Put the Rubik's cube in the bowl.", "target_object": null, "variants": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], "object_aliases": "configs/object_aliases.json"},
+  "2": {"instruction": "Put the can in the mug.", "target_object": null, "variants": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], "object_aliases": "configs/object_aliases.json"},
+  "3": {"instruction": "Put the banana in the bin.", "target_object": null, "variants": [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11], "object_aliases": "configs/object_aliases.json"},
+  "4": {"instruction": "Put the cube on the mug and the cans in the bowl.", "target_object": null, "variants": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], "object_aliases": "configs/object_aliases.json"},
+  "5": {"instruction": "Put 3 blocks in the bowl.", "target_object": null, "variants": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], "object_aliases": "configs/object_aliases.json"}
+}

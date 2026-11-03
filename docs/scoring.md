@@ -5,8 +5,13 @@
 The evaluator (`grasp_eval/observed_eval.py`) executes the upstream plan exactly as `tiptop_eval.py` does
 and only reads state. It never changes actions, pauses, retries, or feeds simulator state to perception or planning.
 
-After each control step it logs the target object's world position, the gripper reference point (midpoint of
-the two inner finger links), the commanded gripper value, the measured gripper and arm joints, and the time.
+After each control step it logs every rigid object's world position, the gripper reference point (midpoint of
+the two inner finger links), the commanded gripper value, the commanded and measured arm joints, and the time
+(`trace.npz`). Probe runs (`docs/probes.md`) change the experiment on purpose and are recorded in `record.probe`.
+
+The scored target is the `--target-object` name. With `--target-object from-plan` (scene survey), it is the plan's
+first `Pick(...)` object matched to a simulator name (`record.target_source = plan_label`). If that fails, it is the
+object nearest the gripper at the first close (`nearest_at_close`, flagged in the summary for review).
 
 ## Stable lift (first grasp only)
 
@@ -54,8 +59,8 @@ reads the server log, and writes corrections to `results/<pilot>/manual_labels.c
 
 ```
 run_id,stable_lift,failure_category,task_success,note
-s1v2t0_20261101-141500,,perception_grounding,,Gemini grounded the bowl as the target
-s1v0t1_20261101-142210,,,true,cube ended inside bowl
+002_s1v2_baseline_t0,,perception_grounding,,Gemini grounded the bowl as the target
+005_s1v0_baseline_t1,,,true,cube ended inside bowl
 ```
 
 Raw records are never edited. `summarize.py` applies these labels on top and reports how many runs were overridden.

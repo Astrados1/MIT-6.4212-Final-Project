@@ -43,6 +43,14 @@ class RunRecord:
     versions: dict[str, Any] = field(default_factory=dict)
     criteria: dict[str, Any] = field(default_factory=dict)
 
+    # Experimental condition. {"type": "baseline"} for unmodified runs; probes record
+    # their parameters here (see docs/probes.md).
+    probe: dict[str, Any] = field(default_factory=lambda: {"type": "baseline"})
+    plan_source: str = "server"  # "server" (fresh plan) or "replay" (saved plan file)
+    replayed_plan: str | None = None
+    plan_q_init_max_abs_diff_rad: float | None = None  # replay only: plan start vs actual joints
+    target_source: str = "explicit"  # explicit | plan_label | nearest_at_close | unresolved
+
     # Perception/planning, as reported by the TiPToP server.
     server_response_received: bool = False
     server_success: bool | None = None  # True means a plan was produced, nothing more
