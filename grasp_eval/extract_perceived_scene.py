@@ -7,7 +7,9 @@ Must run inside the tiptop pixi environment, because unpickling needs cuTAMP and
         --save-dir tiptop_server_outputs/<timestamp> --out perceived_scene.json
 
 For each perceived object it writes the name, cuTAMP type (Movable/Surface/...), the
-stored pose, and the world-frame axis-aligned bounding box of its geometry. Coordinates
+stored pose, and the world-frame axis-aligned bounding box of its geometry. It also
+writes how many M2T2 grasps were associated with each object (perception/grasps.pt),
+Gemini's grounded goal atoms and cuTAMP's failure reason (metadata.json). Coordinates
 are in TiPToP's world frame, which includes the simulator client's 1.5 cm camera
 z-offset (see docs/upstream_notes.md); attribution.py corrects for it.
 """
@@ -50,6 +52,21 @@ def describe(env) -> dict:
     return {"env_name": getattr(env, "name", None), "objects": out}
 
 
+def m2t2_grasp_counts(path: Path) -> dict[str, int]:
+    """Number of M2T2 grasps TiPToP associated with each object label (perception/grasps.pt).
+
+    cuTAMP 0.0.6 uses these for an object when there is at least one; otherwise it samples
+    heuristic grasps (cutamp/particle_initialization.py), so a zero means "heuristic".
+    """
+    import torch  # tiptop environment only
+
+    try:
+        grasps = torch.load(path, map_location="cpu", weights_only=False)
+    except TypeError:  # older torch without weights_only
+        grasps = torch.load(path, map_location="cpu")
+    return {label: int(len(entry["poses"])) for label, entry in grasps.items()}
+
+
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     p.add_argument("--save-dir", type=Path, required=True, help="tiptop_server_outputs/<timestamp>")
@@ -66,6 +83,12 @@ def main(argv=None) -> int:
         with open(pkl, "rb") as f:
             env = dill.load(f)
         result.update(describe(env))
+    grasps_pt = args.save_dir / "perception" / "grasps.pt"
+    if grasps_pt.exists():
+        try:
+            result["m2t2_grasp_counts"] = m2t2_grasp_counts(grasps_pt)
+        except Exception as e:  # the counts are optional; keep the rest of the export
+            result["m2t2_grasp_counts_error"] = f"{type(e).__name__}: {e}"
     meta = args.save_dir / "metadata.json"
     if meta.exists():
         m = json.loads(meta.read_text())

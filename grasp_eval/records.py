@@ -75,8 +75,16 @@ class RunRecord:
     failure_detail: str | None = None
     task_success: bool | None = None  # final place success; labeled manually
 
+    # Goal spec for the automatic task check (grasp_eval/task_goal.py); None if not given.
+    goal: list[dict[str, Any]] | None = None
+
     initial_object_positions: dict[str, list[float]] = field(default_factory=dict)
     final_object_positions: dict[str, list[float]] = field(default_factory=dict)
+    initial_object_quats: dict[str, list[float]] = field(default_factory=dict)  # (w, x, y, z)
+    final_object_quats: dict[str, list[float]] = field(default_factory=dict)
+    # Geometry box of each object in its own frame, [[min xyz], [max xyz]], read from USD.
+    object_local_bounds: dict[str, list[list[float]]] = field(default_factory=dict)
+    object_bounds_notes: dict[str, str] = field(default_factory=dict)
 
     artifacts: dict[str, str] = field(default_factory=dict)
     harness_exception: str | None = None

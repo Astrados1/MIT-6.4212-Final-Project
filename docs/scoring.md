@@ -38,6 +38,25 @@ more than 5 cm and keeps it there more than 0.5 s before release, and look at th
 distance during a good hold. Then set the final values here, mark them frozen with the date, and pass the same
 values to every later run. Do not add a dwell or stop to the baseline to make scoring easier.
 
+## Task success (whole instruction)
+
+Stable lift is our project's metric. The TiPToP paper counts a trial as a success only when the whole rearrangement
+worked, so its failure taxonomy (`docs/probes.md` §5) needs task success too. The attribution step checks it
+automatically (`grasp_eval/task_goal.py`) from the final resting poses and each object's true geometry box, which
+`observed_eval.py` reads from the USD stage:
+
+- `in`: the object's center is inside the container's xy box, and its bottom is between the container's bottom
+  (−1 cm) and top (+2 cm).
+- `on`: the object's center is inside the container's xy box, and its bottom is within 2 cm of the container's top.
+- The gripper must be open at the end of the episode.
+
+The goal per scene lives in `configs/scenes.json` → `goal`. Until its object/container names are filled in from
+`--inspect-only`, task success is "unchecked". A `task_success` column in `manual_labels.csv` overrides the
+automatic check.
+
+The task check uses the objects' boxes, so a bowl counts as "in" anywhere inside its rim. Check the first few results
+against the video before trusting the numbers.
+
 ## Failure labels
 
 `perception_grounding`, `planning`, `missed_grasp`, `drop_after_closure_or_lift`, `execution_collision`,

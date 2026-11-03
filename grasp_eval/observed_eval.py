@@ -116,6 +116,8 @@ def parse_args(argv=None):
                    help=f"rigid-object name as listed by --inspect-only, or '{FROM_PLAN}' to use the plan's first Pick")
     p.add_argument("--object-aliases", type=Path, default=None,
                    help="JSON {perceived label: sim object name} used with --target-object from-plan")
+    p.add_argument("--goal-json", default=None,
+                   help="goal spec for the automatic task-success check (grasp_eval/task_goal.py), as JSON")
     p.add_argument("--run-id", default=None)
     p.add_argument("--out-dir", type=Path, required=True)
     p.add_argument("--seed", type=int, default=None)
@@ -276,6 +278,43 @@ def resolve_target(requested: str, plan: dict | None, names: list[str], aliases:
     return None, "unresolved"
 
 
+def usd_local_bounds(scene, names: list[str]) -> tuple[dict, dict]:
+    """Each rigid object's geometry box in its own (unscaled) frame, from the USD stage.
+
+    Call before the first physics step: with Fabric enabled, USD transforms are not updated
+    during simulation. The box is expressed in the prim's frame with scale removed, which is
+    the frame of RigidObject.root_pos_w / root_quat_w when the rigid body is that prim
+    (CHECK for payloaded assets whose rigid body is a child prim).
+    """
+    import omni.usd
+    from pxr import Gf, Usd, UsdGeom
+
+    stage = omni.usd.get_context().get_stage()
+    cache = UsdGeom.BBoxCache(Usd.TimeCode.Default(), [UsdGeom.Tokens.default_, UsdGeom.Tokens.render])
+    bounds, notes = {}, {}
+    for n in names:
+        path = scene.rigid_objects[n].cfg.prim_path.replace("{ENV_REGEX_NS}", "/World/envs/env_0")
+        path = path.replace("env_.*", "env_0")
+        prim = stage.GetPrimAtPath(path)
+        if not prim or not prim.IsValid():
+            notes[n] = f"no prim at {path}"
+            continue
+        bb = cache.ComputeWorldBound(prim)
+        rng = bb.GetRange()
+        if rng.IsEmpty():
+            notes[n] = f"empty bound at {path}"
+            continue
+        lo, hi, m = rng.GetMin(), rng.GetMax(), bb.GetMatrix()
+        world = np.array([list(m.Transform(Gf.Vec3d(x, y, z)))
+                          for x in (lo[0], hi[0]) for y in (lo[1], hi[1]) for z in (lo[2], hi[2])])
+        xf = UsdGeom.Xformable(prim).ComputeLocalToWorldTransform(Usd.TimeCode.Default()).RemoveScaleShear()
+        p0 = np.array(list(xf.ExtractTranslation()))
+        r0 = np.array([list(row) for row in xf.ExtractRotationMatrix()])  # Gf: row vectors, world = local @ r0
+        local = (world - p0) @ r0.T
+        bounds[n] = [local.min(axis=0).round(5).tolist(), local.max(axis=0).round(5).tolist()]
+    return bounds, notes
+
+
 def main(argv=None) -> int:
     args = parse_args(argv)
     sim_root = args.sim_root.resolve()
@@ -337,6 +376,7 @@ def main(argv=None) -> int:
         probe=probe_description(args),
         plan_source="replay" if args.plan_json else "server",
         replayed_plan=str(args.plan_json.resolve()) if args.plan_json else None,
+        goal=json.loads(args.goal_json) if args.goal_json else None,
         versions={
             "project_sha": _git_sha(PROJECT_ROOT),
             "project_dirty": _git_dirty(PROJECT_ROOT),
@@ -353,8 +393,8 @@ def main(argv=None) -> int:
     wall_start = time.time()
     env = client = None
     video = []
-    trace = {k: [] for k in ("t", "objects_pos", "gripper_pos", "gripper_cmd", "gripper_obs",
-                             "joint_pos", "joint_cmd")}
+    trace = {k: [] for k in ("t", "objects_pos", "objects_quat", "gripper_pos", "gripper_quat", "gripper_cmd",
+                             "gripper_obs", "joint_pos", "joint_cmd")}
     object_names: list[str] = []
 
     try:
@@ -369,12 +409,19 @@ def main(argv=None) -> int:
         device = env.unwrapped.device
         step_dt = float(env.unwrapped.step_dt)
         object_names = sorted(scene.rigid_objects.keys())
+        try:
+            rec.object_local_bounds, rec.object_bounds_notes = usd_local_bounds(scene, object_names)
+        except Exception as e:  # sizes feed the task/shape checks only; never lose the run over them
+            rec.object_bounds_notes = {"_error": f"{type(e).__name__}: {e}"}
 
         obs, _ = env.reset()
         obs, _ = env.reset()  # upstream: second render cycle for materials
 
         def object_positions() -> dict[str, list[float]]:
             return {name: scene.rigid_objects[name].data.root_pos_w[0].tolist() for name in object_names}
+
+        def object_quats() -> dict[str, list[float]]:
+            return {name: scene.rigid_objects[name].data.root_quat_w[0].tolist() for name in object_names}
 
         if args.inspect_only:
             obs, _ = env.reset()
@@ -383,6 +430,9 @@ def main(argv=None) -> int:
                 "scene": args.scene,
                 "variant": args.variant,
                 "rigid_objects_after_settle": object_positions(),
+                "rigid_object_quats_after_settle": object_quats(),
+                "rigid_object_local_bounds": rec.object_local_bounds,
+                "rigid_object_bounds_notes": rec.object_bounds_notes,
                 "robot_body_names": list(robot.data.body_names),
                 "robot_joint_names": list(robot.data.joint_names),
                 "step_dt": step_dt,
@@ -403,6 +453,10 @@ def main(argv=None) -> int:
 
         def gripper_ref() -> list[float]:
             return robot.data.body_pos_w[0, body_ids].mean(dim=0).tolist()
+
+        def gripper_quat() -> list[float]:
+            # Orientation of the first finger link: fixed relative to the hand once the gripper is closed.
+            return robot.data.body_quat_w[0, body_ids[0]].tolist()
 
         ClientCls = make_observed_client_class(TiptopWebsocketClient)
         if args.plan_json:
@@ -443,6 +497,7 @@ def main(argv=None) -> int:
             obs, _ = env.reset()
             obs = settle_sim(env, obs, reset_episode_buf=True)
             rec.initial_object_positions = object_positions()
+            rec.initial_object_quats = object_quats()
             q_now = obs["policy"]["arm_joint_pos"][0].cpu().numpy()
 
             frame_idx = 0
@@ -476,7 +531,10 @@ def main(argv=None) -> int:
                 trace["t"].append(frame_idx * step_dt)
                 trace["objects_pos"].append(
                     [scene.rigid_objects[n].data.root_pos_w[0].tolist() for n in object_names])
+                trace["objects_quat"].append(
+                    [scene.rigid_objects[n].data.root_quat_w[0].tolist() for n in object_names])
                 trace["gripper_pos"].append(gripper_ref())
+                trace["gripper_quat"].append(gripper_quat())
                 trace["gripper_cmd"].append(float(ret["action"][-1]))
                 trace["gripper_obs"].append(float(obs["policy"]["gripper_pos"][0, 0]))
                 trace["joint_pos"].append(obs["policy"]["arm_joint_pos"][0].tolist())
@@ -490,6 +548,7 @@ def main(argv=None) -> int:
         rec.executed_steps = frame_idx
         rec.sim_duration_s = frame_idx * step_dt
         rec.final_object_positions = object_positions()
+        rec.final_object_quats = object_quats()
         if client.replay_q_init is not None:
             rec.plan_q_init_max_abs_diff_rad = float(np.max(np.abs(client.replay_q_init - q_now)))
         if client.corruption_applied:

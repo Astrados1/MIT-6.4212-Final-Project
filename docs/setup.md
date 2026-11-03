@@ -89,6 +89,11 @@ cuRobo SHA from it into `provenance/pins.env` so that later installs are pinned.
    matches the video. Confirm `left_inner_finger` and `right_inner_finger` are in `robot_body_names`. If they are not, choose
    the two inner finger/pad links and pass them with `--gripper-bodies`. Record the choice in `docs/baseline_report.md`.
 
+   The same file lists each object's geometry box (`rigid_object_local_bounds`). Check that the cube is about 6 cm on
+   a side and the bowl looks bowl-sized; anything in `rigid_object_bounds_notes` means a box could not be read.
+   Then put the bowl's name in `configs/scenes.json` → `"1"` → `goal[0].container`. Without it, task success stays
+   "unchecked" and the paper-taxonomy table (`docs/probes.md` §5) can't separate successes from failures.
+
 ## D. One fresh end-to-end run
 
 Terminal 1:
@@ -141,7 +146,8 @@ are sized from it.
 Then:
 
 1. Watch every failure video, read the matching server log, and fill in `results/pilot_scene1/manual_labels.csv`.
-   Watch a few successes too.
+   Watch a few successes too. Confirm each run's automatic paper category (summary section "Paper failure taxonomy")
+   and correct it in the `paper_category` column when it's wrong; resolve every `needs_review` run.
 2. Re-run `python3 -m grasp_eval.summarize results/pilot_scene1`.
 3. Write up failure modes in `docs/baseline_report.md`.
 4. Commit the records, summary, labels and report. Videos and traces are gitignored, so share them separately and note where.
@@ -155,7 +161,9 @@ Once the pilot works end to end, run the probe suites in `docs/probes.md`, in th
 
 1. **`displacement`**: the most important one for the project. It finds how much object-pose error the open-loop plan tolerates.
 2. **`sensor`**.
-3. **`scenes`**: fill in `configs/scenes.json` / `configs/object_aliases.json` from `--inspect-only` first.
+3. **`scenes`**: fill in `configs/scenes.json` (target, aliases and every `goal` name, including how many cans/blocks
+   there really are in scenes 4 and 5) and `configs/object_aliases.json` from `--inspect-only` first. This suite plus
+   more pilot trials is what gives enough failures to compare with the paper's taxonomy.
 
 Each suite writes its own results directory and `summary.md`. Check each suite's in-suite control before reading
 the rest: `replay_0cm` for displacement, `nominal` for sensor.
