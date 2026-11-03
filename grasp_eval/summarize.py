@@ -138,8 +138,27 @@ def build_rows(results_dir: Path) -> tuple[list[dict], list[str]]:
     return rows, warnings
 
 
+def wilson_ci(k: int, n: int, z: float = 1.96) -> tuple[float, float] | None:
+    """95% Wilson score interval for a proportion k/n (well behaved at small n and at 0 or n)."""
+    if n == 0:
+        return None
+    p = k / n
+    centre = (p + z * z / (2 * n)) / (1 + z * z / n)
+    half = z * ((p * (1 - p) / n + z * z / (4 * n * n)) ** 0.5) / (1 + z * z / n)
+    return max(0.0, centre - half), min(1.0, centre + half)
+
+
+def _ci_text(k: int, n: int) -> str:
+    ci = wilson_ci(k, n)
+    return f"[{100 * ci[0]:.0f}-{100 * ci[1]:.0f}%]" if ci else ""
+
+
 def _frac(k: int, n: int) -> str:
     return f"{k}/{n} ({100.0 * k / n:.0f}%)" if n else f"{k}/0 (n/a)"
+
+
+def _frac_ci(k: int, n: int) -> str:
+    return f"{_frac(k, n)}, 95% CI {_ci_text(k, n)}" if n else _frac(k, n)
 
 
 def render(rows: list[dict], warnings: list[str], title: str) -> str:
@@ -155,11 +174,11 @@ def render(rows: list[dict], warnings: list[str], title: str) -> str:
     out.append(f"- Scheduled trials: {n} (records written: {records})")
     out.append(f"- Plan returned by server: {_frac(plans, n)}")
     out.append(f"- Valid executed plans: {_frac(valid, n)}")
-    out.append(f"- **Stable lift, overall (per scheduled trial): {_frac(lifts, n)}**")
-    out.append(f"- **Stable lift, conditional (per valid executed plan): {_frac(lifts, valid)}**")
+    out.append(f"- **Stable lift, overall (per scheduled trial): {_frac_ci(lifts, n)}**")
+    out.append(f"- **Stable lift, conditional (per valid executed plan): {_frac_ci(lifts, valid)}**")
     out.append(
         f"- Final task success (runs with an automatic check or manual label): "
-        f"{_frac(sum(bool(r['task_success']) for r in labeled_task), len(labeled_task))}; "
+        f"{_frac_ci(sum(bool(r['task_success']) for r in labeled_task), len(labeled_task))}; "
         f"unchecked: {n - len(labeled_task)}"
     )
     if times:
@@ -302,16 +321,21 @@ def render_paper_taxonomy(rows: list[dict]) -> str:
            f"Denominator: {n} paper-comparable trials = {len(rows)} scheduled minus {len(rows) - n} excluded "
            "(infrastructure or needs_review). Automatic labels are first passes: confirm on video and in the "
            "server log, and override with `paper_category` in manual_labels.csv. The paper's 173 trials ran on "
-           "a real robot, so proportions in simulation are not expected to match.", "",
-           "| node | ours | % of our trials | % of our failures | paper (of 173) | in paper figure |",
-           "|---|---|---|---|---|---|"]
+           "a real robot, so proportions in simulation are not expected to match. With a few dozen trials the "
+           "95% intervals are wide: \"paper % inside our CI\" means only that this run can't tell the two apart.", "",
+           "| node | ours | % of our trials | % of our failures | paper (of 173) | in paper figure "
+           "| our 95% CI | paper % inside our CI |",
+           "|---|---|---|---|---|---|---|---|"]
 
     def line(name: str, k: int, in_paper: bool, indent: int = 0, share_of_failures: bool = True) -> None:
         pct = f"{100 * k / n:.0f}%" if n else "n/a"
         fpct = f"{100 * k / len(fails):.0f}%" if share_of_failures and fails else ""
         ref = PAPER_REFERENCE_COUNTS.get(name, "")
         label = "&nbsp;&nbsp;" * indent + name
-        out.append(f"| {label} | {k} | {pct} | {fpct} | {ref} | {'yes' if in_paper else 'no'} |")
+        ci = wilson_ci(k, n)
+        inside = "" if ref == "" or ci is None else ("yes" if ci[0] <= ref / 173 <= ci[1] else "no")
+        out.append(f"| {label} | {k} | {pct} | {fpct} | {ref} | {'yes' if in_paper else 'no'} "
+                   f"| {_ci_text(k, n)} | {inside} |")
 
     line("Success", n - len(fails), True, share_of_failures=False)
     line("Failure", len(fails), True, share_of_failures=False)
@@ -347,11 +371,41 @@ def load_attributions(results_dir: Path) -> dict[str, dict]:
     return {a["run_id"]: a for a in read_jsonl(results_dir / "attribution.jsonl")}
 
 
+MERGED_FILES = ("schedule.jsonl", "runs.jsonl", "attribution.jsonl", "skipped.jsonl", "exit_codes.tsv")
+
+
+def merge_shards(shard_dirs: list[Path], into: Path) -> None:
+    """Combine shard results (run_suite --shard) into one directory for a single summary.
+
+    The merged files are regenerated on every call. Put manual labels in <into>/manual_labels.csv;
+    shard label files are ignored, so each run is labeled in one place.
+    """
+    into.mkdir(parents=True, exist_ok=True)
+    seen: dict[str, Path] = {}
+    for d in shard_dirs:
+        for s in read_jsonl(d / "schedule.jsonl"):
+            if s["run_id"] in seen:
+                raise ValueError(f"run {s['run_id']} is scheduled in both {seen[s['run_id']]} and {d}")
+            seen[s["run_id"]] = d
+    for name in MERGED_FILES:
+        parts = [(d / name).read_text() for d in shard_dirs if (d / name).exists()]
+        (into / name).write_text("".join(p if p.endswith("\n") or not p else p + "\n" for p in parts))
+    (into / "merged_from.json").write_text(json.dumps([str(d) for d in shard_dirs], indent=2))
+
+
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    p.add_argument("results_dir", type=Path)
+    p.add_argument("results_dir", type=Path, nargs="+", help="one results directory, or several shards with --into")
+    p.add_argument("--into", type=Path, default=None, help="merge the given shard directories into this one")
     p.add_argument("--out", type=Path, default=None, help="default: <results_dir>/summary.md")
     args = p.parse_args(argv)
+    if len(args.results_dir) > 1 or args.into:
+        if not args.into:
+            p.error("several results directories need --into <merged dir>")
+        merge_shards(args.results_dir, args.into)
+        args.results_dir = args.into
+    else:
+        args.results_dir = args.results_dir[0]
     rows, warnings = build_rows(args.results_dir)
     skipped = read_jsonl(args.results_dir / "skipped.jsonl")
     if skipped:
