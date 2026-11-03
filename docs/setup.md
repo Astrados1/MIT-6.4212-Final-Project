@@ -162,8 +162,67 @@ Once the pilot works end to end, run the probe suites in `docs/probes.md`, in th
 1. **`displacement`**: the most important one for the project. It finds how much object-pose error the open-loop plan tolerates.
 2. **`sensor`**.
 3. **`scenes`**: fill in `configs/scenes.json` (target, aliases and every `goal` name, including how many cans/blocks
-   there really are in scenes 4 and 5) and `configs/object_aliases.json` from `--inspect-only` first. This suite plus
-   more pilot trials is what gives enough failures to compare with the paper's taxonomy.
+   there really are in scenes 4 and 5) and `configs/object_aliases.json` from `--inspect-only` first. For the
+   comparison with the paper, use the `paper` suite in section G rather than this one.
 
 Each suite writes its own results directory and `summary.md`. Check each suite's in-suite control before reading
 the rest: `replay_0cm` for displacement, `nominal` for sensor.
+
+## G. Running on one or two H100s
+
+GPU time is limited, so the plan is small and staged. Each stage only starts once the previous one is clean.
+Nothing below has been timed yet. The runner prints minutes per run and an ETA after the first run; use the
+pilot's numbers to decide how much of stages 4-5 fits.
+
+| stage | command (from `$PROJECT`) | runs | purpose |
+|---|---|---|---|
+| 0 | `python3 -m grasp_eval.preflight --tiptop-dir $TIPTOP_DIR` | 0 | GPU, tools, scene files, pins, Gemini patch, servers, goal names, disk |
+| 1 | `... preflight --tiptop-dir $TIPTOP_DIR --sim-check` | 5 inspections | the parts never run on a GPU: object boxes, finger links, goal names exist in the sim |
+| 2 | `... preflight --tiptop-dir $TIPTOP_DIR --scenes 1 --smoke-run` | 1 | one full run plus attribution; checks record, trace, task check, paper category |
+| 3 | `python3 -m grasp_eval.run_suite pilot --tiptop-dir $TIPTOP_DIR --target-object <name>` | 15 | baseline on scene 1 |
+| 4 | `python3 -m grasp_eval.run_suite paper --tiptop-dir $TIPTOP_DIR` | 40 | paper-taxonomy comparison: 5 scenes x 4 variants x 2 trials |
+| 5 (optional) | `run_suite displacement ...` / `run_suite sensor ...` | 15 / 18 | probes (docs/probes.md) |
+
+That is about 60 runs for stages 2-4. Treat 40 runs as a check of the pipeline and a rough picture of the
+failure mix, not a reproduction of the paper's numbers. The summary prints 95% intervals so the uncertainty is visible.
+
+**Each GPU runs the whole stack.** With two GPUs, split a suite into two shards. Each shard gets its own simulator
+and TiPToP server; M2T2 is shared on GPU 0.
+
+```bash
+# GPU 0: M2T2 and TiPToP server 1 (as in section D)
+cd "$TIPTOP_DIR/M2T2" && CUDA_VISIBLE_DEVICES=0 pixi run server
+cd "$TIPTOP_DIR/tiptop" && CUDA_VISIBLE_DEVICES=0 pixi run tiptop-server --host 127.0.0.1 --port 8765
+
+# GPU 1: TiPToP server 2, started from its own folder. The server writes tiptop_server_outputs/<time to the second>/
+# into its working directory, so two servers in the same folder could overwrite each other's outputs.
+mkdir -p "$TIPTOP_DIR/server_gpu1" && cd "$TIPTOP_DIR/server_gpu1"
+eval "$(pixi shell-hook --manifest-path "$TIPTOP_DIR/tiptop/pixi.toml")"
+CUDA_VISIBLE_DEVICES=1 tiptop-server --host 127.0.0.1 --port 8766
+```
+
+Check both servers with `preflight --ws-port 8765` and `--ws-port 8766`. Then run one shard per GPU, each in its own terminal:
+
+```bash
+CUDA_VISIBLE_DEVICES=0 python3 -m grasp_eval.run_suite paper --tiptop-dir "$TIPTOP_DIR" --shard 0/2 --ws-port 8765
+CUDA_VISIBLE_DEVICES=1 python3 -m grasp_eval.run_suite paper --tiptop-dir "$TIPTOP_DIR" --shard 1/2 --ws-port 8766
+```
+
+Shards split by (scene, variant), so a displacement replay always runs on the same GPU as its source plan.
+When both finish, merge them into one summary, then put manual labels in the merged directory:
+
+```bash
+python3 -m grasp_eval.summarize results/paper_shard0of2 results/paper_shard1of2 --into results/paper
+```
+
+**Unattended runs.**
+- `--max-hours H` stops starting new runs after H hours. Runs go trial by trial, so a cut-short suite still covers every scene.
+- If the session ends (time limit, lost machine), rerun the same command with `--resume`. Interrupted runs are
+  redone. Runs that exited but wrote no record stay counted as infrastructure failures.
+- Each run is killed after `--run-timeout-s` (20 min by default) and counts as an infrastructure failure.
+- Before each fresh-plan run, the runner checks both servers' `/health`. If one is down, it waits up to
+  `--server-wait-s` (10 min), then stops cleanly so the outage doesn't turn into a string of failed runs. Fix it and `--resume`.
+- The `paper` suite refuses to start while any goal name in `configs/scenes.json` is unset (stage 1 tells you which).
+
+**CHECK on first use:** that the Isaac Sim simulator and a TiPToP server fit together on one H100 (watch `nvidia-smi`
+during stage 2), and that the second server writes its outputs under `server_gpu1/`.

@@ -13,8 +13,8 @@ tracing) and the cuTAMP unpickling are untested until the first real run.
 | probe | question | changes the experiment? | suite | runs (defaults) |
 |---|---|---|---|---|
 | Stage attribution | Which stage caused each failure? | No, measurement only | every suite | 0 extra |
-| Object displacement | How much object-pose error does the open-loop plan tolerate? | Yes: moves the object after planning | `displacement` | 49 per variant |
-| Sensor corruption | How sensitive are perception and grasping to depth noise and calibration error? | Yes: corrupts the observation sent to TiPToP | `sensor` | 27 |
+| Object displacement | How much object-pose error does the open-loop plan tolerate? | Yes: moves the object after planning | `displacement` | 15 per variant |
+| Sensor corruption | How sensitive are perception and grasping to depth noise and calibration error? | Yes: corrupts the observation sent to TiPToP | `sensor` | 18 |
 | Scene survey | Does performance hold across other objects and clutter? | No (different scenes) | `scenes` | 24 |
 | Paper failure taxonomy | Where do failures fall in the TiPToP paper's categories? | No, measurement only | every suite | 0 extra |
 
@@ -49,8 +49,8 @@ doesn't match the simulated Panda. Check the latter first (see `docs/upstream_no
 
 ```bash
 python3 -m grasp_eval.run_suite displacement --tiptop-dir "$TIPTOP_DIR" --target-object <name> \
-    --provenance-file provenance/provenance_<ts>.txt [--variants 0 1] [--distances-cm 1 2 3 4 6] \
-    [--directions x+ x- y+ y-] [--yaws-deg 15 30 45] [--repeats 2]
+    --provenance-file provenance/provenance_<ts>.txt [--variants 0 1] [--distances-cm 1 2 4] \
+    [--directions x+ x- y+ y-] [--yaws-deg 30] [--repeats 1]
 ```
 
 For each variant:
@@ -79,7 +79,7 @@ Caveats:
 
 ```bash
 python3 -m grasp_eval.run_suite sensor --tiptop-dir "$TIPTOP_DIR" --target-object <name> \
-    [--variants 0] [--trials 3] [--conditions nominal depth_noise_5mm cam_rot_2deg ...]
+    [--variants 0] [--trials 2] [--conditions nominal depth_noise_5mm cam_rot_2deg ...]
 ```
 
 The simulator renders perfect depth and knows the exact camera pose. A real IIWA setup will have neither. Each condition

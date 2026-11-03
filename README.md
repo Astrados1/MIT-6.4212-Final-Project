@@ -40,6 +40,7 @@ to `gemini-robotics-er-2-preview`. Results are therefore "upstream TiPToP with G
 - [x] Probe suites implemented (stage attribution, displacement sweep with plan replay, sensor corruption, scene survey); unit-tested with stand-ins, not run on a GPU
 - [x] Paper failure taxonomy (task success, grasp source, shape completion, goal translation, cuTAMP reason, in-hand slip), unit-tested with stand-ins, not run on a GPU
 - [ ] Goal names in `configs/scenes.json` filled in from `--inspect-only` (task success is unchecked until then)
+- [x] Small-budget GPU plan (1-2 H100s): preflight checks, 40-run `paper` suite, two-GPU sharding, `--resume`, `--max-hours`, run timeouts, server health gate, 95% intervals ([docs/setup.md](docs/setup.md) section G)
 - [ ] Probe suites run: displacement first, then sensor, then scenes
 
 `observed_eval.py`, the shell scripts and the runbook have not been run on a GPU machine yet. Expect small fixes on first contact.

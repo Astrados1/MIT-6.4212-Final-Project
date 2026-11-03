@@ -273,11 +273,12 @@ class SuiteOrchestrationTest(unittest.TestCase):
         self.calls = []
         with tempfile.TemporaryDirectory() as d, \
                 mock.patch.object(run_suite, "PROJECT_ROOT", Path(d)), \
-                mock.patch.object(run_suite.subprocess, "run", self._fake_run), \
+                mock.patch.object(run_suite, "run_process",
+                                  lambda cmd, cwd, log, timeout: self._fake_run(cmd, cwd).returncode), \
                 contextlib.redirect_stdout(io.StringIO()):
             rc = run_suite.main(["displacement", "--tiptop-dir", d, "--target-object", "cube", "--variants", "0", "1",
                                  "--distances-cm", "2", "4", "--directions", "x+", "y-", "--yaws-deg", "45",
-                                 "--repeats", "1", "--out-name", "t"])
+                                 "--repeats", "1", "--out-name", "t", "--no-health-check"])
             out = Path(d) / "results" / "t"
             schedule = [json.loads(l) for l in (out / "schedule.jsonl").read_text().splitlines()]
             skipped = (out / "skipped.jsonl").read_text().splitlines()
