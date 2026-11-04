@@ -3,13 +3,17 @@
     python3 -m grasp_eval.preflight --tiptop-dir $TIPTOP_DIR [--scenes 1 2 3 4 5] [--sim-check] [--smoke-run]
 
 Checks, cheapest first:
-  gpu          nvidia-smi works; records GPU, VRAM in use, driver
+  gpu          every visible GPU (CUDA_VISIBLE_DEVICES): which components it can run. The simulator needs RT
+               cores; the simulator and M2T2 environments stop at compute capability 9.0 (no Blackwell)
+  os           Ubuntu 22.04 or later (Isaac Sim's supported OS)
+  network      the node can reach Gemini, the SAM2 download host and PyPI
   tools        uv, pixi and git on PATH
   layout       the three upstream checkouts and every scene/variant USD the suite will load
   pins         tiptop and droid-sim-evals at the pinned SHAs; the Gemini ER 2 patch applied
   servers      TiPToP (ws host:port/health) and M2T2 (/health) answer
   config       configs/scenes.json goals have every object/container name filled in
-  credentials  GOOGLE_API_KEY set in this shell (warning only: the server runs in its own shell)
+  credentials  if GOOGLE_API_KEY is set in this shell, ask the Gemini API whether the key can see the pinned
+               model (key sent as a header, never printed); warning only if unset
   disk         free space for results and server outputs
   sim-check    (--sim-check) observed_eval.py --inspect-only per scene: gripper bodies exist, every object
                has a plausible geometry box, and goal/target names exist in the simulator
@@ -28,6 +32,7 @@ import re
 import shutil
 import subprocess
 import sys
+import urllib.error
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
@@ -36,6 +41,65 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 PASS, WARN, FAIL = "PASS", "WARN", "FAIL"
 MIN_FREE_GB = 20
 PLAUSIBLE_EXTENT_M = (0.01, 1.0)  # any object box side outside this is suspicious
+
+# GPUs without RT cores. Isaac Sim does not support them, and it needs RT cores to render cameras.
+NO_RT_CORE_GPUS = ("A100", "A800", "A30", "H100", "H800", "H200", "H20", "B100", "B200", "GB200", "V100", "P100")
+# Newest compute capability each pinned environment's PyTorch/CUDA build supports (docs/upstream_notes.md):
+# simulator: torch 2.7.0 built for CUDA 12.6; M2T2: torch 2.4.1 / nvcc 12.1 (both stop at sm_90, so no
+# Blackwell); TiPToP: torch 2.7.1 / nvcc 12.9 (expected to cover Blackwell, sm_120).
+ENV_MAX_COMPUTE_CAP = {"simulator": 9.0, "m2t2": 9.0, "tiptop": 12.0}
+# Hosts the GPU node must reach: Gemini (every run), SAM2 checkpoint (first run), packages (install).
+REQUIRED_HOSTS = {"gemini": "https://generativelanguage.googleapis.com/",
+                  "sam2_download": "https://dl.fbaipublicfiles.com/",
+                  "pypi": "https://pypi.org/simple/"}
+
+
+def gpu_roles(name: str, compute_cap: float) -> dict[str, str | None]:
+    """For one GPU: component -> None if it should run there, else why it can't."""
+    no_rt = any(re.search(rf"\b{m}\b", name) for m in NO_RT_CORE_GPUS)
+    out: dict[str, str | None] = {}
+    for comp, max_cc in ENV_MAX_COMPUTE_CAP.items():
+        if comp == "simulator" and no_rt:
+            out[comp] = "no RT cores, so Isaac Sim can't render the cameras"
+        elif compute_cap > max_cc:
+            out[comp] = (f"compute capability {compute_cap:g} is newer than its pinned PyTorch/CUDA build "
+                         f"supports (up to {max_cc:g})")
+        else:
+            out[comp] = None
+    return out
+
+
+def parse_os_release(text: str) -> tuple[str, str]:
+    vals = dict(re.findall(r'^(\w+)="?([^"\n]*)"?$', text, flags=re.M))
+    return vals.get("ID", ""), vals.get("VERSION_ID", "")
+
+
+def reachable(url: str, timeout: float = 8.0) -> tuple[bool, str]:
+    """Any HTTP answer (even 403/404) means the host is reachable from this node."""
+    try:
+        with urllib.request.urlopen(url, timeout=timeout) as r:
+            return True, f"HTTP {r.status}"
+    except urllib.error.HTTPError as e:
+        return True, f"HTTP {e.code}"
+    except Exception as e:  # DNS failure, connection refused, proxy block, timeout
+        return False, f"{type(e).__name__}: {e}"
+
+
+def gemini_model_check(model: str, key: str, timeout: float = 15.0) -> tuple[bool, str]:
+    """Ask the Gemini API whether this key can see `model`. The key goes in a header, never the URL or logs."""
+    req = urllib.request.Request(f"https://generativelanguage.googleapis.com/v1beta/models/{model}",
+                                 headers={"x-goog-api-key": key})
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            return r.status == 200, f"HTTP {r.status}: {model} is available to this key"
+    except urllib.error.HTTPError as e:
+        try:
+            msg = json.loads(e.read().decode()).get("error", {}).get("message", "")
+        except Exception:
+            msg = ""
+        return False, f"HTTP {e.code}: {msg[:200]}"
+    except Exception as e:
+        return False, f"{type(e).__name__}: {e}"
 
 
 def _sh(cmd: list[str], cwd: Path | None = None, timeout: float = 60) -> tuple[int, str]:
@@ -149,8 +213,41 @@ def run_checks(a) -> Report:
     tiptop, sim, m2t2 = root / "tiptop", root / "droid-sim-evals", root / "M2T2"
     scenes_cfg = json.loads(Path(a.scenes_config).read_text())
 
-    code, out = _sh(["nvidia-smi", "--query-gpu=name,memory.total,memory.used,driver_version", "--format=csv,noheader"])
-    rep.add("gpu", PASS if code == 0 else FAIL, out.splitlines()[0] if code == 0 and out else out)
+    code, out = _sh(["nvidia-smi", "--query-gpu=index,name,compute_cap,memory.total,memory.used,driver_version",
+                     "--format=csv,noheader"])
+    if code != 0 or not out:
+        rep.add("gpu", FAIL, out or "nvidia-smi printed nothing")
+    else:
+        sim_ok = False
+        for line in out.splitlines():
+            idx, name, cc, total, used, driver = [f.strip() for f in line.split(",")]
+            try:
+                roles = gpu_roles(name, float(cc))
+            except ValueError:
+                rep.add(f"gpu{idx}", WARN, f"{name}: compute capability {cc!r} unreadable")
+                continue
+            ok = [c for c, why in roles.items() if why is None]
+            sim_ok |= "simulator" in ok
+            detail = f"{name}, sm {cc}, {used} / {total} used, driver {driver}; can run: {', '.join(ok) or 'nothing'}"
+            blocked = "; ".join(f"{c}: {why}" for c, why in roles.items() if why)
+            status = PASS if {"simulator", "m2t2"} <= set(ok) else (WARN if ok else FAIL)
+            rep.add(f"gpu{idx}", status, detail + (f" (not {blocked})" if blocked else ""), roles=roles)
+        if not sim_ok:
+            rep.add("gpu:simulator", FAIL, "no visible GPU can run the simulator; use an RTX card with compute "
+                    "capability up to 9.0 (e.g. RTX A6000), or set CUDA_VISIBLE_DEVICES to one")
+
+    os_text = Path("/etc/os-release").read_text() if Path("/etc/os-release").exists() else ""
+    os_id, os_ver = parse_os_release(os_text)
+    try:
+        ubuntu_ok = os_id == "ubuntu" and tuple(int(x) for x in os_ver.split(".")) >= (22, 4)
+    except ValueError:
+        ubuntu_ok = False
+    rep.add("os", PASS if ubuntu_ok else WARN, f"{os_id or 'unknown'} {os_ver}"
+            + ("" if ubuntu_ok else ": Isaac Sim officially needs Ubuntu 22.04 or later; expect install problems"))
+
+    for name, url in REQUIRED_HOSTS.items():
+        ok, detail = reachable(url)
+        rep.add(f"network:{name}", PASS if ok else (FAIL if name == "gemini" else WARN), f"{url} -> {detail}")
 
     missing_tools = [t for t in ("uv", "pixi", "git") if shutil.which(t) is None]
     rep.add("tools", FAIL if missing_tools else PASS, f"missing: {missing_tools}" if missing_tools else "uv, pixi, git")
@@ -183,9 +280,14 @@ def run_checks(a) -> Report:
     rep.add("config", (FAIL if a.require_goals else WARN) if problems else PASS,
             "; ".join(problems) if problems else "every goal name set", problems=problems)
 
-    rep.add("credentials", PASS if os.environ.get("GOOGLE_API_KEY") else WARN,
-            "GOOGLE_API_KEY set in this shell" if os.environ.get("GOOGLE_API_KEY")
-            else "GOOGLE_API_KEY not set here; it must be set in the TiPToP server's shell")
+    key = os.environ.get("GOOGLE_API_KEY")
+    if key:
+        model = pins.get("EXPECTED_GEMINI_MODEL", "gemini-robotics-er-2-preview")
+        ok, detail = gemini_model_check(model, key)
+        rep.add("credentials", PASS if ok else FAIL, detail)
+    else:
+        rep.add("credentials", WARN, "GOOGLE_API_KEY not set here; export it in this shell to test it, and it must "
+                "be set in the TiPToP server's shell")
 
     for label, path in (("results", PROJECT_ROOT), ("tiptop", root)):
         free = shutil.disk_usage(path).free / 1e9 if path.exists() else 0.0

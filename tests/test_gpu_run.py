@@ -102,3 +102,56 @@ class PreflightTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ClusterPlanTest(unittest.TestCase):
+    def test_gpu_roles(self):
+        from grasp_eval.preflight import gpu_roles
+
+        self.assertEqual(gpu_roles("NVIDIA RTX A6000", 8.6), {"simulator": None, "m2t2": None, "tiptop": None})
+        bw = gpu_roles("NVIDIA RTX PRO 6000 Blackwell Server Edition", 12.0)
+        self.assertIsNone(bw["tiptop"])
+        self.assertIn("compute capability 12", bw["simulator"])
+        self.assertIn("compute capability 12", bw["m2t2"])
+        h100 = gpu_roles("NVIDIA H100 80GB HBM3", 9.0)
+        self.assertIn("RT cores", h100["simulator"])
+        self.assertIsNone(h100["m2t2"])
+
+    def test_os_release(self):
+        from grasp_eval.preflight import parse_os_release
+
+        self.assertEqual(parse_os_release('NAME="Ubuntu"\nID=ubuntu\nVERSION_ID="22.04"\n'), ("ubuntu", "22.04"))
+        self.assertEqual(parse_os_release('ID="rocky"\nVERSION_ID="9.4"\n'), ("rocky", "9.4"))
+
+
+class VideoAndReviewTest(unittest.TestCase):
+    def test_plan_step_text(self):
+        from grasp_eval.video_overlay import caption_line, plan_step_text
+
+        plan = [{"type": "trajectory", "label": "Pick(cube, g, q)"}, {"type": "gripper", "action": "close", "label": "Pick(cube, g, q)"}]
+        self.assertEqual(plan_step_text(None, 0, None), "waiting for plan")
+        self.assertEqual(plan_step_text(plan, 1, None), "step 1/2: Pick(cube, g, q)")
+        self.assertEqual(plan_step_text(plan, 1, "close"), "step 2/2: gripper close (Pick(cube, g, q))")
+        self.assertEqual(plan_step_text(plan, 3, None), "plan finished (2 steps)")
+        self.assertIn("target +5.0 cm", caption_line("x", 1.0, 0.05, None))
+
+    def test_review_page(self):
+        from grasp_eval.review_page import render_review
+
+        with tempfile.TemporaryDirectory() as d:
+            base = Path(d)
+            rows = [{"run_id": "r1", "variant": 0, "condition": "baseline", "stable_lift": False, "task_success": False,
+                     "task_success_source": "auto", "paper_category": "grasp_failure/heuristic_unstable_grasp",
+                     "paper_category_source": "auto", "paper_evidence": ["no stable lift (missed_grasp)", "grasp source: heuristic"]},
+                    {"run_id": "r2", "variant": 1, "condition": "baseline", "stable_lift": True, "task_success": True,
+                     "task_success_source": "auto", "paper_category": "success", "paper_category_source": "auto",
+                     "paper_evidence": []}]
+            recs = {"r1": {"scene": 1, "trial": 0, "instruction": "Put <cube> in bowl",
+                           "artifacts": {"video": str(base / "runs" / "r1" / "video.mp4")}}}
+            attrs = {"r1": {"grasp_source": "heuristic", "gripper_xy_offset_at_close_m": 0.031}}
+            page = render_review(base, rows, recs, attrs)
+        self.assertIn('src="runs/r1/video.mp4"', page)
+        self.assertIn("Heuristic Unstable Grasp", page)
+        self.assertIn("3.1 cm", page)
+        self.assertIn("Put &lt;cube&gt; in bowl", page)  # escaped
+        self.assertLess(page.index('id="r1"'), page.index('id="r2"'))  # failures first

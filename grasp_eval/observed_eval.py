@@ -18,7 +18,8 @@ Differences that remain in that baseline mode:
   * one episode per process (upstream loops episodes in one process), so each
     trial gets a fresh connection and a fresh plan;
   * client.reset() is not called after the episode, because the process exits;
-  * a video is saved for every run that executed any steps;
+  * a video is saved for every run that executed any steps, with a caption bar (plan step,
+    gripper command, target height) under each frame and an outcome card at the end;
   * Python/numpy/torch seeds are set and recorded (upstream sets none).
 
 Probe flags (docs/probes.md) deliberately change the experiment and are recorded in
@@ -53,6 +54,7 @@ from grasp_eval.attribution import normalize_name, pick_objects  # noqa: E402
 from grasp_eval.probe_math import corrupt_depth, displaced_pose, perturb_camera_pose  # noqa: E402
 from grasp_eval.records import RunRecord, append_jsonl, auto_label  # noqa: E402
 from grasp_eval.scoring import LiftCriteria, score_first_grasp  # noqa: E402
+from grasp_eval.video_overlay import add_caption, caption_line, outcome_card, plan_step_text  # noqa: E402
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
 logger = logging.getLogger("observed_eval")
@@ -501,6 +503,7 @@ def main(argv=None) -> int:
             q_now = obs["policy"]["arm_joint_pos"][0].cpu().numpy()
 
             frame_idx = 0
+            caption_ok = True
             for _ in range(max_steps):
                 try:
                     ret = client.infer(obs, rec.instruction)
@@ -521,6 +524,19 @@ def main(argv=None) -> int:
                 viz = np.concatenate([ret["right_image"], ret["wrist_image"]], axis=1)
                 viz = add_top_padding(viz, pad_px=40)
                 overlay_timer_ms(viz, int(frame_idx * 1000 / VIDEO_FPS))
+                if caption_ok:
+                    try:  # annotation only; a drawing problem must never stop the run
+                        rise = None
+                        if args.target_object != FROM_PLAN:
+                            rise = (float(scene[args.target_object].data.root_pos_w[0, 2])
+                                    - rec.initial_object_positions[args.target_object][2])
+                        step = plan_step_text(client._plan, client._current_plan_step,
+                                              client._gripper_action_pending)
+                        viz = add_caption(viz, caption_line(step, float(ret["action"][-1]), rise,
+                                                            rec.probe.get("label") if args.probe_label else None))
+                    except Exception:
+                        caption_ok = False
+                        logger.warning("Video captions disabled:\n%s", traceback.format_exc())
                 video.append(viz)
                 frame_idx += 1
 
@@ -612,6 +628,10 @@ def main(argv=None) -> int:
                     np.savez_compressed(trace_path, object_names=np.asarray(object_names), **arrays)
                     rec.artifacts["trace"] = str(trace_path)
                 if video:
+                    try:
+                        video += outcome_card(video[-1], rec.to_dict(), VIDEO_FPS)
+                    except Exception:
+                        logger.warning("Outcome card skipped:\n%s", traceback.format_exc())
                     video_path = run_dir / "video.mp4"
                     mediapy.write_video(video_path, video, fps=VIDEO_FPS)
                     rec.artifacts["video"] = str(video_path)
