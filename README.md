@@ -22,6 +22,7 @@ observation-only evaluator. No learning, retries or IIWA work happens this week.
 | Pilot runner (scene 1, variants 0–4, 3 trials) | `scripts/run_pilot.sh` (wraps `python3 -m grasp_eval.run_suite pilot`) |
 | Failure-mode probes: stage attribution, object displacement, sensor corruption, scene survey, paper failure taxonomy | [docs/probes.md](docs/probes.md), `python3 -m grasp_eval.run_suite <suite>` |
 | Scoring / records / attribution / summary | [grasp_eval/](grasp_eval/) |
+| What a suite produces | `results/<suite>/summary.md` (rates with 95% CIs, paper-taxonomy table), `review.html` (each run's captioned video next to its root cause and evidence), `paper_taxonomy.json` (Sankey data) |
 
 Upstream repos are not vendored. `setup_upstream.sh` clones them next to this repo at the pinned SHAs, and the
 evaluator wraps the simulator from outside. The only change to upstream code is one patch in [patches/](patches/README.md):
@@ -33,14 +34,16 @@ to `gemini-robotics-er-2-preview`. Results are therefore "upstream TiPToP with G
 - [x] Harness, scoring, run records, summary, runbook (unit tests pass, see below)
 - [ ] Execution machine documented: **needs a Linux NVIDIA GPU machine (teammate)**
 - [x] Patch for the retired Gemini model (ER 1.6 → ER 2); applies cleanly to pinned TiPToP, not yet tried against the live API
-- [ ] Gemini API key with access to `gemini-robotics-er-2-preview`: **not obtained yet**
+- [ ] Gemini API key with access to `gemini-robotics-er-2-preview`: free AI Studio key obtained; model access not yet confirmed (preflight's `credentials` check)
 - [ ] Install + provenance, geometry check, replay smoke test
 - [ ] Fresh end-to-end run, target mapping verified, thresholds frozen
 - [ ] 15-run pilot with all failures recorded, report written
 - [x] Probe suites implemented (stage attribution, displacement sweep with plan replay, sensor corruption, scene survey); unit-tested with stand-ins, not run on a GPU
 - [x] Paper failure taxonomy (task success, grasp source, shape completion, goal translation, cuTAMP reason, in-hand slip), unit-tested with stand-ins, not run on a GPU
 - [ ] Goal names in `configs/scenes.json` filled in from `--inspect-only` (task success is unchecked until then)
-- [x] Small-budget GPU plan (1-2 H100s): preflight checks, 40-run `paper` suite, two-GPU sharding, `--resume`, `--max-hours`, run timeouts, server health gate, 95% intervals ([docs/setup.md](docs/setup.md) section G)
+- [x] Small-budget GPU plan: preflight checks, 40-run `paper` suite, two-GPU sharding, `--resume`, `--max-hours`, run timeouts, server health gate, 95% intervals ([docs/setup.md](docs/setup.md) section G)
+- [x] Target hardware: **RTX A6000** for the whole stack (the RTX PRO 6000 Blackwell can host only the TiPToP server with the pinned builds; H100/A100 can't run the simulator). Preflight checks GPU roles, OS, network and the Gemini key.
+- [ ] Cluster checked: Ubuntu 22.04+, internet from the GPU node, job length, disk ([docs/setup.md](docs/setup.md) section G)
 - [ ] Probe suites run: displacement first, then sensor, then scenes
 
 `observed_eval.py`, the shell scripts and the runbook have not been run on a GPU machine yet. Expect small fixes on first contact.

@@ -28,6 +28,7 @@ from pathlib import Path
 
 from grasp_eval.paper_taxonomy import EXCLUDED_FROM_PAPER_DENOMINATOR, PAPER_CATEGORIES, SUCCESS, classify
 from grasp_eval.records import FAILURE_LABELS, read_jsonl
+from grasp_eval.review_page import write_review
 
 _BOOL = {"true": True, "false": False, "1": True, "0": False, "yes": True, "no": False}
 
@@ -415,6 +416,9 @@ def main(argv: list[str] | None = None) -> int:
     text += render_attribution(rows, load_attributions(args.results_dir))
     text += render_paper_taxonomy(rows)
     (args.results_dir / "paper_taxonomy.json").write_text(json.dumps(paper_sankey(rows), indent=2))
+    records = {r["run_id"]: r for r in read_jsonl(args.results_dir / "runs.jsonl")}
+    review = write_review(args.results_dir, rows, records, load_attributions(args.results_dir))
+    text += f"\nPer-run videos with their causes: {review.name} (open in a browser).\n"
     out = args.out or args.results_dir / "summary.md"
     out.write_text(text, encoding="utf-8")
     sys.stdout.write(text)

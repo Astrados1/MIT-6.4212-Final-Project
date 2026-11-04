@@ -145,7 +145,10 @@ directories. `DRY_RUN=1` prints the schedule without running anything. Time the 
 are sized from it.
 Then:
 
-1. Watch every failure video, read the matching server log, and fill in `results/pilot_scene1/manual_labels.csv`.
+1. Open `results/pilot_scene1/review.html` in a browser. It groups runs by root cause, and shows each run's video
+   (captioned with the plan step, gripper command and target height, with an outcome card at the end) next to the
+   evidence and key measurements. To view it on a laptop, copy the whole results folder; videos aren't in git.
+   Watch every failure video, read the matching server log, and fill in `results/pilot_scene1/manual_labels.csv`.
    Watch a few successes too. Confirm each run's automatic paper category (summary section "Paper failure taxonomy")
    and correct it in the `paper_category` column when it's wrong; resolve every `needs_review` run.
 2. Re-run `python3 -m grasp_eval.summarize results/pilot_scene1`.
@@ -168,15 +171,50 @@ Once the pilot works end to end, run the probe suites in `docs/probes.md`, in th
 Each suite writes its own results directory and `summary.md`. Check each suite's in-suite control before reading
 the rest: `replay_0cm` for displacement, `nominal` for sensor.
 
-## G. Running on one or two H100s
+## G. Running on the cluster (RTX A6000, optional RTX PRO 6000)
 
-GPU time is limited, so the plan is small and staged. Each stage only starts once the previous one is clean.
-Nothing below has been timed yet. The runner prints minutes per run and an ETA after the first run; use the
-pilot's numbers to decide how much of stages 4-5 fits.
+### Which GPU runs what
+
+| component | RTX A6000 (Ampere, sm 8.6, 48 GB) | RTX PRO 6000 Blackwell (sm 12.0, 96 GB) |
+|---|---|---|
+| Simulator (Isaac Sim 5.0; PyTorch 2.7.0 built for CUDA 12.6) | yes | no: that PyTorch build has no Blackwell kernels |
+| M2T2 server (PyTorch 2.4.1, nvcc 12.1) | yes | no: same reason, and nvcc 12.1 can't compile for Blackwell |
+| TiPToP server (PyTorch 2.7.1, nvcc 12.9) | yes | expected to work |
+
+Run **everything on the A6000**. If both cards are on the same node, TiPToP can move to the Blackwell card to
+free A6000 memory. Running the simulator or M2T2 on Blackwell would mean upgrading their pinned PyTorch/CUDA
+builds, a compatibility change that would need its own entry in `docs/baseline_report.md`. H100/A100-class
+cards are out entirely: they have no RT cores, so Isaac Sim can't render the cameras. Preflight's `gpu` check
+reports which components each visible GPU can run.
+
+### Before you start: the cluster
+
+Check these once, on a GPU node (not the login node):
+
+1. **OS**: Ubuntu 22.04 or later (`cat /etc/os-release`). Isaac Sim doesn't support other distributions such as
+   Rocky/RHEL; if that's what the cluster runs, ask whether it offers an Ubuntu container (Apptainer/Singularity).
+2. **Internet from the GPU node**: TiPToP calls Gemini on every run, and SAM2 downloads its checkpoint on first
+   use. Preflight's `network` checks test this. Many clusters block outbound traffic from compute nodes; ask
+   for a proxy or an exception if so.
+3. **A long enough job** with the A6000, holding three processes at once: M2T2, TiPToP and the suite runner,
+   which starts the simulator for each run. Use `tmux` inside the job, or one job script that starts the
+   servers in the background. Something like `srun --gres=gpu:a6000:1 --time=8:00:00 --pty bash`, but the
+   GPU name and limits depend on your cluster.
+4. **Disk**: Isaac Sim and the pixi/uv environments take tens of GB. Put `$TIPTOP_DIR` on a project or scratch
+   filesystem if the home quota is small.
+5. **Gemini key**: in the TiPToP server's shell, `read -rs GOOGLE_API_KEY && export GOOGLE_API_KEY`. Export it in
+   the preflight shell too, so preflight can ask the API whether the key can see `gemini-robotics-er-2-preview`.
+   The key never appears in output or files.
+
+### Stages
+
+GPU time is limited, so the plan is small and staged. Each stage starts only once the previous one is clean.
+Nothing has been timed yet. The runner prints minutes per run and an ETA after the first run; use the pilot's
+numbers to decide how much of stages 4-5 fits.
 
 | stage | command (from `$PROJECT`) | runs | purpose |
 |---|---|---|---|
-| 0 | `python3 -m grasp_eval.preflight --tiptop-dir $TIPTOP_DIR` | 0 | GPU, tools, scene files, pins, Gemini patch, servers, goal names, disk |
+| 0 | `python3 -m grasp_eval.preflight --tiptop-dir $TIPTOP_DIR` | 0 | GPU roles, OS, network, Gemini key, tools, scene files, pins, Gemini patch, servers, goal names, disk |
 | 1 | `... preflight --tiptop-dir $TIPTOP_DIR --sim-check` | 5 inspections | the parts never run on a GPU: object boxes, finger links, goal names exist in the sim |
 | 2 | `... preflight --tiptop-dir $TIPTOP_DIR --scenes 1 --smoke-run` | 1 | one full run plus attribution; checks record, trace, task check, paper category |
 | 3 | `python3 -m grasp_eval.run_suite pilot --tiptop-dir $TIPTOP_DIR --target-object <name>` | 15 | baseline on scene 1 |
@@ -185,44 +223,49 @@ pilot's numbers to decide how much of stages 4-5 fits.
 
 That is about 60 runs for stages 2-4. Treat 40 runs as a check of the pipeline and a rough picture of the
 failure mix, not a reproduction of the paper's numbers. The summary prints 95% intervals so the uncertainty is visible.
+Watch `nvidia-smi` during stage 2: the simulator, TiPToP and M2T2 sharing 48 GB is an estimate, not a measurement.
 
-**Each GPU runs the whole stack.** With two GPUs, split a suite into two shards. Each shard gets its own simulator
-and TiPToP server; M2T2 is shared on GPU 0.
+### Servers on the A6000
+
+Start the servers as in section D, pinned to the A6000 with `CUDA_VISIBLE_DEVICES`. Use the index `nvidia-smi`
+shows for it inside your job; it's often 0 when the job gets one GPU. Start the suite in a third shell with
+the same `CUDA_VISIBLE_DEVICES`.
+
+To put TiPToP on the Blackwell card instead (same node), start only that server with the Blackwell card's
+index. M2T2 and the suite stay on the A6000. Preflight then reports TiPToP-only for the Blackwell card, which
+is expected.
+
+### If you get a second simulator-capable GPU
+
+With two cards that can both run the simulator (two A6000s, for example), split a suite into shards. Each GPU
+runs its own simulator and TiPToP server; M2T2 is shared on the first.
 
 ```bash
-# GPU 0: M2T2 and TiPToP server 1 (as in section D)
-cd "$TIPTOP_DIR/M2T2" && CUDA_VISIBLE_DEVICES=0 pixi run server
-cd "$TIPTOP_DIR/tiptop" && CUDA_VISIBLE_DEVICES=0 pixi run tiptop-server --host 127.0.0.1 --port 8765
-
-# GPU 1: TiPToP server 2, started from its own folder. The server writes tiptop_server_outputs/<time to the second>/
-# into its working directory, so two servers in the same folder could overwrite each other's outputs.
+# second TiPToP server, started from its own folder: the server writes tiptop_server_outputs/<time to the
+# second>/ into its working directory, so two servers in one folder could overwrite each other's outputs
 mkdir -p "$TIPTOP_DIR/server_gpu1" && cd "$TIPTOP_DIR/server_gpu1"
 eval "$(pixi shell-hook --manifest-path "$TIPTOP_DIR/tiptop/pixi.toml")"
 CUDA_VISIBLE_DEVICES=1 tiptop-server --host 127.0.0.1 --port 8766
-```
 
-Check both servers with `preflight --ws-port 8765` and `--ws-port 8766`. Then run one shard per GPU, each in its own terminal:
-
-```bash
+# one shard per GPU, each in its own shell
 CUDA_VISIBLE_DEVICES=0 python3 -m grasp_eval.run_suite paper --tiptop-dir "$TIPTOP_DIR" --shard 0/2 --ws-port 8765
 CUDA_VISIBLE_DEVICES=1 python3 -m grasp_eval.run_suite paper --tiptop-dir "$TIPTOP_DIR" --shard 1/2 --ws-port 8766
-```
 
-Shards split by (scene, variant), so a displacement replay always runs on the same GPU as its source plan.
-When both finish, merge them into one summary, then put manual labels in the merged directory:
-
-```bash
+# afterwards: one summary (put manual labels in the merged directory)
 python3 -m grasp_eval.summarize results/paper_shard0of2 results/paper_shard1of2 --into results/paper
 ```
 
-**Unattended runs.**
+Start the second server only after the first has served one request. Both share one SAM2 checkpoint, which
+TiPToP downloads straight to its final path on first use, so two simultaneous first downloads could leave a
+corrupt file that is never fetched again.
+
+### Unattended runs
+
 - `--max-hours H` stops starting new runs after H hours. Runs go trial by trial, so a cut-short suite still covers every scene.
-- If the session ends (time limit, lost machine), rerun the same command with `--resume`. Interrupted runs are
+  Set it a little under the job's time limit.
+- If the job ends (time limit, preemption), rerun the same command with `--resume` in a new job. Interrupted runs are
   redone. Runs that exited but wrote no record stay counted as infrastructure failures.
 - Each run is killed after `--run-timeout-s` (20 min by default) and counts as an infrastructure failure.
 - Before each fresh-plan run, the runner checks both servers' `/health`. If one is down, it waits up to
   `--server-wait-s` (10 min), then stops cleanly so the outage doesn't turn into a string of failed runs. Fix it and `--resume`.
 - The `paper` suite refuses to start while any goal name in `configs/scenes.json` is unset (stage 1 tells you which).
-
-**CHECK on first use:** that the Isaac Sim simulator and a TiPToP server fit together on one H100 (watch `nvidia-smi`
-during stage 2), and that the second server writes its outputs under `server_gpu1/`.

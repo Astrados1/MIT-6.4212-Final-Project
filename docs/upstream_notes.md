@@ -79,8 +79,17 @@ executed yet. Items marked **CHECK** must be verified on the GPU machine before 
 - The SAM2 checkpoint `sam2.1_hiera_large.pt` is downloaded on first use into TiPToP's cache directory.
 - Asset archive URLs disagree: the TiPToP simulation guide uses `pi-sim-assets.s3...`, the simulator README
   uses `tiptop-sim-assets.s3...`. **CHECK** which one is reachable and record its sha256.
-- The droid-sim-evals uv environment pins `isaaclab[all,isaacsim]==2.2.0` with CUDA 11.8 torch wheels. TiPToP's
-  pixi environment targets CUDA 12. These are separate environments and processes.
+- The three environments are separate processes with different PyTorch/CUDA builds. This decides which GPUs
+  each can run on (preflight's `gpu` check encodes it; see docs/setup.md section G):
+
+  | environment | locked build (from its lockfile at the pins) | newest GPU arch |
+  |---|---|---|
+  | droid-sim-evals (`uv.lock`) | isaacsim 5.0.0.0, isaaclab 2.2.0, torch 2.7.0 from PyPI with CUDA 12.6 libraries (`nvidia-cuda-runtime-cu12` 12.6.77). `pyproject.toml` declares a CUDA 11.8 index, but the lock resolved torch from PyPI. | sm 9.0 (no Blackwell) |
+  | M2T2 (`pixi.lock`, williamshen-nz/M2T2 master) | pytorch 2.4.1 (cuda120 build), cuda-nvcc 12.1; `pointnet2_ops` is compiled at install time for the GPU present (no fixed arch list in its setup.py) | sm 9.0 (no Blackwell) |
+  | tiptop (`pixi.lock`) | pytorch 2.7.1 (cuda129 build), cuda-nvcc 12.9; cuRobo compiled at install time | expected to cover Blackwell (sm 12.0) |
+
+  Isaac Sim also needs RT cores (NVIDIA lists A100/H100 as unsupported), so the simulator needs an RTX-class
+  card. Build M2T2 and cuRobo on the machine that runs them, so their compiled kernels target that GPU.
 - `tiptop_eval.py`'s docstring says `python -m tiptop.websocket_server`; use the pixi task `pixi run tiptop-server`.
 
 ## Not yet read
