@@ -4,10 +4,18 @@ _Template. Fill in as the runbook (`docs/setup.md`) progresses. Leave a section 
 
 ## Environment
 
-- Machine record: `provenance/machine_<host>.txt`
-- Provenance record(s): `provenance/provenance_<timestamp>.txt`
-- Gemini model actually used: `gemini-robotics-er-2-preview` with `thinking_level=MINIMAL` (substituted; see
-  below). Confirm from the server log of the first run.
+- On November 4, 2026, the RunPod Secure Cloud node reported Ubuntu 22.04.5 LTS, an NVIDIA RTX A6000
+  with 46,068 MiB visible, compute capability 8.6, and driver 595.91.07. The pod had a 150 GB root
+  disk and a 100 GB volume mounted at `/workspace`. [Machine record](../provenance/machine_8fa2f45dbe02.txt).
+- The GPU node received HTTP 404 at the Gemini API root, HTTP 200 at the PyPI index, and HTTP 200
+  for the SAM2.1 large checkpoint. The first network check required installing `curl` in the base image.
+- The initial Vulkan check listed only the CPU renderer and reported
+  `Could not get 'vkCreateInstance' via 'vk_icdGetInstanceProcAddr' for ICD libGLX_nvidia.so.0`.
+  Installing the Ubuntu packages `libegl1` and `libgl1` in the container let `vulkaninfo --summary`
+  enumerate the RTX A6000 with the NVIDIA proprietary driver. Isaac Sim camera rendering still needs the replay test.
+- The runbook calls for verifying access to `gemini-robotics-er-2-preview` before installing the pinned
+  stack. As of this machine check, that credential check, installation provenance, and all simulation
+  runs were pending. The intended model and thinking setting are listed below.
 - Differences from the paper's release: current upstream code at the pins, not the original paper release, plus the
   Gemini model substitution below.
 
