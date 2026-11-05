@@ -1,8 +1,147 @@
 {
-  "_comment": "Scene survey config for `run_suite scenes`. Instructions are the droid-sim-evals README examples. target_object null means the scored object is the plan's first Pick, matched to a sim rigid-body name (see object_aliases). Fill in target_object or aliases after running observed_eval.py --inspect-only for each scene. goal: spec for the automatic task-success check (grasp_eval/task_goal.py); \"$target\" is the scored object; null names leave the task unchecked until filled in from --inspect-only. relation \"in\" = resting inside the container's box, \"on\" = resting on its top.",
-  "1": {"instruction": "Put the Rubik's cube in the bowl.", "target_object": null, "variants": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], "object_aliases": "configs/object_aliases.json", "goal": [{"objects": ["$target"], "relation": "in", "container": null}]},
-  "2": {"instruction": "Put the can in the mug.", "target_object": null, "variants": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], "object_aliases": "configs/object_aliases.json", "goal": [{"objects": ["$target"], "relation": "in", "container": null}]},
-  "3": {"instruction": "Put the banana in the bin.", "target_object": null, "variants": [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11], "object_aliases": "configs/object_aliases.json", "goal": [{"objects": ["$target"], "relation": "in", "container": null}]},
-  "4": {"instruction": "Put the cube on the mug and the cans in the bowl.", "target_object": null, "variants": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], "object_aliases": "configs/object_aliases.json", "goal": [{"objects": [null], "relation": "on", "container": null}, {"objects": [null, null], "relation": "in", "container": null}]},
-  "5": {"instruction": "Put 3 blocks in the bowl.", "target_object": null, "variants": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], "object_aliases": "configs/object_aliases.json", "goal": [{"objects": [null, null, null, null], "count": 3, "relation": "in", "container": null}]}
+  "_comment": "Names verified from scene-variant-0 inspections on 2026-11-05. Scenes 4 and 5 score the first planned pick; whole-task goals include both cans and any 3 of the 5 blocks. Geometry and scoring validation are documented in docs/baseline_report.md.",
+  "1": {
+    "instruction": "Put the Rubik's cube in the bowl.",
+    "target_object": "rubiks_cube",
+    "variants": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "object_aliases": "configs/object_aliases.json",
+    "goal": [
+      {
+        "objects": [
+          "$target"
+        ],
+        "relation": "in",
+        "container": "_24_bowl"
+      }
+    ]
+  },
+  "2": {
+    "instruction": "Put the can in the mug.",
+    "target_object": "_10_potted_meat_can",
+    "variants": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "object_aliases": "configs/object_aliases.json",
+    "goal": [
+      {
+        "objects": [
+          "$target"
+        ],
+        "relation": "in",
+        "container": "_25_mug"
+      }
+    ]
+  },
+  "3": {
+    "instruction": "Put the banana in the bin.",
+    "target_object": "_11_banana",
+    "variants": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      10,
+      11
+    ],
+    "object_aliases": "configs/object_aliases.json",
+    "goal": [
+      {
+        "objects": [
+          "$target"
+        ],
+        "relation": "in",
+        "container": "small_KLT_visual_collision"
+      }
+    ]
+  },
+  "4": {
+    "instruction": "Put the cube on the mug and the cans in the bowl.",
+    "target_object": null,
+    "variants": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "object_aliases": "configs/object_aliases.json",
+    "goal": [
+      {
+        "objects": [
+          "rubiks_cube"
+        ],
+        "relation": "on",
+        "container": "_25_mug"
+      },
+      {
+        "objects": [
+          "_05_tomato_soup_can",
+          "_10_potted_meat_can"
+        ],
+        "relation": "in",
+        "container": "_24_bowl"
+      }
+    ]
+  },
+  "5": {
+    "instruction": "Put 3 blocks in the bowl.",
+    "target_object": null,
+    "variants": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "object_aliases": "configs/object_aliases.json",
+    "goal": [
+      {
+        "objects": [
+          "basic_block",
+          "blue_block",
+          "green_block",
+          "red_block",
+          "yellow_block"
+        ],
+        "count": 3,
+        "relation": "in",
+        "container": "_24_bowl"
+      }
+    ]
+  }
 }

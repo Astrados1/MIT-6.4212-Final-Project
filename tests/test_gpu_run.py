@@ -30,6 +30,42 @@ class NativeCrashOutputTest(unittest.TestCase):
         self.assertIn("\ufffd", output)
 
 
+class RemotePlannerTest(unittest.TestCase):
+    def test_rejects_artifacts_outside_planner_output_root(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            out, tiptop = root / "results", root / "tiptop"
+            rd = out / "runs" / "r1"
+            rd.mkdir(parents=True)
+            (rd / "record.json").write_text(json.dumps({"server_save_dir": str(root / "other")}))
+            args = SimpleNamespace(planner_ssh_host="planner", planner_ssh_config=root / "ssh_config")
+            with mock.patch.object(run_suite, "run_process") as run, self.assertRaises(ValueError):
+                run_suite.attribute(SimpleNamespace(run_id="r1"), out, root / "sim", tiptop, args)
+            run.assert_not_called()
+
+    def test_extracts_on_planner_and_fetches_before_attribution(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            out, tiptop = root / "results", root / "tiptop"
+            rd = out / "runs" / "r1"
+            rd.mkdir(parents=True)
+            save_dir = tiptop / "tiptop_server_outputs" / "20261105_000000"
+            (rd / "record.json").write_text(json.dumps({"server_save_dir": str(save_dir)}))
+            args = SimpleNamespace(planner_ssh_host="planner", planner_ssh_config=root / "ssh_config")
+            commands = []
+
+            def run(cmd, cwd, log, timeout):
+                commands.append(cmd)
+                if cmd[0] == "scp":
+                    Path(cmd[-1]).write_text('{}')
+                return 0
+
+            with mock.patch.object(run_suite, "run_process", run):
+                run_suite.attribute(SimpleNamespace(run_id="r1"), out, root / "sim", tiptop, args)
+            self.assertEqual([c[0] for c in commands], ["ssh", "rsync", "scp", "uv"])
+            self.assertIn("--perceived", commands[-1])
+
+
 class ShardTest(unittest.TestCase):
     def test_shards_partition_runs_and_keep_replays_with_source(self):
         a = _args(variants=[0, 1, 2], distances_cm=[2], directions=["x+"], yaws_deg=[], repeats=1)

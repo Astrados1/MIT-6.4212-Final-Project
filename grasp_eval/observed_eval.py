@@ -54,6 +54,7 @@ from grasp_eval.attribution import normalize_name, pick_objects  # noqa: E402
 from grasp_eval.probe_math import corrupt_depth, displaced_pose, perturb_camera_pose  # noqa: E402
 from grasp_eval.records import RunRecord, append_jsonl, auto_label  # noqa: E402
 from grasp_eval.scoring import LiftCriteria, score_first_grasp  # noqa: E402
+from grasp_eval.task_goal import geometry_center_positions  # noqa: E402
 from grasp_eval.video_overlay import add_caption, caption_line, outcome_card, plan_step_text  # noqa: E402
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
@@ -283,10 +284,10 @@ def resolve_target(requested: str, plan: dict | None, names: list[str], aliases:
 def usd_local_bounds(scene, names: list[str]) -> tuple[dict, dict]:
     """Each rigid object's geometry box in its own (unscaled) frame, from the USD stage.
 
-    Call before the first physics step: with Fabric enabled, USD transforms are not updated
-    during simulation. The box is expressed in the prim's frame with scale removed, which is
-    the frame of RigidObject.root_pos_w / root_quat_w when the rigid body is that prim
-    (CHECK for payloaded assets whose rigid body is a child prim).
+    With Fabric enabled, USD transforms are not updated during simulation. Resolve the
+    actual PhysX body rather than its configured parent: payloaded assets may put the
+    body below that parent with a separate transform. Remove scale from that body's
+    frame to match RigidObject.root_pos_w / root_quat_w.
     """
     import omni.usd
     from pxr import Gf, Usd, UsdGeom
@@ -295,8 +296,7 @@ def usd_local_bounds(scene, names: list[str]) -> tuple[dict, dict]:
     cache = UsdGeom.BBoxCache(Usd.TimeCode.Default(), [UsdGeom.Tokens.default_, UsdGeom.Tokens.render])
     bounds, notes = {}, {}
     for n in names:
-        path = scene.rigid_objects[n].cfg.prim_path.replace("{ENV_REGEX_NS}", "/World/envs/env_0")
-        path = path.replace("env_.*", "env_0")
+        path = scene.rigid_objects[n].root_physx_view.prim_paths[0]
         prim = stage.GetPrimAtPath(path)
         if not prim or not prim.IsValid():
             notes[n] = f"no prim at {path}"
@@ -425,6 +425,10 @@ def main(argv=None) -> int:
         def object_quats() -> dict[str, list[float]]:
             return {name: scene.rigid_objects[name].data.root_quat_w[0].tolist() for name in object_names}
 
+        def object_centers(positions, quats) -> dict[str, list[float]]:
+            return {n: geometry_center_positions(positions[n], quats[n], rec.object_local_bounds[n]).tolist()
+                    if n in rec.object_local_bounds else positions[n] for n in object_names}
+
         if args.inspect_only:
             obs, _ = env.reset()
             obs = settle_sim(env, obs, reset_episode_buf=True)
@@ -433,6 +437,7 @@ def main(argv=None) -> int:
                 "variant": args.variant,
                 "rigid_objects_after_settle": object_positions(),
                 "rigid_object_quats_after_settle": object_quats(),
+                "geometry_centers_after_settle": object_centers(object_positions(), object_quats()),
                 "rigid_object_local_bounds": rec.object_local_bounds,
                 "rigid_object_bounds_notes": rec.object_bounds_notes,
                 "robot_body_names": list(robot.data.body_names),
@@ -500,6 +505,7 @@ def main(argv=None) -> int:
             obs = settle_sim(env, obs, reset_episode_buf=True)
             rec.initial_object_positions = object_positions()
             rec.initial_object_quats = object_quats()
+            rec.initial_object_centers = object_centers(rec.initial_object_positions, rec.initial_object_quats)
             q_now = obs["policy"]["arm_joint_pos"][0].cpu().numpy()
 
             frame_idx = 0
@@ -528,8 +534,8 @@ def main(argv=None) -> int:
                     try:  # annotation only; a drawing problem must never stop the run
                         rise = None
                         if args.target_object != FROM_PLAN:
-                            rise = (float(scene[args.target_object].data.root_pos_w[0, 2])
-                                    - rec.initial_object_positions[args.target_object][2])
+                            center = object_centers(object_positions(), object_quats())[args.target_object]
+                            rise = center[2] - rec.initial_object_centers[args.target_object][2]
                         step = plan_step_text(client._plan, client._current_plan_step,
                                               client._gripper_action_pending)
                         viz = add_caption(viz, caption_line(step, float(ret["action"][-1]), rise,
@@ -565,6 +571,7 @@ def main(argv=None) -> int:
         rec.sim_duration_s = frame_idx * step_dt
         rec.final_object_positions = object_positions()
         rec.final_object_quats = object_quats()
+        rec.final_object_centers = object_centers(rec.final_object_positions, rec.final_object_quats)
         if client.replay_q_init is not None:
             rec.plan_q_init_max_abs_diff_rad = float(np.max(np.abs(client.replay_q_init - q_now)))
         if client.corruption_applied:
@@ -593,7 +600,13 @@ def main(argv=None) -> int:
         rec.planning_time_s = client.last_planning_time
 
         if trace["t"]:
-            objects_pos = np.asarray(trace["objects_pos"])
+            objects_pos = np.asarray(trace["objects_pos"]).copy()
+            for k, n in enumerate(object_names):
+                if n in rec.object_local_bounds:
+                    objects_pos[:, k, :] = geometry_center_positions(
+                        objects_pos[:, k, :], np.asarray(trace["objects_quat"])[:, k, :],
+                        rec.object_local_bounds[n])
+            trace["objects_center"] = objects_pos
             gripper_pos = np.asarray(trace["gripper_pos"])
             closes = np.flatnonzero(np.asarray(trace["gripper_cmd"]) > criteria.close_threshold)
             target, rec.target_source = resolve_target(
@@ -604,9 +617,10 @@ def main(argv=None) -> int:
                 k = object_names.index(target)
                 score = score_first_grasp(
                     np.array(trace["t"]), objects_pos[:, k, :], gripper_pos,
-                    np.array(trace["gripper_cmd"]), rec.initial_object_positions[target][2], criteria,
+                    np.array(trace["gripper_cmd"]), rec.initial_object_centers[target][2], criteria,
                 )
                 rec.score = score.to_dict()
+                rec.score["position_reference"] = "geometry_box_center" if target in rec.object_local_bounds else "rigid_body_origin_fallback"
         elif args.target_object == FROM_PLAN:
             rec.target_source = "unresolved"
         if rec.server_success and rec.executed_steps > 0:

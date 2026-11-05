@@ -42,6 +42,19 @@ def quat_to_matrix(q) -> np.ndarray:
     ])
 
 
+def geometry_center_positions(positions, quats, local_bounds) -> np.ndarray:
+    """World geometry-box centers from rigid-body origins and wxyz orientations.
+
+    Supports one pose or batches. Several upstream assets have mesh centers more
+    than 10 cm from their body origins; scoring those origins gives false misses.
+    """
+    p, q = np.asarray(positions, dtype=float), np.asarray(quats, dtype=float)
+    q = q / np.linalg.norm(q, axis=-1, keepdims=True)
+    center = np.asarray(local_bounds, dtype=float).mean(axis=0)
+    cross = np.cross(q[..., 1:], center)
+    return p + center + 2 * (q[..., :1] * cross + np.cross(q[..., 1:], cross))
+
+
 def world_aabb(local_min, local_max, pos, quat) -> tuple[np.ndarray, np.ndarray]:
     """World-frame axis-aligned box of a local box placed at (pos, quat)."""
     lo, hi = np.asarray(local_min, dtype=float), np.asarray(local_max, dtype=float)

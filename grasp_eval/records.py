@@ -80,6 +80,8 @@ class RunRecord:
 
     initial_object_positions: dict[str, list[float]] = field(default_factory=dict)
     final_object_positions: dict[str, list[float]] = field(default_factory=dict)
+    initial_object_centers: dict[str, list[float]] = field(default_factory=dict)
+    final_object_centers: dict[str, list[float]] = field(default_factory=dict)
     initial_object_quats: dict[str, list[float]] = field(default_factory=dict)  # (w, x, y, z)
     final_object_quats: dict[str, list[float]] = field(default_factory=dict)
     # Geometry box of each object in its own frame, [[min xyz], [max xyz]], read from USD.

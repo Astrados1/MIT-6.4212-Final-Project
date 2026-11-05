@@ -97,3 +97,15 @@ A `stable_lift=true` override is ignored unless the run had a valid executed pla
   over manually labeled runs only.
 
 `server success` and `plan_done` never count as grasp success.
+
+## November 5 measurement validation
+
+The first visually successful smoke run found that the inner-finger **link origins** are about
+15.47 cm from a held cube. The 10 cm pilot proximity limit therefore rejects a real 6.87 s carry.
+The next pilot uses `--max-obj-to-gripper-m 0.20`, provisionally, with the other thresholds unchanged.
+These values are not yet frozen; review both successful and failed pilot videos before the paper suite.
+
+Some scene-4/5 assets have geometry offset substantially from the body origin. New runs preserve
+`objects_pos` and `objects_quat` as raw poses and add `objects_center` to the trace. Lift/proximity
+scoring and perception matching use geometry-box centers, with corresponding initial/final centers
+in the record. `score.position_reference` records this choice. Existing raw results are unchanged.

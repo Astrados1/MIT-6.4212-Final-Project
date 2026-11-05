@@ -107,3 +107,54 @@ List every change with its reason and the results directories it affects.
 ## What the learned skill should replace
 
 Which part of the executed plan (approach → close → lift) failed, and the plan step indices that bound it.
+
+## November 5 recovery and first completed task
+
+The user authorized changes to the GPU type and simulation software to obtain results. The working
+configuration separates the original planner environments on an RTX A6000 (driver 595.91.07) from
+Isaac Sim 5.0.0.0 / Isaac Lab 2.2.0 on an RTX PRO 6000 Blackwell Max-Q (driver 590.48.01).
+The simulator's Torch and torchvision versions remain 2.7.0 and 0.22.0, but their CUDA wheels are
+`2.7.0+cu128` and `0.22.0+cu128`, enabling sm_120. `UV_NO_SYNC=1` prevents restoration of cu126.
+Two loopback-only SSH forwards connect the simulator to TiPToP port 8765 and M2T2 port 8123.
+The Google credential is held only on the planner host. The simulator's credential-presence WARN
+is expected; model lookup, a small generation, and the full planning request passed on the planner.
+
+A6000 driver 595 crashed the original renderer before scene loading. Trials with Isaac Sim 6.x
+required substantial Isaac Lab API changes and did not establish a valid camera pipeline. Those
+experimental environments are excluded from the baseline. On Blackwell/R590, the original runtime
+renders actual images and all five robot scenes complete inspection. Cold shader initialization
+can exceed 100 seconds; subsequent launches are much faster. A failed synthetic cube test initially
+placed the camera inside the cube; a correctly scaled scene produced a verified image.
+
+- M2T2 sample: 515 predicted grasps; cuTAMP demo: a successful three-object plan.
+- Original saved-plan replay: 450 frames / 30 seconds, exit 0, complete video. The cube remains on
+  the table in sampled frames, so this is an execution check, not a successful task trial.
+- Fresh smoke: `results/preflight_smoke_20261105T045535Z`; 467 control steps, plan complete,
+  22.63 seconds planning, 176.91 seconds recorded wall time (excluding app launch), 9 plan steps.
+  Video confirms the cube is picked up and placed in the bowl. Automatic whole-task success is true.
+- Perception localized the cube within 2.3 mm in xy and associated 394 M2T2 grasps with it.
+- The original 10 cm proximity threshold falsely reports no stable lift: while visibly carrying the
+  cube above 5 cm, the inner-finger-link origin midpoint is 15.467–15.479 cm from the cube.
+  At a provisional 20 cm limit, the same immutable trace has a 10.855 cm maximum rise and a
+  6.867 second continuous hold. The smoke correction is recorded in `manual_labels.csv`.
+  Pilot runs will use 5 cm rise, 0.5 second hold, and a provisional 20 cm proximity limit; freeze
+  only after reviewing pilot successes and failures. Raw smoke records remain unchanged.
+
+### Geometry findings and measurement corrections
+
+The cube mesh is about 7.21 cm across. Both `left_inner_finger` and `right_inner_finger` exist.
+Scene 4 contains two cans; scene 5 contains five candidate blocks, of which the goal requires three.
+All object/container names in `configs/scenes.json` come from completed inspections.
+
+Direct mesh-vertex checks confirm substantial mesh-center offsets from rigid-body origins in
+scenes 4 and 5 (for example the scene-4 cube has a local z offset about 20 cm). These are real asset
+transforms, not erroneous bounding-box metadata. The evaluator now retains raw body poses and also
+records geometry-box centers, using the centers for grasp proximity, lift height, nearest-object
+matching and perception comparisons. Whole-task checks continue to transform the full geometry box.
+The bounding-box reader explicitly selects the PhysX body prim, supporting payloaded child bodies.
+These are measurement changes only; no actions, physics, assets, retries or planning policies change.
+A regression test covers a rotated object with its mesh 20 cm from its body origin.
+
+The recorded trajectory dt is 0.02 seconds. Stride 3 at 15 Hz executes trajectories at about 1.111x
+planned duration; the original timing is preserved. Panda-versus-FR3 FK comparison and the complete
+pilot/paper summaries are still pending at this checkpoint.
