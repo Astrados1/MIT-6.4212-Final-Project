@@ -1,6 +1,7 @@
 import contextlib
 import io
 import json
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -8,7 +9,7 @@ from types import SimpleNamespace
 from unittest import mock
 
 from grasp_eval import run_suite
-from grasp_eval.preflight import goal_problems, inspection_problems
+from grasp_eval.preflight import _sh, goal_problems, inspection_problems
 from grasp_eval.summarize import build_rows, merge_shards, wilson_ci
 
 
@@ -16,6 +17,17 @@ def _args(**kw):
     a = SimpleNamespace(scene=1, variants=[0, 1, 2, 3], trials=2, instruction="x", target_object="cube", seed_base=0)
     a.__dict__.update(kw)
     return a
+
+
+class NativeCrashOutputTest(unittest.TestCase):
+    def test_invalid_utf8_preserves_exit_code_and_diagnostic(self):
+        code, output = _sh([
+            sys.executable, "-c",
+            "import os; os.write(2, b'RTX crash: \\xff\\n'); raise SystemExit(139)",
+        ])
+        self.assertEqual(code, 139)
+        self.assertIn("RTX crash:", output)
+        self.assertIn("\ufffd", output)
 
 
 class ShardTest(unittest.TestCase):

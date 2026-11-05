@@ -104,7 +104,7 @@ def gemini_model_check(model: str, key: str, timeout: float = 15.0) -> tuple[boo
 
 def _sh(cmd: list[str], cwd: Path | None = None, timeout: float = 60) -> tuple[int, str]:
     try:
-        p = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, timeout=timeout)
+        p = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, errors="replace", timeout=timeout)
         return p.returncode, (p.stdout + p.stderr).strip()
     except (OSError, subprocess.TimeoutExpired) as e:
         return 127, f"{type(e).__name__}: {e}"
