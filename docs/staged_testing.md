@@ -111,9 +111,11 @@ holding 1.5 s at each target:
 - TiPToP's home pose, then each joint moved +0.25 and −0.25 rad from home and back (free space above the table);
 - TiPToP's capture pose and back;
 - gripper close, then open, with nothing in it;
-- **limit probes**: joint 6 commanded to 4.219 rad and joint 7 to 3.0 rad. The planner's FR3 model allows
+- **limit probes**: joint 6 commanded to 4.219 rad and joint 7 to 3.0 rad. TiPToP's default FR3 model allows
   these, the simulated Panda does not (its limits are 3.7525 and 2.8973 rad). 4.219 rad is what baseline pilot
-  run 002 commanded just before it dropped the cube beside the bowl.
+  run 002 commanded just before it dropped the cube beside the bowl. Since then the planner plans for the Panda
+  (`patches/tiptop/0002-panda-robot-model.patch`), so its plans should stay inside these limits. The probes
+  confirm the limits the planner now assumes are the ones the simulator enforces.
 
 PASS needs every normal move to end within 0.02 rad of its target, the gripper to visibly change state,
 and no joint to leave its limits. The probes are reported as information: they show where the
@@ -127,7 +129,8 @@ Watch `arm_check.mp4`. `arm_trace.npz` has every commanded and measured joint an
 ## Stage 4: trials
 
 Only now start the planner services and spend Gemini calls (`docs/setup.md` section C, with your key exported
-in the TiPToP server's terminal only):
+in the TiPToP server's terminal only). Preflight's `planner-robot` check must say `panda_robotiq`: the planner
+should plan for the arm the simulator has. Only the Nov-5 FR3 baseline differs.
 
 ```bash
 python3 -m grasp_eval.preflight --tiptop-dir $TIPTOP_DIR --smoke-run       # one full trial

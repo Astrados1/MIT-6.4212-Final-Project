@@ -272,6 +272,7 @@ its actual configuration hash and saved `tiptop.yml` identify the Panda conditio
 | reviewed unattributed task-failure bucket | preserves confirmed failures in the denominator when the causal module is uncertain; postprocessing only |
 | Panda configuration and cached-scene replay | separate validation only, not active in the baseline |
 | quota circuit breaker | stops later paid simulator launches after API quota/rate-limit rejection; added after the paper run |
+| planner robot model FR3 → Panda (`patches/tiptop/0002`) | decided after this baseline: TiPToP now plans for `panda_robotiq`, the arm the simulator has. **Every November 5 result above used `fr3_robotiq`**; later runs are a separate condition |
 
 No retries, learned policies, contact forces, friction, object geometry, physical attachment,
 waypoint timing or baseline planner defaults were changed. Local harness tests: **70 passing**, including the quota stop regression test.

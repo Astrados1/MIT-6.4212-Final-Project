@@ -9,7 +9,8 @@ Checks, cheapest first:
   network      the node can reach Gemini, the SAM2 download host and PyPI
   tools        uv, pixi and git on PATH
   layout       the three upstream checkouts and every scene/variant USD the suite will load
-  pins         tiptop and droid-sim-evals at the pinned SHAs; the Gemini ER 2 patch applied
+  pins         tiptop and droid-sim-evals at the pinned SHAs; our patches applied (Gemini ER 2, Panda robot model)
+  planner-robot  tiptop.yml plans for panda_robotiq, the arm the simulator actually has (patches/README.md)
   servers      TiPToP (ws host:port/health) and M2T2 (/health) answer
   config       configs/scenes.json goals have every object/container name filled in
   credentials  if GOOGLE_API_KEY is set in this shell, ask the Gemini API whether the key can see the pinned
@@ -135,6 +136,18 @@ def m2t2_url_from_config(tiptop: Path) -> str:
         if m:
             return m.group(1).strip()
     return "http://localhost:8123"
+
+
+PLANNER_ROBOT = "panda_robotiq"  # matches the simulator's Panda joint limits (patches/tiptop/0002)
+
+
+def planner_robot_type(tiptop: Path) -> str | None:
+    """robot.type from tiptop.yml without needing a YAML parser."""
+    cfg = tiptop / "tiptop" / "config" / "tiptop.yml"
+    if not cfg.exists():
+        return None
+    m = re.search(r"^robot:[ \t]*\n(?:[ \t]*(?:#.*)?\n)*[ \t]+type:[ \t]*\"?([\w-]+)", cfg.read_text(), flags=re.M)
+    return m.group(1) if m else None
 
 
 def scene_variants(scenes_cfg: dict, scenes: list[int], variants: list[int] | None) -> list[tuple[int, int]]:
@@ -288,6 +301,13 @@ def run_checks(a) -> Report:
         code, out = _sh(["git", "-C", str(tiptop), "apply", "--reverse", "--check", str(patch)])
         rep.add(f"patch:{patch.name}", PASS if code == 0 else FAIL,
                 "applied" if code == 0 else f"not applied: git -C {tiptop} apply {patch}")
+    robot = planner_robot_type(tiptop)
+    if robot == PLANNER_ROBOT:
+        rep.add("planner-robot", PASS, f"TiPToP plans for {robot}, the simulator's arm")
+    else:
+        rep.add("planner-robot", FAIL, f"TiPToP plans for {robot!r}, not {PLANNER_ROBOT}: its joint limits differ from "
+                                       "the simulated Panda's. Apply patches/tiptop/0002-panda-robot-model.patch "
+                                       "(only the Nov-5 baseline used fr3_robotiq)")
 
     if a.no_servers:
         rep.add("servers", WARN, "skipped (--no-servers)")
