@@ -1,0 +1,92 @@
+{
+  "run_id": "007_s1v2_baseline_t1",
+  "scope": "Actual-joint FK and observed object poses. Rigid-center prediction assumes the first-close object-to-TCP transform stays fixed. This is an observational diagnostic, not a counterfactual execution.",
+  "first_close_t": 8.0,
+  "bowl_initial_center": [
+    0.4386840760707855,
+    -0.10912458598613739,
+    0.07386093586683273
+  ],
+  "samples": [
+    {
+      "t": 8.0,
+      "observed_object_center": [
+        0.4787682734695184,
+        0.12904475343269453,
+        0.08118985711986636
+      ],
+      "rigid_center_prediction_from_first_close": [
+        0.4787682734695184,
+        0.1290447534326945,
+        0.08118985711986636
+      ],
+      "grasp_center_shift_since_first_close_m": 0.0,
+      "grasp_rotation_since_first_close_deg": 0.0,
+      "joint_tracking_max_abs_rad": 0.0008795261383056641
+    },
+    {
+      "t": 9.4,
+      "observed_object_center": [
+        0.47757806964447386,
+        0.1287390262959242,
+        0.08119044731193141
+      ],
+      "rigid_center_prediction_from_first_close": [
+        0.47967329455869645,
+        0.1299459038700949,
+        0.0821202425030546
+      ],
+      "grasp_center_shift_since_first_close_m": 0.002590567508800133,
+      "grasp_rotation_since_first_close_deg": 0.3938254758631264,
+      "joint_tracking_max_abs_rad": 0.005302131175994873
+    },
+    {
+      "t": 14.0,
+      "observed_object_center": [
+        0.4805106849687722,
+        0.13546856806792867,
+        0.09795148307858366
+      ],
+      "rigid_center_prediction_from_first_close": [
+        0.4773460509899688,
+        0.1358485546052351,
+        0.11990072430284003
+      ],
+      "grasp_center_shift_since_first_close_m": 0.022179460956229892,
+      "grasp_rotation_since_first_close_deg": 38.70807814267477,
+      "joint_tracking_max_abs_rad": 0.04982733726501465
+    },
+    {
+      "t": 16.53333333333333,
+      "observed_object_center": [
+        0.3986953834593745,
+        -0.027140443761053276,
+        0.13170906980575314
+      ],
+      "rigid_center_prediction_from_first_close": [
+        0.4221555392151712,
+        -0.0685106729484303,
+        0.17067967970731393
+      ],
+      "grasp_center_shift_since_first_close_m": 0.06148644734575231,
+      "grasp_rotation_since_first_close_deg": 102.98187341983974,
+      "joint_tracking_max_abs_rad": 0.04290036857128143
+    },
+    {
+      "t": 20.8,
+      "observed_object_center": [
+        0.4017274613532088,
+        -0.06971286299638807,
+        0.10193820419191765
+      ],
+      "rigid_center_prediction_from_first_close": [
+        0.42789331450878665,
+        -0.11605134249239668,
+        0.1448882200522202
+      ],
+      "grasp_center_shift_since_first_close_m": 0.06838574716826244,
+      "grasp_rotation_since_first_close_deg": 112.07571305132807,
+      "joint_tracking_max_abs_rad": 0.006034135818481445
+    }
+  ]
+}

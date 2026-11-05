@@ -21,6 +21,8 @@ import argparse
 import itertools
 import json
 import os
+import re
+import shlex
 import signal
 import subprocess
 import sys
@@ -214,7 +216,7 @@ def run_one(r: Run, a, out: Path, sim: Path, tiptop: Path) -> int:
     cmd += a.eval_args
     code = run_process(cmd, sim, run_dir / "console.log", a.run_timeout_s)
     if not a.skip_attribution:
-        attribute(r, out, sim, tiptop)
+        attribute(r, out, sim, tiptop, a)
     return code
 
 
@@ -235,7 +237,7 @@ def run_process(cmd: list[str], cwd: Path, log_path: Path, timeout_s: float | No
             return "timeout"
 
 
-def attribute(r: Run, out: Path, sim: Path, tiptop: Path) -> None:
+def attribute(r: Run, out: Path, sim: Path, tiptop: Path, a=None) -> None:
     run_dir = out / "runs" / r.run_id
     rec = _record(out, r.run_id)
     perceived = None
@@ -243,8 +245,31 @@ def attribute(r: Run, out: Path, sim: Path, tiptop: Path) -> None:
         save_dir = Path(rec["server_save_dir"])
         perceived = out / "perceived" / f"{save_dir.name}.json"
         if not perceived.exists():  # replays share their source's perceived scene
-            run_process(["pixi", "run", "python", str(EXTRACT_PY), "--save-dir", str(save_dir),
-                         "--out", str(perceived)], tiptop, run_dir / "extract.log", 600)
+            extract_cmd = ["pixi", "run", "python", str(EXTRACT_PY), "--save-dir", str(save_dir),
+                           "--out", str(perceived)]
+            remote = getattr(a, "planner_ssh_host", None)
+            if remote:
+                # Both hosts use the same project/upstream paths. Never reinterpret a
+                # server reply as an arbitrary remote path or a shell command.
+                rel = save_dir.resolve().relative_to((tiptop / "tiptop_server_outputs").resolve())
+                if len(rel.parts) != 1 or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]*", rel.name):
+                    raise ValueError(f"Unexpected planner output directory: {save_dir}")
+                ssh = ["ssh", "-F", str(a.planner_ssh_config)]
+                remote_cmd = ("cd " + shlex.quote(str(tiptop))
+                              + ' && PATH="$HOME/.pixi/bin:$PATH" ' + shlex.join(extract_cmd))
+                run_process(ssh + [remote, remote_cmd], tiptop, run_dir / "extract.log", 600)
+                perceived.parent.mkdir(parents=True, exist_ok=True)
+                save_dir.mkdir(parents=True, exist_ok=True)
+                # Copy the plan/logs/perception alongside the immutable run record so
+                # attribution and saved replay plans resolve on the simulation host.
+                run_process(["rsync", "-a", "--protect-args", "-e", shlex.join(ssh),
+                             f"{remote}:{save_dir}/", str(save_dir) + "/"],
+                            tiptop, run_dir / "sync_server_outputs.log", 600)
+                run_process(["scp", "-F", str(a.planner_ssh_config),
+                             f"{remote}:{perceived}", str(perceived)],
+                            tiptop, run_dir / "sync_perceived.log", 120)
+            else:
+                run_process(extract_cmd, tiptop, run_dir / "extract.log", 600)
     cmd = ["uv", "run", "python", str(ATTRIBUTE_PY), "--run-dir", str(run_dir),
            "--append-to", str(out / "attribution.jsonl")]
     if perceived is not None and perceived.exists():
@@ -287,6 +312,11 @@ def parse_args(argv=None):
     p.add_argument("--seed-base", type=int, default=1000)
     p.add_argument("--dry-run", action="store_true")
     p.add_argument("--skip-attribution", action="store_true")
+    p.add_argument("--planner-ssh-host", default=os.environ.get("GRASP_EVAL_PLANNER_SSH_HOST"),
+                   help="optional SSH alias for a separate planning host; both hosts must use identical paths")
+    p.add_argument("--planner-ssh-config", type=Path,
+                   default=os.environ.get("GRASP_EVAL_PLANNER_SSH_CONFIG"),
+                   help="SSH config for remote extraction and copying server artifacts (no credentials in this repo)")
     # Running on a small GPU budget (docs/setup.md, section G)
     p.add_argument("--resume", action="store_true",
                    help="continue an interrupted suite in its existing results directory (same arguments)")
@@ -323,6 +353,8 @@ def parse_args(argv=None):
                    help="scenes/paper: first N variants of each scene (default 3 / 4)")
 
     a = p.parse_args(argv)
+    if a.planner_ssh_host and not a.planner_ssh_config:
+        p.error("--planner-ssh-host requires --planner-ssh-config")
     defaults = {"pilot": ([0, 1, 2, 3, 4], 3), "displacement": ([0], None), "sensor": ([0], 2), "scenes": (None, 2),
                 "paper": (None, 2)}
     dv, dt = defaults[a.suite]
@@ -442,6 +474,16 @@ def main(argv=None) -> int:
         with open(out / "exit_codes.tsv", "a") as f:
             f.write(f"{r.run_id}\t{code}\n")
         print(f"    exit code {code} ({durations[-1] / 60:.1f} min)", flush=True)
+        record = _record(out, r.run_id) or {}
+        error = str(record.get("server_error") or "").lower()
+        if not record.get("server_success") and (
+            "429" in error or "resource_exhausted" in error or "quota exceeded" in error
+        ):
+            # A responsive server can still have exhausted its upstream API quota.
+            # Preserve this attempt, then stop before paying to initialize more
+            # simulator processes for requests that cannot currently succeed.
+            stopped = "upstream API quota/rate limit; resolve it before --resume"
+            break
 
     from grasp_eval.summarize import main as summarize
     rc = summarize([str(out)])

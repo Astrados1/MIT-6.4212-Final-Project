@@ -1,0 +1,2 @@
+run_id,stable_lift,failure_category,task_success,paper_category,note
+000_s1v0_scene1_t0,true,,true,success,"Video confirms pickup and placement; raw 10 cm threshold falsely rejects 15.47 cm finger-origin distance. Immutable trace rescored at provisional 20 cm gives 6.867 s hold and 10.855 cm rise."

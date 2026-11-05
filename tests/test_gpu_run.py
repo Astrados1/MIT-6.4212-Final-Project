@@ -1,6 +1,7 @@
 import contextlib
 import io
 import json
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -8,7 +9,7 @@ from types import SimpleNamespace
 from unittest import mock
 
 from grasp_eval import run_suite
-from grasp_eval.preflight import goal_problems, inspection_problems
+from grasp_eval.preflight import _sh, goal_problems, inspection_problems
 from grasp_eval.summarize import build_rows, merge_shards, wilson_ci
 
 
@@ -16,6 +17,53 @@ def _args(**kw):
     a = SimpleNamespace(scene=1, variants=[0, 1, 2, 3], trials=2, instruction="x", target_object="cube", seed_base=0)
     a.__dict__.update(kw)
     return a
+
+
+class NativeCrashOutputTest(unittest.TestCase):
+    def test_invalid_utf8_preserves_exit_code_and_diagnostic(self):
+        code, output = _sh([
+            sys.executable, "-c",
+            "import os; os.write(2, b'RTX crash: \\xff\\n'); raise SystemExit(139)",
+        ])
+        self.assertEqual(code, 139)
+        self.assertIn("RTX crash:", output)
+        self.assertIn("\ufffd", output)
+
+
+class RemotePlannerTest(unittest.TestCase):
+    def test_rejects_artifacts_outside_planner_output_root(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            out, tiptop = root / "results", root / "tiptop"
+            rd = out / "runs" / "r1"
+            rd.mkdir(parents=True)
+            (rd / "record.json").write_text(json.dumps({"server_save_dir": str(root / "other")}))
+            args = SimpleNamespace(planner_ssh_host="planner", planner_ssh_config=root / "ssh_config")
+            with mock.patch.object(run_suite, "run_process") as run, self.assertRaises(ValueError):
+                run_suite.attribute(SimpleNamespace(run_id="r1"), out, root / "sim", tiptop, args)
+            run.assert_not_called()
+
+    def test_extracts_on_planner_and_fetches_before_attribution(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            out, tiptop = root / "results", root / "tiptop"
+            rd = out / "runs" / "r1"
+            rd.mkdir(parents=True)
+            save_dir = tiptop / "tiptop_server_outputs" / "20261105_000000"
+            (rd / "record.json").write_text(json.dumps({"server_save_dir": str(save_dir)}))
+            args = SimpleNamespace(planner_ssh_host="planner", planner_ssh_config=root / "ssh_config")
+            commands = []
+
+            def run(cmd, cwd, log, timeout):
+                commands.append(cmd)
+                if cmd[0] == "scp":
+                    Path(cmd[-1]).write_text('{}')
+                return 0
+
+            with mock.patch.object(run_suite, "run_process", run):
+                run_suite.attribute(SimpleNamespace(run_id="r1"), out, root / "sim", tiptop, args)
+            self.assertEqual([c[0] for c in commands], ["ssh", "rsync", "scp", "uv"])
+            self.assertIn("--perceived", commands[-1])
 
 
 class ShardTest(unittest.TestCase):
@@ -31,6 +79,32 @@ class ShardTest(unittest.TestCase):
 
 
 class ResumeTest(unittest.TestCase):
+    def test_quota_stops_before_scheduling_more_paid_simulators(self):
+        calls = []
+
+        def fake_run(r, args, out, sim, tiptop):
+            calls.append(r.run_id)
+            run_dir = out / "runs" / r.run_id
+            run_dir.mkdir(parents=True)
+            (run_dir / "record.json").write_text(json.dumps({
+                "run_id": r.run_id, "server_success": False,
+                "server_error": "429 RESOURCE_EXHAUSTED: daily quota exceeded",
+            }))
+            return 0
+
+        with tempfile.TemporaryDirectory() as d, \
+                mock.patch.object(run_suite, "PROJECT_ROOT", Path(d)), \
+                mock.patch.object(run_suite, "run_one", fake_run), \
+                contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+            rc = run_suite.main(["pilot", "--tiptop-dir", d, "--target-object", "cube",
+                                 "--variants", "0", "1", "--trials", "1",
+                                 "--no-health-check", "--skip-attribution", "--out-name", "t"])
+            out = Path(d) / "results" / "t"
+            self.assertEqual(rc, 3)
+            self.assertEqual(len((out / "schedule.jsonl").read_text().splitlines()), 1)
+            self.assertEqual(len((out / "exit_codes.tsv").read_text().splitlines()), 1)
+        self.assertEqual(calls, ["000_s1v0_baseline_t0"])
+
     def test_resume_runs_only_unfinished(self):
         calls = []
 
@@ -125,6 +199,21 @@ class ClusterPlanTest(unittest.TestCase):
 
 
 class VideoAndReviewTest(unittest.TestCase):
+    def test_review_links_survive_copy_from_gpu_to_laptop(self):
+        from grasp_eval.review_page import _rel
+        with tempfile.TemporaryDirectory() as d:
+            base = Path(d)
+            video = base / "runs" / "trial1" / "video.mp4"
+            video.parent.mkdir(parents=True)
+            video.touch()
+            remote = "/workspace/project/results/pilot/runs/trial1/video.mp4"
+            self.assertEqual(_rel(remote, base), "runs/trial1/video.mp4")
+            plan = base / "server_outputs" / "2026-11-05_05-07-22" / "tiptop_plan.json"
+            plan.parent.mkdir(parents=True)
+            plan.touch()
+            remote_plan = "/opt/tiptop/tiptop_server_outputs/2026-11-05_05-07-22/tiptop_plan.json"
+            self.assertEqual(_rel(remote_plan, base), "server_outputs/2026-11-05_05-07-22/tiptop_plan.json")
+
     def test_plan_step_text(self):
         from grasp_eval.video_overlay import caption_line, plan_step_text
 

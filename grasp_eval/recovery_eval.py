@@ -58,7 +58,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from grasp_eval.checkpoint import (  # noqa: E402
     CheckpointLimits, CheckResult, OracleCheckCriteria, OracleStateDetector, OracleStatePacket, Outcome,
-    RecoverySupervisor, StepOutcome, Stop, TrialResult,
+    RecoverySupervisor, StepOutcome, Stop, TrialResult, is_api_quota_error,
 )
 from grasp_eval.plan_segments import (  # noqa: E402
     ClientCursor, UnsupportedPlanError, clear_client_plan, find_grasp_segment, run_segment, tag_action,
@@ -67,6 +67,7 @@ from grasp_eval.probe_math import displaced_pose  # noqa: E402
 from grasp_eval.records import append_jsonl  # noqa: E402
 from grasp_eval.recovery_records import ATTEMPTS_FILE, TRIALS_FILE, AttemptRecord, RecoveryTrialRecord  # noqa: E402
 from grasp_eval.scoring import LiftCriteria, count_close_commands, score_first_grasp  # noqa: E402
+from grasp_eval.task_goal import geometry_center_positions  # noqa: E402
 
 logger = logging.getLogger("recovery_eval")
 
@@ -76,7 +77,7 @@ FINGER_JOINT = "finger_joint"
 FINGER_CLOSED_RAD = math.pi / 4  # simulator's closed target for the Robotiq finger joint
 VIDEO_FPS = 15
 PHASES = ("approach", "close", "retract", "hold", "retry_open", "retry_return", "retry_settle")
-TRACE_KEYS = ("t", "objects_pos", "objects_quat", "gripper_pos", "gripper_quat", "gripper_cmd", "gripper_obs",
+TRACE_KEYS = ("t", "objects_pos", "objects_quat", "objects_center", "gripper_pos", "gripper_quat", "gripper_cmd", "gripper_obs",
               "joint_pos", "joint_cmd", "finger_closure", "attempt", "phase", "plan_step")
 
 
@@ -122,14 +123,20 @@ def request_fingerprint(request: dict) -> dict[str, Any]:
     }
 
 
-def classify_planning_exception(e: Exception) -> Stop:
-    """PlanningError = the server answered without a plan; anything else = infrastructure."""
+def classify_planning_exception(e: Exception, server_error: str | None = None) -> Stop:
+    """PlanningError = the server answered without a plan; anything else = infrastructure.
+    An API quota/rate-limit rejection is infrastructure even when it arrives as a PlanningError."""
+    if is_api_quota_error(server_error) or is_api_quota_error(str(e)):
+        return Stop.INFRASTRUCTURE
     return Stop.NO_PLAN if type(e).__name__ == "PlanningError" else Stop.INFRASTRUCTURE
 
 
 class World(Protocol):
     step_dt: float
     object_names: list[str]
+    # Optional: name -> [[min xyz], [max xyz]] geometry box in the body frame. Objects listed here
+    # are scored at their geometry-box center; others fall back to the rigid-body origin.
+    object_local_bounds: dict[str, Any]
 
     def step(self, action: np.ndarray) -> tuple[Any, bool, bool]: ...
     def object_positions(self) -> dict[str, list[float]]: ...
@@ -172,7 +179,9 @@ class SimRecoveryBackend:
         self.steps = 0
         self.attempts: list[AttemptRecord] = []
         self.start_joints = np.asarray(world.joint_pos(obs), dtype=float)
+        self.bounds = dict(getattr(world, "object_local_bounds", None) or {})
         self.initial_positions = world.object_positions()
+        self.initial_centers = self.object_centers()
         self._pending = None
         self._segment = None
         self._exec: dict[int, dict[str, int]] = {}
@@ -186,6 +195,16 @@ class SimRecoveryBackend:
 
     def wall_time(self) -> float:
         return self._clock() - self._wall0
+
+    def object_centers(self, pos: dict | None = None, quat: dict | None = None) -> dict[str, list[float]]:
+        """Geometry-box centers (the scored position); body origin when no box is known."""
+        pos = self.world.object_positions() if pos is None else pos
+        quat = self.world.object_quats() if quat is None else quat
+        return {n: (geometry_center_positions(pos[n], quat[n], self.bounds[n]).tolist() if n in self.bounds
+                    else list(pos[n])) for n in self.names}
+
+    def position_reference(self, name: str) -> str:
+        return "geometry_box_center" if name in self.bounds else "rigid_body_origin_fallback"
 
     def closes(self) -> int:
         return count_close_commands(np.asarray(self.trace["gripper_cmd"]), self.lift.close_threshold)
@@ -202,10 +221,12 @@ class SimRecoveryBackend:
         self.obs = obs
         w, tr = self.world, self.trace
         pos, quat = w.object_positions(), w.object_quats()
+        centers = self.object_centers(pos, quat)
         fc = w.finger_closure()
         tr["t"].append(self.steps * self.dt)
         tr["objects_pos"].append([pos[n] for n in self.names])
         tr["objects_quat"].append([quat[n] for n in self.names])
+        tr["objects_center"].append([centers[n] for n in self.names])
         tr["gripper_pos"].append(list(w.gripper_ref()))
         tr["gripper_quat"].append(list(w.gripper_quat()))
         tr["gripper_cmd"].append(float(action[-1]))
@@ -268,6 +289,7 @@ class SimRecoveryBackend:
         a.start_joint_pos = [float(v) for v in self.world.joint_pos(self.obs)]
         a.object_positions = self.world.object_positions()
         a.object_quats = self.world.object_quats()
+        a.object_centers = self.object_centers(a.object_positions, a.object_quats)
         a.trace_slice = [len(self.trace["t"]), len(self.trace["t"])]
         return StepOutcome.success(start_joint_pos=a.start_joint_pos, sim_s=a.started_sim_s)
 
@@ -298,7 +320,7 @@ class SimRecoveryBackend:
             a.planning_wall_s = round(self._clock() - t0, 3)
             self._read_response(a)
             a.server_error = a.server_error or f"{type(e).__name__}: {e}"
-            return StepOutcome.fail(classify_planning_exception(e), a.server_error)
+            return StepOutcome.fail(classify_planning_exception(e, a.server_error), a.server_error)
         a.planning_wall_s = round(self._clock() - t0, 3)
         self._read_response(a)
         a.request = dict(getattr(c, "last_request_summary", None) or {})
@@ -310,7 +332,8 @@ class SimRecoveryBackend:
                 a.request["plan_q_init_max_abs_diff_rad"] = round(
                     float(np.max(np.abs(np.asarray(q_plan) - np.asarray(a.start_joint_pos)))), 5)
         if not c._plan:
-            return StepOutcome.fail(Stop.NO_PLAN, a.server_error or "empty plan")
+            stop = Stop.INFRASTRUCTURE if is_api_quota_error(a.server_error) else Stop.NO_PLAN
+            return StepOutcome.fail(stop, a.server_error or "empty plan")
         earlier = {x.server_save_dir for x in self.attempts[:attempt] if x.server_save_dir}
         if a.plan_source == "server" and a.server_save_dir and a.server_save_dir in earlier:
             return StepOutcome.fail(Stop.INFRASTRUCTURE, f"server reused output dir {a.server_save_dir}")
@@ -391,7 +414,7 @@ class SimRecoveryBackend:
         ex = self._exec[attempt]
         tr = self.trace
         t = np.asarray(tr["t"], dtype=float)
-        objs = np.asarray(tr["objects_pos"], dtype=float)
+        objs = np.asarray(tr["objects_center"], dtype=float)  # geometry centers, not body origins
         grip = np.asarray(tr["gripper_pos"], dtype=float)
         cmd = np.asarray(tr["gripper_cmd"], dtype=float)
         phase = np.asarray(tr["phase"])
@@ -416,7 +439,8 @@ class SimRecoveryBackend:
             res = self.detector.check(packet)
         att = slice(ex["start"], ex["end"])
         a.historical_lift = score_first_grasp(t[att], objs[att, k], grip[att], cmd[att],
-                                              a.object_positions[self.target][2], self.lift).to_dict()
+                                              a.object_centers[self.target][2], self.lift).to_dict()
+        a.historical_lift["position_reference"] = self.position_reference(self.target)
         a.checkpoint = res.to_dict()
         a.outcome, a.outcome_source, a.outcome_privileged = res.outcome.value, res.source, res.privileged
         return res
@@ -439,10 +463,10 @@ class SimRecoveryBackend:
                      "planned_steps": needed})
         if needed > self._steps_left():
             return StepOutcome.fail(Stop.SIM_TIME_LIMIT, "not enough simulated time for the return motion", **info)
-        p0 = {n: np.asarray(v, dtype=float) for n, v in self.world.object_positions().items()}
+        p0 = {n: np.asarray(v, dtype=float) for n, v in self.object_centers().items()}
 
         def disturbed() -> tuple[str, float]:
-            now = self.world.object_positions()
+            now = self.object_centers()
             return max(((n, float(np.linalg.norm(np.asarray(now[n]) - p0[n]))) for n in self.names),
                        key=lambda x: x[1])
 
@@ -535,7 +559,8 @@ def parse_args(argv=None):
     c = LiftCriteria()
     s.add_argument("--min-rise-m", type=float, default=c.min_rise_m)
     s.add_argument("--min-hold-s", type=float, default=c.min_hold_s)
-    s.add_argument("--max-obj-to-gripper-m", type=float, default=c.max_obj_to_gripper_m)
+    # The frozen 0.20 m shared with the oracle checkpoint, not the generic LiftCriteria default (0.10).
+    s.add_argument("--max-obj-to-gripper-m", type=float, default=o.max_obj_to_gripper_m)
 
     r = p.add_argument_group("empty-hand return before a retry")
     rc = ReturnConfig()
@@ -620,7 +645,7 @@ def main(argv=None) -> int:  # pragma: no cover - needs Isaac Sim
     os.chdir(sim_root)
 
     from grasp_eval.observed_eval import (_file_sha256, _git_diff_sha256, _git_dirty, _git_sha, _utc_now,
-                                          make_observed_client_class)
+                                          make_observed_client_class, usd_local_bounds)
 
     trial_id = args.trial_id or (f"s{args.scene}v{args.variant}t{args.trial}_a{args.max_attempts}_"
                                  f"{datetime.now().strftime('%Y%m%d-%H%M%S')}")
@@ -702,10 +727,15 @@ def main(argv=None) -> int:  # pragma: no cover - needs Isaac Sim
         if len(body_ids) != len(args.gripper_bodies):
             raise KeyError(f"gripper bodies {args.gripper_bodies} matched {body_names}")
         finger_ids, _ = robot.find_joints([args.finger_joint])
+        try:  # before the first physics step (Fabric stops USD transform updates); as observed_eval
+            rec.object_local_bounds, rec.object_bounds_notes = usd_local_bounds(scene, names)
+        except Exception as e:  # fall back to body origins rather than lose the trial
+            rec.object_bounds_notes = {"_error": f"{type(e).__name__}: {e}"}
 
         class IsaacWorld:
             step_dt = float(env.unwrapped.step_dt)
             object_names = names
+            object_local_bounds = rec.object_local_bounds
 
             def step(self, action):
                 o, _, term, trunc, _ = env.step(torch.tensor(action, dtype=torch.float32)[None])
@@ -749,8 +779,8 @@ def main(argv=None) -> int:  # pragma: no cover - needs Isaac Sim
                 viz = add_top_padding(viz, pad_px=40)
                 overlay_timer_ms(viz, int(backend.steps * 1000 / VIDEO_FPS))
                 if caption_ok[0]:
-                    rise = scene[args.target_object].data.root_pos_w[0, 2].item() - \
-                        backend.initial_positions[args.target_object][2]
+                    rise = backend.object_centers()[args.target_object][2] - \
+                        backend.initial_centers[args.target_object][2]
                     step = "" if plan_step is None else f" step {plan_step + 1}"
                     viz = add_caption(viz, f"attempt {attempt + 1}/{limits.max_attempts} | {phase}{step} | gripper "
                                            f"{'CLOSE' if action[-1] > 0.5 else 'open'} | target {100 * rise:+.1f} cm")
@@ -774,10 +804,12 @@ def main(argv=None) -> int:  # pragma: no cover - needs Isaac Sim
                 target_label=args.target_label, limits=limits, detector=OracleStateDetector(check_criteria),
                 lift_criteria=lift, return_cfg=return_cfg, displacement=displacement,
                 replay_plan=str(args.plan_json.resolve()) if args.plan_json else None, on_step=on_step)
+            rec.initial_object_centers = backend.initial_centers
             rec.process_startup_s = round(time.monotonic() - PROCESS_T0, 2)
             result = RecoverySupervisor(backend, limits).run()
         fill_trial_record(rec, result, backend)
         rec.final_object_positions = world.object_positions()
+        rec.final_object_centers = backend.object_centers()
     except Exception:
         rec.harness_exception = traceback.format_exc()
         rec.stop_reason = rec.stop_reason or Stop.INFRASTRUCTURE.value

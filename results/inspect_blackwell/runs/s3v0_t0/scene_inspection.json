@@ -1,0 +1,93 @@
+{
+  "scene": 3,
+  "variant": 0,
+  "rigid_objects_after_settle": {
+    "_11_banana": [
+      0.42245182394981384,
+      -0.11275127530097961,
+      0.06295852363109589
+    ],
+    "small_KLT_visual_collision": [
+      0.4956849217414856,
+      0.19846481084823608,
+      0.11832112073898315
+    ]
+  },
+  "rigid_object_quats_after_settle": {
+    "_11_banana": [
+      0.6707814931869507,
+      0.7415595054626465,
+      0.00794088002294302,
+      -0.008862543851137161
+    ],
+    "small_KLT_visual_collision": [
+      0.707099199295044,
+      9.056910812432761e-07,
+      -9.946546697392478e-07,
+      0.7071143388748169
+    ]
+  },
+  "rigid_object_local_bounds": {
+    "_11_banana": [
+      [
+        -0.09859,
+        -0.01933,
+        -0.03703
+      ],
+      [
+        0.09859,
+        0.01932,
+        0.03703
+      ]
+    ],
+    "small_KLT_visual_collision": [
+      [
+        -0.09892,
+        -0.14832,
+        -0.07318
+      ],
+      [
+        0.09892,
+        0.14832,
+        0.07318
+      ]
+    ]
+  },
+  "rigid_object_bounds_notes": {},
+  "robot_body_names": [
+    "panda_link0",
+    "panda_link1",
+    "panda_link2",
+    "panda_link3",
+    "panda_link4",
+    "panda_link5",
+    "panda_link6",
+    "panda_link7",
+    "panda_link8",
+    "base_link",
+    "left_outer_knuckle",
+    "right_outer_knuckle",
+    "left_outer_finger",
+    "right_outer_finger",
+    "left_inner_finger",
+    "right_inner_finger",
+    "left_inner_knuckle",
+    "right_inner_knuckle"
+  ],
+  "robot_joint_names": [
+    "panda_joint1",
+    "panda_joint2",
+    "panda_joint3",
+    "panda_joint4",
+    "panda_joint5",
+    "panda_joint6",
+    "panda_joint7",
+    "finger_joint",
+    "right_outer_knuckle_joint",
+    "left_inner_finger_joint",
+    "right_inner_finger_joint",
+    "left_inner_finger_knuckle_joint",
+    "right_inner_finger_knuckle_joint"
+  ],
+  "step_dt": 0.06666666666666667
+}

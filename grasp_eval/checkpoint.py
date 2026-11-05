@@ -75,6 +75,15 @@ class Stop(str, Enum):
     INTERRUPTED = "interrupted"
 
 
+def is_api_quota_error(text: str | None) -> bool:
+    """True for an upstream model-API quota or rate-limit rejection (e.g. Gemini's 429
+    RESOURCE_EXHAUSTED). The planner server stays healthy while every request fails, so this
+    is infrastructure, never a planning failure of the robot pipeline."""
+    t = str(text or "").lower()
+    return ("429" in t or "resource_exhausted" in t or "quota exceeded" in t
+            or "exceeded your current quota" in t)
+
+
 @dataclass
 class CheckResult:
     outcome: Outcome
@@ -361,7 +370,10 @@ class OracleCheckCriteria:
     "Held" is therefore judged by the target following the hand during the retraction.
     """
 
-    max_obj_to_gripper_m: float = 0.10  # same meaning as LiftCriteria.max_obj_to_gripper_m
+    # Same meaning as LiftCriteria.max_obj_to_gripper_m, at the value frozen for the baseline on
+    # 2026-11-05 (provenance/scoring_frozen_20261105.json). The gripper reference is the
+    # inner-finger link-origin midpoint, ~15.5 cm from a held cube, so 0.10 rejects every real grasp.
+    max_obj_to_gripper_m: float = 0.20
     close_threshold: float = 0.5
     min_gripper_rise_m: float = 0.03  # the retraction must raise the hand at least this much
     held_min_follow_frac: float = 0.6  # target rise >= frac * hand rise (close -> checkpoint)

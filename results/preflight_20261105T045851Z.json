@@ -1,0 +1,118 @@
+{
+  "utc": "20261105T045851Z",
+  "args": {
+    "tiptop_dir": "/opt/tiptop-project",
+    "scenes": "[1]",
+    "variants": "None",
+    "scenes_config": "/workspace/MIT-6.4212-Final-Project/configs/scenes.json",
+    "ws_host": "localhost",
+    "ws_port": "8765",
+    "gripper_bodies": "['left_inner_finger', 'right_inner_finger']",
+    "no_servers": "False",
+    "remote_planners": "True",
+    "probe_simulator_runtime": "True",
+    "require_goals": "True",
+    "sim_check": "False",
+    "sim_timeout_s": "900",
+    "smoke_run": "True"
+  },
+  "checks": [
+    {
+      "check": "gpu:simulator-runtime",
+      "status": "PASS",
+      "detail": "torch 2.7.0+cu128 CUDA 12.8\narchitectures ['sm_75', 'sm_80', 'sm_86', 'sm_90', 'sm_100', 'sm_120', 'compute_120']\nCUDA_MATMUL_PASSED"
+    },
+    {
+      "check": "gpu0",
+      "status": "PASS",
+      "detail": "NVIDIA RTX PRO 6000 Blackwell Max-Q Workstation Edition, sm 12.0, 6 MiB / 97887 MiB used, driver 590.48.01; can run: simulator, tiptop; planners run on a separate host (health checked below) (not m2t2: compute capability 12 is newer than its pinned PyTorch/CUDA build supports (up to 9))",
+      "roles": {
+        "simulator": null,
+        "m2t2": "compute capability 12 is newer than its pinned PyTorch/CUDA build supports (up to 9)",
+        "tiptop": null
+      }
+    },
+    {
+      "check": "os",
+      "status": "PASS",
+      "detail": "ubuntu 22.04"
+    },
+    {
+      "check": "network:gemini",
+      "status": "PASS",
+      "detail": "https://generativelanguage.googleapis.com/ -> HTTP 404"
+    },
+    {
+      "check": "network:sam2_download",
+      "status": "PASS",
+      "detail": "https://dl.fbaipublicfiles.com/ -> HTTP 403"
+    },
+    {
+      "check": "network:pypi",
+      "status": "PASS",
+      "detail": "https://pypi.org/simple/ -> HTTP 200"
+    },
+    {
+      "check": "tools",
+      "status": "PASS",
+      "detail": "uv, pixi, git"
+    },
+    {
+      "check": "layout",
+      "status": "PASS",
+      "detail": "checkouts and 10 scene USDs present"
+    },
+    {
+      "check": "pin:tiptop",
+      "status": "PASS",
+      "detail": "d8f5afdaa94a7432220c3042f9f80be5ab45aae8"
+    },
+    {
+      "check": "pin:droid-sim-evals",
+      "status": "PASS",
+      "detail": "69a914cf56e0da6adafe9428de39b6ceffe9bcc6"
+    },
+    {
+      "check": "patch:0001-gemini-robotics-er-2.patch",
+      "status": "PASS",
+      "detail": "applied"
+    },
+    {
+      "check": "server:tiptop",
+      "status": "PASS",
+      "detail": "http://localhost:8765/health -> HTTP 200"
+    },
+    {
+      "check": "server:m2t2",
+      "status": "PASS",
+      "detail": "http://localhost:8123/health -> HTTP 200"
+    },
+    {
+      "check": "config",
+      "status": "PASS",
+      "detail": "every goal name set",
+      "problems": []
+    },
+    {
+      "check": "credentials",
+      "status": "WARN",
+      "detail": "GOOGLE_API_KEY not set here; export it in this shell to test it, and it must be set in the TiPToP server's shell"
+    },
+    {
+      "check": "disk:results",
+      "status": "PASS",
+      "detail": "21 GB free at /workspace/MIT-6.4212-Final-Project"
+    },
+    {
+      "check": "disk:tiptop",
+      "status": "PASS",
+      "detail": "141 GB free at /opt/tiptop-project"
+    },
+    {
+      "check": "smoke-run",
+      "status": "PASS",
+      "detail": "stable_lift=False paper_category=success",
+      "results": "/workspace/MIT-6.4212-Final-Project/results/preflight_smoke_20261105T045535Z"
+    }
+  ]
+}

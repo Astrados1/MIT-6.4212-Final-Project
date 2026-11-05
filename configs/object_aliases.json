@@ -1,1 +1,16 @@
-{}
+{
+  "cube": "rubiks_cube",
+  "Rubik's cube": "rubiks_cube",
+  "bowl": "_24_bowl",
+  "mug": "_25_mug",
+  "can": "_10_potted_meat_can",
+  "potted meat can": "_10_potted_meat_can",
+  "tomato soup can": "_05_tomato_soup_can",
+  "banana": "_11_banana",
+  "bin": "small_KLT_visual_collision",
+  "red block": "red_block",
+  "blue block": "blue_block",
+  "green block": "green_block",
+  "yellow block": "yellow_block",
+  "wooden block": "basic_block"
+}

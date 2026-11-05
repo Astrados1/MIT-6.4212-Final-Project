@@ -8,9 +8,9 @@ import numpy as np
 from grasp_eval.attribution import attribute, goal_translation
 from grasp_eval.paper_taxonomy import PAPER_CATEGORIES, classify, cutamp_failure_kind
 from grasp_eval.probe_math import yaw_quat
-from grasp_eval.scoring import in_hand_motion
+from grasp_eval.scoring import in_hand_motion, score_first_grasp
 from grasp_eval.summarize import build_rows, main as summarize_main, render_paper_taxonomy
-from grasp_eval.task_goal import aabb_iou, check_goal, shape_comparison, world_aabb
+from grasp_eval.task_goal import aabb_iou, check_goal, geometry_center_positions, shape_comparison, world_aabb
 
 CUBE = [[-0.03, -0.03, -0.03], [0.03, 0.03, 0.03]]       # 6 cm cube, origin at its center
 BOWL = [[-0.08, -0.08, 0.0], [0.08, 0.08, 0.06]]          # 16 cm bowl, origin at its bottom
@@ -31,6 +31,22 @@ def _record(final_cube, **kw):
 
 
 class TaskGoalTest(unittest.TestCase):
+    def test_offset_body_origin_does_not_turn_a_real_lift_into_a_miss(self):
+        # A mesh 20 cm from its body origin is carried at the fingers. The origin
+        # itself is outside the proximity threshold, as in several scene-4/5 assets.
+        bounds = [[0.17, -0.03, -0.03], [0.23, 0.03, 0.03]]
+        n = 30
+        roots = np.tile([0.0, 0.0, 0.12], (n, 1))
+        quats = np.tile(yaw_quat(np.pi / 2), (n, 1))
+        centers = geometry_center_positions(roots, quats, bounds)
+        np.testing.assert_allclose(centers, np.tile([0.0, 0.2, 0.12], (n, 1)), atol=1e-12)
+        grip = centers.copy()
+        times, cmd = np.arange(n) / 15, np.ones(n)
+        self.assertFalse(score_first_grasp(times, roots, grip, cmd, 0.03).lifted)
+        self.assertTrue(score_first_grasp(times, centers, grip, cmd, 0.03).lifted)
+        lo, hi = world_aabb(*bounds, roots[0], quats[0])
+        np.testing.assert_allclose(centers[0], (lo + hi) / 2, atol=1e-12)
+
     def test_world_aabb_rotates_box(self):
         lo, hi = world_aabb([-0.1, -0.02, 0], [0.1, 0.02, 0.01], [1, 2, 0], yaw_quat(np.pi / 2))
         np.testing.assert_allclose(lo, [0.98, 1.9, 0], atol=1e-9)
@@ -281,6 +297,22 @@ class PaperSummaryTest(unittest.TestCase):
                         "run_id,stable_lift,failure_category,task_success,note,paper_category\nr0,,,,,oops\n")
             with self.assertRaises(ValueError):
                 build_rows(d)
+
+    def test_reviewed_failure_with_unknown_cause_stays_in_denominator(self):
+        from grasp_eval.summarize import paper_sankey
+        with tempfile.TemporaryDirectory() as d:
+            d = Path(d)
+            records = [dict(ClassifyTest.ok, run_id=name) for name in ('success', 'uncertain')]
+            self._write(d, records, [],
+                        "run_id,task_success,paper_category\n"
+                        "success,true,success\n"
+                        "uncertain,false,unattributed_task_failure/cause_not_established\n")
+            rows, _ = build_rows(d)
+            sankey = paper_sankey(rows)
+            self.assertEqual(sankey['comparable_trials'], 2)
+            self.assertEqual(sankey['excluded'], {'infrastructure': 1})
+            self.assertIn({'source': 'All Trials', 'target': 'Failure', 'value': 1}, sankey['links'])
+            self.assertIn('| Success | 1 | 50% |', render_paper_taxonomy(rows))
 
 
 if __name__ == "__main__":

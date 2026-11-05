@@ -1,0 +1,185 @@
+{
+  "artifacts": {
+    "log": "/workspace/MIT-6.4212-Final-Project/results/paper_20261105/runs/026_s2v2_scene2_t1/observed_eval.log",
+    "server_log": "/opt/tiptop-project/tiptop/tiptop_server_outputs/2026-11-05_06-34-18/tiptop_run.log",
+    "server_outputs": "/opt/tiptop-project/tiptop/tiptop_server_outputs/2026-11-05_06-34-18",
+    "server_plan": "/opt/tiptop-project/tiptop/tiptop_server_outputs/2026-11-05_06-34-18/tiptop_plan.json",
+    "trace": "/workspace/MIT-6.4212-Final-Project/results/paper_20261105/runs/026_s2v2_scene2_t1/trace.npz",
+    "video": "/workspace/MIT-6.4212-Final-Project/results/paper_20261105/runs/026_s2v2_scene2_t1/video.mp4"
+  },
+  "criteria": {
+    "close_threshold": 0.5,
+    "max_obj_to_gripper_m": 0.2,
+    "min_hold_s": 0.5,
+    "min_rise_m": 0.05
+  },
+  "executed_steps": 700,
+  "failure_category": null,
+  "failure_category_source": "auto",
+  "failure_detail": null,
+  "final_object_centers": {
+    "_10_potted_meat_can": [
+      0.4215504177317579,
+      -0.1063885852200605,
+      0.1408759947701782
+    ],
+    "_25_mug": [
+      0.4387834004194918,
+      -0.10910911519306246,
+      0.08700904992319697
+    ]
+  },
+  "final_object_positions": {
+    "_10_potted_meat_can": [
+      0.41714730858802795,
+      -0.08141201734542847,
+      0.14019429683685303
+    ],
+    "_25_mug": [
+      0.4387784004211426,
+      -0.10910911113023758,
+      0.08700904995203018
+    ]
+  },
+  "final_object_quats": {
+    "_10_potted_meat_can": [
+      -0.28153282403945923,
+      0.6154080629348755,
+      0.44528728723526,
+      -0.586286187171936
+    ],
+    "_25_mug": [
+      0.7071057558059692,
+      -0.707107663154602,
+      0.0002893243217840791,
+      -0.0002852459147106856
+    ]
+  },
+  "finished_utc": "2026-11-05T06:37:23+00:00",
+  "goal": [
+    {
+      "container": "_25_mug",
+      "objects": [
+        "$target"
+      ],
+      "relation": "in"
+    }
+  ],
+  "harness_exception": null,
+  "initial_object_centers": {
+    "_10_potted_meat_can": [
+      0.4560204099893624,
+      0.12918963652414556,
+      0.07421713785165371
+    ],
+    "_25_mug": [
+      0.43870811975478924,
+      -0.10910347835019825,
+      0.08700900524913638
+    ]
+  },
+  "initial_object_positions": {
+    "_10_potted_meat_can": [
+      0.47859615087509155,
+      0.12922286987304688,
+      0.08579365909099579
+    ],
+    "_25_mug": [
+      0.43870311975479126,
+      -0.1091034784913063,
+      0.0870090052485466
+    ]
+  },
+  "initial_object_quats": {
+    "_10_potted_meat_can": [
+      0.7060947418212891,
+      -0.7081141471862793,
+      -0.0015155364526435733,
+      -0.001505836728028953
+    ],
+    "_25_mug": [
+      0.707107424736023,
+      -0.7071061730384827,
+      -1.0019541150541045e-05,
+      9.936151400324889e-06
+    ]
+  },
+  "instruction": "Put the can in the mug.",
+  "object_bounds_notes": {},
+  "object_local_bounds": {
+    "_10_potted_meat_can": [
+      [
+        -0.0582,
+        -0.01776,
+        -0.02016
+      ],
+      [
+        0.01295,
+        0.04072,
+        0.02016
+      ]
+    ],
+    "_25_mug": [
+      [
+        -0.05849,
+        -0.04065,
+        -0.04654
+      ],
+      [
+        0.0585,
+        0.04065,
+        0.04654
+      ]
+    ]
+  },
+  "plan_done": true,
+  "plan_num_close_steps": 1,
+  "plan_num_steps": 9,
+  "plan_q_init_max_abs_diff_rad": null,
+  "plan_source": "server",
+  "planning_time_s": 12.59301960002631,
+  "probe": {
+    "label": "scene2",
+    "type": "baseline"
+  },
+  "replayed_plan": null,
+  "run_id": "026_s2v2_scene2_t1",
+  "scene": 2,
+  "score": {
+    "failure_hint": null,
+    "first_close_t": 16.53333333333333,
+    "lifted": true,
+    "longest_hold_s": 11.533333333333335,
+    "max_rise_m": 0.13457609521505506,
+    "max_rise_near_gripper_m": 0.13457609521505506,
+    "num_close_commands": 1,
+    "position_reference": "geometry_box_center",
+    "release_t": 37.8
+  },
+  "seed": 3201,
+  "server_error": null,
+  "server_response_received": true,
+  "server_save_dir": "/opt/tiptop-project/tiptop/tiptop_server_outputs/2026-11-05_06-34-18",
+  "server_success": true,
+  "sim_duration_s": 46.666666666666664,
+  "stable_lift": true,
+  "started_utc": "2026-11-05T06:33:49+00:00",
+  "target_object": "_10_potted_meat_can",
+  "target_source": "explicit",
+  "task_success": null,
+  "terminated": false,
+  "trial": 1,
+  "truncated": false,
+  "variant": 2,
+  "versions": {
+    "project_dirty": false,
+    "project_sha": "e4bb12239c0f5e52820e57320bd6bb582d159665",
+    "provenance_file": "/workspace/MIT-6.4212-Final-Project/provenance/paper_split_host_20261105.json",
+    "provenance_sha256": "888d5fbdf524768204a0f5542b7267e1f284e7bbad1ad37de64c45d60cfcbd66",
+    "sim_dirty": false,
+    "sim_sha": "69a914cf56e0da6adafe9428de39b6ceffe9bcc6",
+    "tiptop_diff_sha256": "f192094e9d726c4471054fec374fad7dcaeff597260529d10fe8dfcd62cbffb1",
+    "tiptop_sha": "d8f5afdaa94a7432220c3042f9f80be5ab45aae8"
+  },
+  "wall_duration_s": 213.80210518836975
+}

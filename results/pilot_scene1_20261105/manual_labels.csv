@@ -1,0 +1,16 @@
+run_id,stable_lift,failure_category,task_success,paper_category,note
+000_s1v0_baseline_t0,true,,true,success,Reviewed approach/carry/release/final video keyframes and trace: cube picked up and placed in bowl.
+001_s1v1_baseline_t0,true,,true,success,Reviewed approach/carry/release/final video keyframes and trace: cube picked up and placed in bowl.
+002_s1v2_baseline_t0,true,,false,execution_failure/tracking_or_collision,Rigid carry succeeds. Joint 6 command 4.219 rad before release exceeds USD upper limit 3.7525 rad; measured joint saturates at that limit. FK predicts 12.46 cm TCP tracking error and commanded object center over bowl. Actual cube is released beside bowl. Joint 7 also exceeds its limit. No collision cause inferred.
+003_s1v3_baseline_t0,true,,true,success,Reviewed approach/carry/release/final video keyframes and trace: cube picked up and placed in bowl.
+004_s1v4_baseline_t0,false,missed_grasp,false,grasp_failure/m2t2_unstable_grasp,"Video shows gripper closing on cube edge, then leaving cube on table; maximum rise 7.94 mm. No arm joint-limit violation."
+005_s1v0_baseline_t1,true,,true,success,Reviewed approach/carry/release/final keyframes and trace: cube placed in bowl.
+006_s1v1_baseline_t1,true,,true,success,Reviewed approach/carry/release/final keyframes and trace: cube placed in bowl.
+007_s1v2_baseline_t1,true,,false,cutamp_failure/rigid_grasp_assumption,"Video shows angled acquisition, carry, and release beside bowl. Full FK diagnostic from first close finds 68.4 mm object-to-TCP shift and 112.1 deg rotation before release; a rigid-grasp projection places the cube above the bowl. Joint tracking error before release is only 0.006 rad and no joint limits are exceeded. Supports rigid-grasp-assumption failure. The standard metric begins after 5 cm rise and misses most acquisition motion. Stable lift still passes its definition for 1.333 s at maximum rise 5.132 cm. See acquisition_fk_diagnostic.json; projection is not a counterfactual run."
+008_s1v3_baseline_t1,true,,true,success,"Reviewed full-resolution approach/placement/final frames and trace. Cube retained in the bowl, which is left tilted about 61 degrees. Meets the stated AABB task criterion; flagged as a tilted-container boundary case rather than a clean upright placement."
+009_s1v4_baseline_t1,false,missed_grasp,false,grasp_failure/m2t2_unstable_grasp,"Video shows cube briefly nudged upward during closure, then left on table during empty carry. Maximum rise 10.68 mm; no stable lift."
+010_s1v0_baseline_t2,false,missed_grasp,false,grasp_failure/m2t2_unstable_grasp,Keyframes confirm failed acquisition and empty carry; maximum rise 3.42 mm.
+011_s1v1_baseline_t2,true,,true,success,Keyframes confirm pickup and placement in bowl.
+012_s1v2_baseline_t2,true,,true,success,Keyframes confirm pickup and placement in bowl.
+013_s1v3_baseline_t2,true,,true,success,Keyframes confirm pickup and placement in bowl.
+014_s1v4_baseline_t2,false,missed_grasp,false,grasp_failure/m2t2_unstable_grasp,Keyframes confirm failed acquisition and empty carry; maximum rise 9.24 mm.

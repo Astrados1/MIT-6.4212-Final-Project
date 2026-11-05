@@ -1,0 +1,25 @@
+{
+  "frames": 467,
+  "fr3_vs_panda_grasp_frame_translation_m": {
+    "min": 0.0,
+    "median": 0.0,
+    "max": 0.0
+  },
+  "fr3_vs_panda_orientation_deg_max": 2.9575586669421963e-06,
+  "fr3_grasp_frame_to_held_cube_distance_m": [
+    0.029928184663972904,
+    0.029936914434644468,
+    0.029962686611637757
+  ],
+  "finger_reference_minus_fr3_tcp_local_mean": [
+    -0.00013454320187396325,
+    8.612347674934379e-08,
+    -0.1292642733707915
+  ],
+  "finger_reference_minus_fr3_tcp_local_std": [
+    0.0001790209670532975,
+    1.6843167256660878e-07,
+    0.0027591930130366964
+  ],
+  "scope": "Planner FR3/Panda forward kinematics at all measured joint positions in the successful smoke; this is not a full direct USD link-by-link FK comparison."
+}

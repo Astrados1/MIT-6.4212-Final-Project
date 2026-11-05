@@ -1,0 +1,179 @@
+{
+  "run_id": "014_s1v4_baseline_t2",
+  "thresholds": {
+    "perception_xy_error_m": 0.02,
+    "gripper_xy_offset_at_close_m": 0.02,
+    "joint_tracking_error_rad": 0.05,
+    "pushed_before_close_m": 0.01,
+    "missed_detection_radius_m": 0.05
+  },
+  "trace_available": true,
+  "plan_timing": {
+    "trajectory_dts_s": [
+      0.02
+    ],
+    "implied_plan_hz": [
+      50.0
+    ],
+    "client_assumed_plan_hz": 50.0,
+    "client_waypoint_stride": 3,
+    "execution_time_scale": [
+      1.111
+    ]
+  },
+  "grounded_atoms": [
+    {
+      "predicate": "on",
+      "args": [
+        "Rubik's_cube",
+        "bowl"
+      ]
+    }
+  ],
+  "perceived_scene_available": true,
+  "perceived_movables": [
+    "Rubik's_cube",
+    "table",
+    "bowl"
+  ],
+  "perceived_objects": [
+    {
+      "perceived": "Rubik's_cube",
+      "role": "movable",
+      "nearest_sim_object": "rubiks_cube",
+      "xy_error_m": 0.0033,
+      "z_error_m": 0.0028
+    },
+    {
+      "perceived": "table",
+      "role": "movable",
+      "nearest_sim_object": "rubiks_cube",
+      "xy_error_m": 0.0532,
+      "z_error_m": -0.0632
+    },
+    {
+      "perceived": "bowl",
+      "role": "movable",
+      "nearest_sim_object": "_24_bowl",
+      "xy_error_m": 0.0115,
+      "z_error_m": -0.0002
+    },
+    {
+      "perceived": "bowl",
+      "role": "static",
+      "nearest_sim_object": "_24_bowl",
+      "xy_error_m": 0.0115,
+      "z_error_m": -0.0002
+    }
+  ],
+  "sim_objects_without_nearby_detection": [],
+  "plan_pick_objects": [
+    "Rubik's_cube"
+  ],
+  "first_pick_found_in_perceived_scene": true,
+  "first_pick_maps_to_sim_object": "rubiks_cube",
+  "perception_xy_error_m": 0.0033,
+  "perception_z_error_m": 0.0028,
+  "first_pick_matches_target": true,
+  "first_pick_m2t2_grasp_count": 2066,
+  "grasp_source": "m2t2",
+  "goal_objects_without_detection": [],
+  "shape": {
+    "_24_bowl": {
+      "perceived": "bowl",
+      "perceived_extent_m": [
+        0.1409,
+        0.1432,
+        0.0534
+      ],
+      "true_extent_m": [
+        0.1612,
+        0.1615,
+        0.055
+      ],
+      "extent_ratio": [
+        0.874,
+        0.887,
+        0.971
+      ],
+      "aabb_iou": 0.753
+    },
+    "rubiks_cube": {
+      "perceived": "Rubik's_cube",
+      "perceived_extent_m": [
+        0.0662,
+        0.068,
+        0.0664
+      ],
+      "true_extent_m": [
+        0.0722,
+        0.0722,
+        0.0723
+      ],
+      "extent_ratio": [
+        0.917,
+        0.942,
+        0.918
+      ],
+      "aabb_iou": 0.787
+    }
+  },
+  "grounded_atoms_mapped": [
+    [
+      "on",
+      "rubiks_cube",
+      "_24_bowl"
+    ]
+  ],
+  "expected_atoms": [
+    [
+      "on",
+      "rubiks_cube",
+      "_24_bowl"
+    ]
+  ],
+  "goal_translation_correct": true,
+  "max_joint_tracking_error_rad": 0.0968,
+  "first_close_t_s": 7.933,
+  "gripper_minus_target_at_close_m": [
+    0.0075,
+    0.0151,
+    0.1771
+  ],
+  "gripper_xy_offset_at_close_m": 0.0168,
+  "target_pushed_before_close_m": 0.0116,
+  "joint_tracking_error_at_close_rad": 0.0366,
+  "in_hand": {
+    "carried": false
+  },
+  "stage_hint": "approach_contact",
+  "task_check": {
+    "task_success": false,
+    "clauses": [
+      {
+        "relation": "in",
+        "container": "_24_bowl",
+        "required": 1,
+        "satisfied_count": 0,
+        "ok": false,
+        "objects": {
+          "rubiks_cube": {
+            "satisfied": false,
+            "center_xy_inside_container": false,
+            "object_bottom_z": 0.045,
+            "container_z_range": [
+              0.0464,
+              0.1014
+            ]
+          }
+        }
+      }
+    ],
+    "reason": null
+  },
+  "paper_category": "grasp_failure/m2t2_unstable_grasp",
+  "evidence": [
+    "no stable lift (missed_grasp)",
+    "grasp source: m2t2"
+  ]
+}

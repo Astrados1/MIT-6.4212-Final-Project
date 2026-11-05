@@ -1,0 +1,72 @@
+{
+  "comparable_trials": 15,
+  "excluded": {},
+  "nodes": [
+    "All Trials",
+    "Success",
+    "Failure",
+    "Execution Failure (not in paper)",
+    "Tracking or Collision",
+    "Grasp Failure",
+    "M2T2 Unstable Grasp",
+    "cuTAMP Failure",
+    "Rigid Grasp Assumption"
+  ],
+  "links": [
+    {
+      "source": "All Trials",
+      "target": "Success",
+      "value": 9
+    },
+    {
+      "source": "All Trials",
+      "target": "Failure",
+      "value": 6
+    },
+    {
+      "source": "Failure",
+      "target": "Execution Failure (not in paper)",
+      "value": 1
+    },
+    {
+      "source": "Execution Failure (not in paper)",
+      "target": "Tracking or Collision",
+      "value": 1
+    },
+    {
+      "source": "Failure",
+      "target": "Grasp Failure",
+      "value": 4
+    },
+    {
+      "source": "Grasp Failure",
+      "target": "M2T2 Unstable Grasp",
+      "value": 4
+    },
+    {
+      "source": "Failure",
+      "target": "cuTAMP Failure",
+      "value": 1
+    },
+    {
+      "source": "cuTAMP Failure",
+      "target": "Rigid Grasp Assumption",
+      "value": 1
+    }
+  ],
+  "paper_reference_counts": {
+    "Success": 118,
+    "Failure": 55,
+    "Grasp Failure": 31,
+    "M2T2 Unstable Grasp": 20,
+    "Heuristic Unstable Grasp": 11,
+    "Scene Completion Failure": 13,
+    "Partial Observability": 13,
+    "Gemini VLM Failure": 6,
+    "Object Detection Failure": 5,
+    "Goal Translation Failure": 1,
+    "cuTAMP Failure": 5,
+    "cuRobo Motion Planning Failure": 3,
+    "Rigid Grasp Assumption": 2
+  }
+}

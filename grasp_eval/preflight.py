@@ -104,7 +104,7 @@ def gemini_model_check(model: str, key: str, timeout: float = 15.0) -> tuple[boo
 
 def _sh(cmd: list[str], cwd: Path | None = None, timeout: float = 60) -> tuple[int, str]:
     try:
-        p = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, timeout=timeout)
+        p = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, errors="replace", timeout=timeout)
         return p.returncode, (p.stdout + p.stderr).strip()
     except (OSError, subprocess.TimeoutExpired) as e:
         return 127, f"{type(e).__name__}: {e}"
@@ -213,6 +213,22 @@ def run_checks(a) -> Report:
     tiptop, sim, m2t2 = root / "tiptop", root / "droid-sim-evals", root / "M2T2"
     scenes_cfg = json.loads(Path(a.scenes_config).read_text())
 
+    runtime_ok = False
+    if a.probe_simulator_runtime:
+        # A documented CUDA-wheel override can support GPUs newer than the lockfile.
+        # Exercise the installed environment; this does not replace the camera/physics check.
+        code, detail = _sh(["uv", "run", "python", "-c",
+            "import torch\nprint('torch',torch.__version__,'CUDA',torch.version.cuda)\n"
+            "print('architectures',torch.cuda.get_arch_list())\n"
+            "assert torch.cuda.device_count()>0\n"
+            "for i in range(torch.cuda.device_count()):\n"
+            " x=torch.ones((32,32),device=f'cuda:{i}')\n"
+            " assert (x@x).sum().item()==32768\n"
+            " torch.cuda.synchronize(i)\n"
+            "print('CUDA_MATMUL_PASSED')"], cwd=sim, timeout=90)
+        runtime_ok = code == 0 and "CUDA_MATMUL_PASSED" in detail
+        rep.add("gpu:simulator-runtime", PASS if runtime_ok else FAIL, detail)
+
     code, out = _sh(["nvidia-smi", "--query-gpu=index,name,compute_cap,memory.total,memory.used,driver_version",
                      "--format=csv,noheader"])
     if code != 0 or not out:
@@ -226,11 +242,16 @@ def run_checks(a) -> Report:
             except ValueError:
                 rep.add(f"gpu{idx}", WARN, f"{name}: compute capability {cc!r} unreadable")
                 continue
+            if runtime_ok and not any(re.search(rf"\b{m}\b", name) for m in NO_RT_CORE_GPUS):
+                roles["simulator"] = None
             ok = [c for c, why in roles.items() if why is None]
             sim_ok |= "simulator" in ok
             detail = f"{name}, sm {cc}, {used} / {total} used, driver {driver}; can run: {', '.join(ok) or 'nothing'}"
             blocked = "; ".join(f"{c}: {why}" for c, why in roles.items() if why)
-            status = PASS if {"simulator", "m2t2"} <= set(ok) else (WARN if ok else FAIL)
+            required = {"simulator"} if a.remote_planners else {"simulator", "m2t2"}
+            status = PASS if required <= set(ok) else (WARN if ok else FAIL)
+            if a.remote_planners:
+                detail += "; planners run on a separate host (health checked below)"
             rep.add(f"gpu{idx}", status, detail + (f" (not {blocked})" if blocked else ""), roles=roles)
         if not sim_ok:
             rep.add("gpu:simulator", FAIL, "no visible GPU can run the simulator; use an RTX card with compute "
@@ -394,6 +415,10 @@ def parse_args(argv=None):
     p.add_argument("--ws-port", type=int, default=8765)
     p.add_argument("--gripper-bodies", nargs="+", default=["left_inner_finger", "right_inner_finger"])
     p.add_argument("--no-servers", action="store_true", help="skip server health checks")
+    p.add_argument("--remote-planners", action="store_true",
+                   help="only require simulator GPU compatibility locally; planners use the configured endpoints")
+    p.add_argument("--probe-simulator-runtime", action="store_true",
+                   help="test the installed simulator Torch CUDA build instead of assuming the lockfile build")
     p.add_argument("--require-goals", action=argparse.BooleanOptionalAction, default=True,
                    help="FAIL (default) or only WARN when goal names are unset")
     p.add_argument("--sim-check", action="store_true", help="run --inspect-only for each scene (needs the GPU)")

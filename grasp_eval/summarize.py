@@ -322,7 +322,9 @@ def render_paper_taxonomy(rows: list[dict]) -> str:
            f"Denominator: {n} paper-comparable trials = {len(rows)} scheduled minus {len(rows) - n} excluded "
            "(infrastructure or needs_review). Automatic labels are first passes: confirm on video and in the "
            "server log, and override with `paper_category` in manual_labels.csv. The paper's 173 trials ran on "
-           "a real robot, so proportions in simulation are not expected to match. With a few dozen trials the "
+           "a real robot, so proportions in simulation are not expected to match. Reviewed, confirmed task failures "
+           "whose cause remains uncertain are retained as Unattributed Task Failure, outside the paper's module categories. "
+           "With a few dozen trials the "
            "95% intervals are wide: \"paper % inside our CI\" means only that this run can't tell the two apart.", "",
            "| node | ours | % of our trials | % of our failures | paper (of 173) | in paper figure "
            "| our 95% CI | paper % inside our CI |",

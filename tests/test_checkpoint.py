@@ -38,6 +38,15 @@ class OracleDetectorTest(unittest.TestCase):
         self.assertEqual(r.source, "oracle-state")
         self.assertAlmostEqual(r.evidence["gripper_rise_m"], 0.05, places=3)
 
+    def test_held_cube_at_finger_origin_offset(self):
+        # Nov-5 smoke: a clearly held cube sits ~15.5 cm from the inner-finger origin midpoint.
+        # The frozen 0.20 m limit accepts it; the old 0.10 m limit called every real grasp "not held".
+        p = window(1.0)
+        p.target_pos = p.target_pos + np.array([0.0, 0.0, -0.155])
+        self.assertEqual(self.det.check(p).outcome, Outcome.HOLDING_TARGET)
+        old = OracleStateDetector(OracleCheckCriteria(max_obj_to_gripper_m=0.10)).check(p)
+        self.assertNotEqual(old.outcome, Outcome.HOLDING_TARGET)
+
     def test_empty(self):
         r = self.det.check(window(0.0))
         self.assertEqual(r.outcome, Outcome.FAILED_EMPTY, r.reason)

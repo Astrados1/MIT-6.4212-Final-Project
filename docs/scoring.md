@@ -27,11 +27,11 @@ object nearest the gripper at the first close (`nearest_at_close`, flagged in th
 A pushed or tossed object fails the proximity condition. A lift that happens only after a release and re-close is
 not scored as the first grasp.
 
-| parameter | pilot value | status |
+| parameter | frozen value | status |
 |---|---|---|
-| `min_rise_m` | 0.05 m | to validate |
-| `min_hold_s` | 0.5 s | to validate |
-| `max_obj_to_gripper_m` | 0.10 m | to validate; depends on object size and finger geometry |
+| `min_rise_m` | 0.05 m | frozen 2026-11-05 |
+| `min_hold_s` | 0.5 s | frozen 2026-11-05 |
+| `max_obj_to_gripper_m` | 0.20 m | frozen 2026-11-05; inner-finger origin reference |
 
 **Before comparing anything**, validate these on pilot traces. Check that the native motion lifts the object
 more than 5 cm and keeps it there more than 0.5 s before release, and look at the real object-to-finger-midpoint
@@ -85,6 +85,13 @@ run_id,stable_lift,failure_category,task_success,note
 Raw records are never edited. `summarize.py` applies these labels on top and reports how many runs were overridden.
 A `stable_lift=true` override is ignored unless the run had a valid executed plan.
 
+After reviewing a confirmed task failure, use paper category
+`unattributed_task_failure/cause_not_established` if the responsible module cannot be established.
+This keeps the observed failure in the denominator without forcing a causal claim. Use `needs_review`
+for trials still awaiting review, not as a way to remove known failures from the reported success rate.
+Shape errors and in-hand rotation are diagnostic indicators; crossing their thresholds alone is not
+proof that they caused a failed task.
+
 ## Denominators
 
 `python -m grasp_eval.summarize results/<pilot>` reports:
@@ -97,3 +104,22 @@ A `stable_lift=true` override is ignored unless the run had a valid executed pla
   over manually labeled runs only.
 
 `server success` and `plan_done` never count as grasp success.
+
+## November 5 measurement validation
+
+The first visually successful smoke run found that the inner-finger **link origins** are about
+15.47 cm from a held cube. The 10 cm pilot proximity limit therefore rejects a real 6.87 s carry.
+The completed 15-trial pilot used `--max-obj-to-gripper-m 0.20`, with the other thresholds unchanged.
+All 15 outcomes were reviewed. The values were frozen at 2026-11-05 06:04:57 UTC before the paper suite.
+Always pass the explicit frozen arguments; the generic scoring utility retains its original defaults.
+
+The 11 positive traces hold for 1.333–11.133 s; the four negatives rise only 3.42–10.68 mm.
+One positive has only 5.132 cm maximum rise, so height sensitivity remains a limitation.
+Proximity limits 17.5, 20 and 22.5 cm all give 11/15 lifts; 10 cm gives 0/15 and 15 cm gives 1/15.
+The greatest raised-and-closed distance in these traces is 18.41 cm.
+[Freeze record](../provenance/scoring_frozen_20261105.json) includes the reviewed-label and audit hashes.
+
+Some scene-4/5 assets have geometry offset substantially from the body origin. New runs preserve
+`objects_pos` and `objects_quat` as raw poses and add `objects_center` to the trace. Lift/proximity
+scoring and perception matching use geometry-box centers, with corresponding initial/final centers
+in the record. `score.position_reference` records this choice. Existing raw results are unchanged.

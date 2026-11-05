@@ -41,11 +41,16 @@ PAPER_CATEGORIES: dict[str, tuple[str, str, bool]] = {
     "cutamp_failure/rigid_grasp_assumption": ("cuTAMP Failure", "Rigid Grasp Assumption", True),
     "cutamp_failure/no_feasible_plan": ("cuTAMP Failure", "No Feasible Plan in Budget (not in paper figure)", False),
     "execution_failure/tracking_or_collision": ("Execution Failure (not in paper)", "Tracking or Collision", False),
+    "unattributed_task_failure/cause_not_established": (
+        "Unattributed Task Failure (not in paper)", "Cause Not Established (not in paper)", False),
     "infrastructure": ("Infrastructure (excluded)", "Infrastructure", False),
     "needs_review": ("Needs Review (excluded)", "Needs Review", False),
 }
 
 # Labels left out of the paper-comparable denominator ("All Trials" in the figure).
+# A manually reviewed, confirmed task failure with an unresolved cause stays in
+# that denominator via unattributed_task_failure/cause_not_established. Otherwise
+# uncertainty about the cause would artificially increase the success rate.
 EXCLUDED_FROM_PAPER_DENOMINATOR = {"infrastructure", "needs_review"}
 
 PAPER_THRESHOLDS = {

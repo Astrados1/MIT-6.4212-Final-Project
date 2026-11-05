@@ -1,0 +1,354 @@
+{
+  "artifacts": {
+    "log": "/workspace/MIT-6.4212-Final-Project/results/paper_20261105/runs/019_s5v3_scene5_t0/observed_eval.log",
+    "server_log": "/opt/tiptop-project/tiptop/tiptop_server_outputs/2026-11-05_06-28-52/tiptop_run.log",
+    "server_outputs": "/opt/tiptop-project/tiptop/tiptop_server_outputs/2026-11-05_06-28-52",
+    "server_plan": "/opt/tiptop-project/tiptop/tiptop_server_outputs/2026-11-05_06-28-52/tiptop_plan.json"
+  },
+  "criteria": {
+    "close_threshold": 0.5,
+    "max_obj_to_gripper_m": 0.2,
+    "min_hold_s": 0.5,
+    "min_rise_m": 0.05
+  },
+  "executed_steps": 0,
+  "failure_category": "unknown",
+  "failure_category_source": "auto",
+  "failure_detail": "server returned no plan; check server log: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-robotics-er-2-preview, description: Generate content requests per day limit exceeded on Free Tier. See https://ai.google.dev/gemini-api/docs/rate-limits.\\nPlease retry in 1h31m5.431784051s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'description': 'Generate content requests per day limit exceeded on Free Tier. See https://ai.google.dev/gemini-api/docs/rate-limits.', 'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-robotics-er-2-preview'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '5465s'}]}}",
+  "final_object_centers": {
+    "_24_bowl": [
+      0.4584988337806311,
+      0.07129752700759653,
+      0.08099995132475599
+    ],
+    "basic_block": [
+      0.2859239773589462,
+      -0.15856284609749302,
+      0.06843681480346823
+    ],
+    "blue_block": [
+      0.3154767567361372,
+      -0.26799498644686204,
+      0.06843420522380635
+    ],
+    "green_block": [
+      0.5378072024494652,
+      -0.13730199456873002,
+      0.06843562428406595
+    ],
+    "red_block": [
+      0.45420603510191543,
+      -0.24734941203984073,
+      0.06843693366952466
+    ],
+    "yellow_block": [
+      0.25273255343968287,
+      0.21089233813129052,
+      0.06843830622589143
+    ]
+  },
+  "final_object_positions": {
+    "_24_bowl": [
+      0.6984968781471252,
+      0.18922653794288635,
+      0.06095513328909874
+    ],
+    "basic_block": [
+      0.28592896461486816,
+      -0.1585579514503479,
+      0.10765181481838226
+    ],
+    "blue_block": [
+      0.3154817521572113,
+      -0.26799002289772034,
+      0.08205420523881912
+    ],
+    "green_block": [
+      0.4996072053909302,
+      0.15702791512012482,
+      0.10331138968467712
+    ],
+    "red_block": [
+      0.30636101961135864,
+      -0.24572455883026123,
+      0.13159190118312836
+    ],
+    "yellow_block": [
+      0.25273755192756653,
+      0.2108973264694214,
+      0.07278330624103546
+    ]
+  },
+  "final_object_quats": {
+    "_24_bowl": [
+      0.7071062326431274,
+      -0.7071072459220886,
+      -6.468008905358147e-06,
+      5.433999831438996e-06
+    ],
+    "basic_block": [
+      0.9999999403953552,
+      1.3432663763524033e-06,
+      -1.6249572354354314e-07,
+      -4.67279868132664e-08
+    ],
+    "blue_block": [
+      1.0,
+      1.3381039707383025e-06,
+      -1.6812882108752092e-07,
+      -9.065227146720645e-08
+    ],
+    "green_block": [
+      1.0,
+      1.3231684761194629e-06,
+      -1.7664430629338312e-07,
+      -2.592760317554621e-08
+    ],
+    "red_block": [
+      0.9999999403953552,
+      1.2511314935181872e-06,
+      -1.2361725509890675e-07,
+      -3.801266856839902e-08
+    ],
+    "yellow_block": [
+      1.0,
+      1.3418871276371647e-06,
+      -1.741064892257782e-07,
+      -8.701104547981231e-08
+    ]
+  },
+  "finished_utc": "2026-11-05T06:28:54+00:00",
+  "goal": [
+    {
+      "container": "_24_bowl",
+      "count": 3,
+      "objects": [
+        "basic_block",
+        "blue_block",
+        "green_block",
+        "red_block",
+        "yellow_block"
+      ],
+      "relation": "in"
+    }
+  ],
+  "harness_exception": null,
+  "initial_object_centers": {
+    "_24_bowl": [
+      0.4584988337806311,
+      0.07129752700759653,
+      0.08099995132475599
+    ],
+    "basic_block": [
+      0.2859239773589462,
+      -0.15856284609749302,
+      0.06843681480346823
+    ],
+    "blue_block": [
+      0.3154767567361372,
+      -0.26799498644686204,
+      0.06843420522380635
+    ],
+    "green_block": [
+      0.5378072024494652,
+      -0.13730199456873002,
+      0.06843562428406595
+    ],
+    "red_block": [
+      0.45420603510191543,
+      -0.24734941203984073,
+      0.06843693366952466
+    ],
+    "yellow_block": [
+      0.25273255343968287,
+      0.21089233813129052,
+      0.06843830622589143
+    ]
+  },
+  "initial_object_positions": {
+    "_24_bowl": [
+      0.6984968781471252,
+      0.18922653794288635,
+      0.06095513328909874
+    ],
+    "basic_block": [
+      0.28592896461486816,
+      -0.1585579514503479,
+      0.10765181481838226
+    ],
+    "blue_block": [
+      0.3154817521572113,
+      -0.26799002289772034,
+      0.08205420523881912
+    ],
+    "green_block": [
+      0.4996072053909302,
+      0.15702791512012482,
+      0.10331138968467712
+    ],
+    "red_block": [
+      0.30636101961135864,
+      -0.24572455883026123,
+      0.13159190118312836
+    ],
+    "yellow_block": [
+      0.25273755192756653,
+      0.2108973264694214,
+      0.07278330624103546
+    ]
+  },
+  "initial_object_quats": {
+    "_24_bowl": [
+      0.7071062326431274,
+      -0.7071072459220886,
+      -6.468008905358147e-06,
+      5.433999831438996e-06
+    ],
+    "basic_block": [
+      0.9999999403953552,
+      1.3432663763524033e-06,
+      -1.6249572354354314e-07,
+      -4.67279868132664e-08
+    ],
+    "blue_block": [
+      1.0,
+      1.3381039707383025e-06,
+      -1.6812882108752092e-07,
+      -9.065227146720645e-08
+    ],
+    "green_block": [
+      1.0,
+      1.3231684761194629e-06,
+      -1.7664430629338312e-07,
+      -2.592760317554621e-08
+    ],
+    "red_block": [
+      0.9999999403953552,
+      1.2511314935181872e-06,
+      -1.2361725509890675e-07,
+      -3.801266856839902e-08
+    ],
+    "yellow_block": [
+      1.0,
+      1.3418871276371647e-06,
+      -1.741064892257782e-07,
+      -8.701104547981231e-08
+    ]
+  },
+  "instruction": "Put 3 blocks in the bowl.",
+  "object_bounds_notes": {},
+  "object_local_bounds": {
+    "_24_bowl": [
+      [
+        -0.39083,
+        -0.05439,
+        -0.26904
+      ],
+      [
+        -0.08917,
+        0.0143,
+        0.03319
+      ]
+    ],
+    "basic_block": [
+      [
+        -0.02351,
+        -0.02351,
+        -0.06272
+      ],
+      [
+        0.0235,
+        0.0235,
+        -0.01571
+      ]
+    ],
+    "blue_block": [
+      [
+        -0.02351,
+        -0.02351,
+        -0.03712
+      ],
+      [
+        0.0235,
+        0.0235,
+        0.00988
+      ]
+    ],
+    "green_block": [
+      [
+        0.0147,
+        -0.31783,
+        -0.05838
+      ],
+      [
+        0.0617,
+        -0.27083,
+        -0.01137
+      ]
+    ],
+    "red_block": [
+      [
+        0.12434,
+        -0.02513,
+        -0.08666
+      ],
+      [
+        0.17135,
+        0.02188,
+        -0.03965
+      ]
+    ],
+    "yellow_block": [
+      [
+        -0.02351,
+        -0.02351,
+        -0.02785
+      ],
+      [
+        0.0235,
+        0.0235,
+        0.01916
+      ]
+    ]
+  },
+  "plan_done": false,
+  "plan_num_close_steps": null,
+  "plan_num_steps": null,
+  "plan_q_init_max_abs_diff_rad": null,
+  "plan_source": "server",
+  "planning_time_s": 2.214839863125235,
+  "probe": {
+    "label": "scene5",
+    "type": "baseline"
+  },
+  "replayed_plan": null,
+  "run_id": "019_s5v3_scene5_t0",
+  "scene": 5,
+  "score": null,
+  "seed": 6300,
+  "server_error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-robotics-er-2-preview, description: Generate content requests per day limit exceeded on Free Tier. See https://ai.google.dev/gemini-api/docs/rate-limits.\\nPlease retry in 1h31m5.431784051s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'description': 'Generate content requests per day limit exceeded on Free Tier. See https://ai.google.dev/gemini-api/docs/rate-limits.', 'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-robotics-er-2-preview'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '5465s'}]}}",
+  "server_response_received": true,
+  "server_save_dir": "/opt/tiptop-project/tiptop/tiptop_server_outputs/2026-11-05_06-28-52",
+  "server_success": false,
+  "sim_duration_s": 0.0,
+  "stable_lift": null,
+  "started_utc": "2026-11-05T06:28:22+00:00",
+  "target_object": "from-plan",
+  "target_source": "unresolved",
+  "task_success": null,
+  "terminated": false,
+  "trial": 0,
+  "truncated": false,
+  "variant": 3,
+  "versions": {
+    "project_dirty": false,
+    "project_sha": "e4bb12239c0f5e52820e57320bd6bb582d159665",
+    "provenance_file": "/workspace/MIT-6.4212-Final-Project/provenance/paper_split_host_20261105.json",
+    "provenance_sha256": "888d5fbdf524768204a0f5542b7267e1f284e7bbad1ad37de64c45d60cfcbd66",
+    "sim_dirty": false,
+    "sim_sha": "69a914cf56e0da6adafe9428de39b6ceffe9bcc6",
+    "tiptop_diff_sha256": "f192094e9d726c4471054fec374fad7dcaeff597260529d10fe8dfcd62cbffb1",
+    "tiptop_sha": "d8f5afdaa94a7432220c3042f9f80be5ab45aae8"
+  },
+  "wall_duration_s": 32.21504211425781
+}

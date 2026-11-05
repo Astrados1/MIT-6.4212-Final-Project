@@ -135,6 +135,28 @@ class RecoveryBackendTest(unittest.TestCase):
         self.assertEqual((r.stop, r.planning_calls), (Stop.NO_PLAN, 2))
         self.assertEqual(b.attempts[1].server_error, "no plan")
 
+    def test_api_quota_rejection_is_infrastructure_not_planning_failure(self):
+        quota = "429 RESOURCE_EXHAUSTED. You exceeded your current quota"
+        r, *_ = run(script=[PlanningError(quota)])
+        self.assertEqual(r.stop, Stop.INFRASTRUCTURE)
+        r, _, server, _, b = run(outcomes=(False, True), script=[None, PlanningError(quota)])
+        self.assertEqual((r.stop, server.calls), (Stop.INFRASTRUCTURE, 2))
+
+    def test_scores_geometry_center_not_body_origin(self):
+        # Mesh center 1 cm from the body origin along x (scene-4/5 assets reach ~20 cm).
+        bounds = {"cube": [[-0.02, -0.03, -0.03], [0.04, 0.03, 0.03]]}
+        r, world, server, client, b = run(object_local_bounds=bounds)
+        self.assertEqual(r.stop, Stop.SUCCESS, r.detail)
+        a = b.attempts[0]
+        np.testing.assert_allclose(a.object_centers["cube"], np.add(a.object_positions["cube"], [0.01, 0, 0]))
+        self.assertEqual(a.historical_lift["position_reference"], "geometry_box_center")
+        pos, ctr = np.asarray(b.trace["objects_pos"]), np.asarray(b.trace["objects_center"])
+        k = b.names.index("cube")
+        np.testing.assert_allclose(ctr[:, k] - pos[:, k], np.tile([0.01, 0, 0], (len(pos), 1)), atol=1e-9)
+        np.testing.assert_allclose(ctr[:, b.names.index("bowl")], pos[:, b.names.index("bowl")])  # no box: origin
+        r, *_, b = run()
+        self.assertEqual(b.attempts[0].historical_lift["position_reference"], "rigid_body_origin_fallback")
+
     def test_unsupported_plan_is_refused_before_any_motion(self):
         def multi(req):
             p = scene_plan([0.5, 0, 0.03], req["q_init"])
@@ -219,6 +241,34 @@ class HelpersTest(unittest.TestCase):
         a = parse_args(["--scene", "1", "--variant", "0", "--instruction", "x", "--target-object", "cube",
                         "--out-dir", "o", "--max-attempts", "1"])
         self.assertEqual((a.max_attempts, a.max_planning_calls, a.detector), (1, 1, "oracle-state"))
+
+
+class RecoverySuiteQuotaTest(unittest.TestCase):
+    def test_quota_stops_before_scheduling_more_paid_simulators(self):
+        import contextlib
+        import io
+        from unittest import mock
+
+        from grasp_eval import recovery_suite
+
+        calls = []
+
+        def fake_run(cmd, cwd, log, timeout):
+            tid = cmd[cmd.index("--trial-id") + 1]
+            calls.append(tid)
+            out = Path(cmd[cmd.index("--out-dir") + 1])
+            (out / "trials" / tid / "attempts.json").write_text(json.dumps([{
+                "attempt_index": 0, "server_success": False,
+                "server_error": "429 RESOURCE_EXHAUSTED: daily quota exceeded"}]))
+            return 0
+
+        with tempfile.TemporaryDirectory() as d,                 mock.patch.object(recovery_suite, "PROJECT_ROOT", Path(d)),                 mock.patch.object(recovery_suite, "run_process", fake_run),                 contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+            rc = recovery_suite.main(["--tiptop-dir", d, "--target-object", "cube", "--variants", "0", "1",
+                                      "--no-health-check", "--out-name", "t"])
+            out = Path(d) / "results" / "t"
+            self.assertEqual(rc, 3)
+            self.assertEqual(len((out / "schedule.jsonl").read_text().splitlines()), 1)
+        self.assertEqual(len(calls), 1)
 
 
 if __name__ == "__main__":

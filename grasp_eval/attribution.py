@@ -251,7 +251,7 @@ def execution(record: dict, trace: dict | None) -> dict[str, Any]:
     if target not in names:
         return out
     k = names.index(target)
-    obj = np.asarray(trace["objects_pos"])[:, k, :]
+    obj = np.asarray(trace.get("objects_center", trace["objects_pos"]))[:, k, :]
     grip = np.asarray(trace["gripper_pos"])
     cmd = np.asarray(trace["gripper_cmd"]) > 0.5
     q_meas = np.asarray(trace["joint_pos"])
@@ -274,7 +274,7 @@ def execution(record: dict, trace: dict | None) -> dict[str, Any]:
     if err is not None:
         out["joint_tracking_error_at_close_rad"] = round(float(err[i]), 4)
     if "objects_quat" in trace and "gripper_quat" in trace:
-        baseline = (record.get("initial_object_positions") or {}).get(target)
+        baseline = (record.get("initial_object_centers") or record.get("initial_object_positions") or {}).get(target)
         if baseline is not None:
             out["in_hand"] = in_hand_motion(
                 trace["t"], obj, np.asarray(trace["objects_quat"])[:, k, :], grip, trace["gripper_quat"],
@@ -309,7 +309,8 @@ def attribute(record: dict, trace: dict | None, perceived: dict | None, plan: di
     attr["trace_available"] = bool(trace) and len(trace.get("t", [])) > 0
     attr["plan_timing"] = plan_timing(plan)
     attr.update(perception_and_grounding(
-        perceived, plan, record.get("initial_object_positions") or {}, record.get("target_object"), record))
+        perceived, plan, record.get("initial_object_centers") or record.get("initial_object_positions") or {},
+        record.get("target_object"), record))
     attr.update(execution(record, trace))
     attr["stage_hint"] = stage_hint(record, attr)
     if record.get("server_success") and record.get("executed_steps"):

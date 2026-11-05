@@ -1,0 +1,113 @@
+{
+  "task_instruction": "Put the Rubik's cube in the bowl.",
+  "timestamp": "2026-11-05T06:53:37.505728+00:00",
+  "observation": {
+    "q_at_capture": [
+      0.0,
+      -0.6283185482025146,
+      0.0,
+      -2.5132741928100586,
+      0.0,
+      1.884955644607544,
+      0.0
+    ],
+    "world_from_cam": [
+      [
+        0.017678694799542427,
+        0.9496455788612366,
+        0.3128269612789154,
+        0.28571274876594543
+      ],
+      [
+        0.9998407363891602,
+        -0.016025137156248093,
+        -0.007856350392103195,
+        -0.03101206198334694
+      ],
+      [
+        -0.0024476535618305206,
+        0.31291601061820984,
+        -0.9497776627540588,
+        0.4457692801952362
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ]
+  },
+  "perception": {
+    "grounded_atoms": [
+      {
+        "predicate": "on",
+        "args": [
+          "Rubik's_cube",
+          "red_bowl"
+        ]
+      }
+    ],
+    "duration": 0.0
+  },
+  "planning": {
+    "success": true,
+    "failure_reason": null,
+    "duration": 1.26
+  },
+  "version": "1.0.0",
+  "tiptop_version": "0.3.0.post1.dev0+gd8f5afdaa.d20261105",
+  "git": {
+    "commit": "d8f5afdaa94a7432220c3042f9f80be5ab45aae8",
+    "dirty": true,
+    "porcelain": "M tiptop/perception/gemini.py\n M tiptop/scripts/compute_gripper_mask.py"
+  },
+  "diagnostic": {
+    "source": "/opt/tiptop-project/tiptop/tiptop_server_outputs/2026-11-05_05-13-21",
+    "source_hashes": {
+      "metadata.json": "5bd9205ada34f7a7c4c28655b54da29b9bad8864339f4e3fa4c8d211ce0bd0d9",
+      "tiptop.yml": "1e18012f5212f2c96aa5fa8873ecb5b5af1ee7927c293e8d36470cda41d7b5c2",
+      "perception/cutamp_env.pkl": "8648ca47882c85a7e180cc4f84e41f5dd512a712682847a9ebe2c1f22fd3444b",
+      "perception/grasps.pt": "3ae1a220a4833b6b06be34dd7a7a6380dd30628173ef0c21949a67c76fab552e"
+    },
+    "perception_reused": true,
+    "planner_seed": 1200,
+    "robot_type": "panda_robotiq",
+    "input_roles": {
+      "movables": [
+        "Rubik's_cube"
+      ],
+      "statics": [
+        "table",
+        "red_bowl"
+      ]
+    },
+    "environment_rebuilt": "Original factory, cached geometry and grounded atoms; remove post-planning role mutation.",
+    "script_sha256": "b39f8dad315dc8701f8c955fee40a66ea39414b6116a35b3de3916e6d9cd29b4",
+    "scope": "Cached-scene replanning; not a fresh end-to-end baseline trial."
+  },
+  "trajectory_check": {
+    "samples": 2253,
+    "minimum_limit_margin_rad": 0.01414498035032885,
+    "q_min": [
+      -0.3218737840652466,
+      -0.6283186078071594,
+      0.0,
+      -2.8314361572265625,
+      -0.5030356049537659,
+      1.8849554061889648,
+      -2.883155107498169
+    ],
+    "q_max": [
+      0.05283810943365097,
+      -0.0140690254047513,
+      0.28319811820983887,
+      -2.5132741928100586,
+      0.0,
+      2.857783079147339,
+      0.0
+    ],
+    "plan_sha256": "cedbeb796c95fe3e7f1a5f43ba92a08ec9e625071bbf56539216f3b7ac5945e4"
+  },
+  "provenance_clarification": "panda_cached_replan_20261105.json inherited top-level planner_robot_type and planner_configuration_sha256 from the baseline. Those two inherited fields describe the baseline, not this diagnostic. The actual diagnostic robot is panda_robotiq, and its config_sha256/planner_config fields and this metadata describe the executed condition."
+}
