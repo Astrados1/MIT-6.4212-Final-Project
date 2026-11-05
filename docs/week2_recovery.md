@@ -212,5 +212,6 @@ connection/API errors are `infrastructure`; neither gets an extra budget.
 - The displacement probe rotates yaw about the rigid-body origin, not the geometry center. That only matters for
   assets whose mesh is offset from the origin (scenes 4-5).
 - Scene 4 variants 1-3 initialise the cube far below the table (baseline report); exclude them until repaired.
-- The planner's FR3 joint-6/7 limits exceed the simulated Panda's. A plan can saturate a joint near release
-  (baseline pilot run 002). `configs/tiptop_panda_sim.yml` is the Panda alternative; it is not the default.
+- TiPToP's default FR3 model allows more joint-6/7 range than the simulated Panda, and a plan saturated a joint
+  near release (baseline pilot run 002). New runs plan for `panda_robotiq`
+  (`patches/tiptop/0002-panda-robot-model.patch`). Do not compare them with the FR3 baseline as the same condition.

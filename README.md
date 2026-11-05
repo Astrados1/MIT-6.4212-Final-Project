@@ -26,9 +26,11 @@ observation-only evaluator. No learning, retries or IIWA work happens this week.
 | What a suite produces | `results/<suite>/summary.md` (rates with 95% CIs, paper-taxonomy table), `review.html` (each run's captioned video next to its root cause and evidence), `paper_taxonomy.json` (Sankey data) |
 
 Upstream repos are not vendored. `setup_upstream.sh` clones them next to this repo at the pinned SHAs, and the
-evaluator wraps the simulator from outside. The only change to upstream code is one patch in [patches/](patches/README.md):
+evaluator wraps the simulator from outside. Upstream code changes only through the patches in [patches/](patches/README.md):
 the pinned TiPToP calls `gemini-robotics-er-1.6-preview`, which Google shut down on Aug 31, 2026, so we switch it
-to `gemini-robotics-er-2-preview`. Results are therefore "upstream TiPToP with Gemini ER 2", not an exact reproduction.
+to `gemini-robotics-er-2-preview`. Since the Nov-5 baseline, TiPToP also plans for the Panda arm the simulator
+actually has (`panda_robotiq`) instead of its default FR3, whose joint limits differ. Results are therefore
+"upstream TiPToP with Gemini ER 2" (and, after Nov 5, "planning for the simulated Panda"), not an exact reproduction.
 
 ## Status
 

@@ -270,3 +270,31 @@ class StageRunnerTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class PandaPlannerModelTest(unittest.TestCase):
+    """The planner should plan for the arm the simulator has (patches/tiptop/0002)."""
+
+    def test_planner_robot_type_is_read_from_tiptop_yml(self):
+        from grasp_eval.preflight import PLANNER_ROBOT, planner_robot_type
+
+        panda = (ROOT / "configs" / "tiptop_panda_sim.yml").read_text()
+        with tempfile.TemporaryDirectory() as d:
+            cfg = Path(d) / "tiptop" / "config" / "tiptop.yml"
+            cfg.parent.mkdir(parents=True)
+            cfg.write_text(panda)
+            self.assertEqual(planner_robot_type(Path(d)), PLANNER_ROBOT)
+            cfg.write_text(panda.replace("type: panda_robotiq", "type: fr3_robotiq"))
+            self.assertEqual(planner_robot_type(Path(d)), "fr3_robotiq")
+            self.assertIsNone(planner_robot_type(Path(d) / "missing"))
+
+    def test_patch_changes_only_the_robot_type(self):
+        text = (ROOT / "patches" / "tiptop" / "0002-panda-robot-model.patch").read_text()
+        changed = [ln for ln in text.splitlines() if ln[:1] in "+-" and not ln.startswith(("+++", "---"))]
+        self.assertEqual(changed, ["-  type: fr3_robotiq", "+  type: panda_robotiq"])
+        self.assertIn("+++ b/tiptop/config/tiptop.yml", text)
+        # Its context lines are the upstream file as copied into configs/tiptop_panda_sim.yml.
+        panda = (ROOT / "configs" / "tiptop_panda_sim.yml").read_text().splitlines()
+        context = [ln[1:] for ln in text.splitlines() if ln.startswith(" ")]
+        start = panda.index(context[0], 1)
+        self.assertEqual(panda[start:start + 3], context[:3])

@@ -37,7 +37,7 @@ TIPTOP_DIR="$TIPTOP_DIR" bash "$PROJECT/scripts/setup_upstream.sh"
 ```
 
 This clones tiptop and droid-sim-evals at the pins in `provenance/pins.env`, plus M2T2 at its current default branch,
-then applies our patches in `patches/` (currently only the Gemini ER 2 switch). It never modifies an existing checkout.
+then applies our patches in `patches/` (the Gemini ER 2 switch, and planning for the Panda arm the simulator has). It never modifies an existing checkout.
 For an existing checkout it reports whether each patch is applied and prints the command to apply it.
 
 ```bash

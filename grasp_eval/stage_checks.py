@@ -236,8 +236,8 @@ def arm_problems(summary: dict, expected_limits: list[tuple[float, float]], plan
             fr3 = f"; the planner's FR3 model allows {planner_limits[j][1]:.4f}" if planner_limits else ""
             if abs(reached - stop_at) <= limit_tol_rad:
                 notes.append(f"joint {j + 1} commanded {q_t[j]:.3f} rad stopped at {reached:.4f} rad, the simulator "
-                             f"limit {stop_at:.4f}{fr3}. This is the arm mismatch: plans that use this range "
-                             f"are not executed as planned")
+                             f"limit {stop_at:.4f}{fr3}. This is the arm mismatch: FR3 plans that used this range "
+                             f"were not executed as planned. Planning for panda_robotiq keeps plans inside it")
             elif (q_t[j] > hi and reached > hi + limit_tol_rad) or (q_t[j] < lo and reached < lo - limit_tol_rad):
                 warns.append(f"joint {j + 1} went past the simulator limit {stop_at:.4f} to {reached:.4f} rad: "
                              f"limits are not enforced as recorded")
