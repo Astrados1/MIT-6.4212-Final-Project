@@ -474,6 +474,16 @@ def main(argv=None) -> int:
         with open(out / "exit_codes.tsv", "a") as f:
             f.write(f"{r.run_id}\t{code}\n")
         print(f"    exit code {code} ({durations[-1] / 60:.1f} min)", flush=True)
+        record = _record(out, r.run_id) or {}
+        error = str(record.get("server_error") or "").lower()
+        if not record.get("server_success") and (
+            "429" in error or "resource_exhausted" in error or "quota exceeded" in error
+        ):
+            # A responsive server can still have exhausted its upstream API quota.
+            # Preserve this attempt, then stop before paying to initialize more
+            # simulator processes for requests that cannot currently succeed.
+            stopped = "upstream API quota/rate limit; resolve it before --resume"
+            break
 
     from grasp_eval.summarize import main as summarize
     rc = summarize([str(out)])

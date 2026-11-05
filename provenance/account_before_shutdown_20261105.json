@@ -1,0 +1,19 @@
+{
+  "currentSpendPerHr": 2.331,
+  "utc": "2026-11-05T06:59:09.672708+00:00",
+  "experiment_pods": [
+    {
+      "id": "9ykaj1fmzb2xx9",
+      "name": "mit64212-tiptop-blackwell-20261104",
+      "status": "RUNNING",
+      "cost": 1.64
+    },
+    {
+      "id": "t811w0kcx16xwc",
+      "name": "mit64212-tiptop-sim6-20261104",
+      "status": "RUNNING",
+      "cost": 0.59
+    }
+  ],
+  "privacy_note": "Account balance omitted from public provenance; complete private response retained locally."
+}

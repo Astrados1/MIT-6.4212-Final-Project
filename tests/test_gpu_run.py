@@ -79,6 +79,32 @@ class ShardTest(unittest.TestCase):
 
 
 class ResumeTest(unittest.TestCase):
+    def test_quota_stops_before_scheduling_more_paid_simulators(self):
+        calls = []
+
+        def fake_run(r, args, out, sim, tiptop):
+            calls.append(r.run_id)
+            run_dir = out / "runs" / r.run_id
+            run_dir.mkdir(parents=True)
+            (run_dir / "record.json").write_text(json.dumps({
+                "run_id": r.run_id, "server_success": False,
+                "server_error": "429 RESOURCE_EXHAUSTED: daily quota exceeded",
+            }))
+            return 0
+
+        with tempfile.TemporaryDirectory() as d, \
+                mock.patch.object(run_suite, "PROJECT_ROOT", Path(d)), \
+                mock.patch.object(run_suite, "run_one", fake_run), \
+                contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+            rc = run_suite.main(["pilot", "--tiptop-dir", d, "--target-object", "cube",
+                                 "--variants", "0", "1", "--trials", "1",
+                                 "--no-health-check", "--skip-attribution", "--out-name", "t"])
+            out = Path(d) / "results" / "t"
+            self.assertEqual(rc, 3)
+            self.assertEqual(len((out / "schedule.jsonl").read_text().splitlines()), 1)
+            self.assertEqual(len((out / "exit_codes.tsv").read_text().splitlines()), 1)
+        self.assertEqual(calls, ["000_s1v0_baseline_t0"])
+
     def test_resume_runs_only_unfinished(self):
         calls = []
 

@@ -115,6 +115,8 @@ def _run_card(row: dict, rec: dict | None, attr: dict | None, base: Path) -> str
              ("trace log", run_dir / "observed_eval.log"), ("console", run_dir / "console.log")]
     link_html = " · ".join(f'<a href="{_e(_rel(str(p), base))}">{_e(n)}</a>' for n, p in links)
     for name, key in (("server log", "server_log"), ("plan", "server_plan")):
+        if key == "server_plan" and not r.get("server_success"):
+            continue  # failed requests record an intended path, but create no plan
         if arts.get(key):
             link_html += f' · <a href="{_e(_rel(arts[key], base))}">{_e(name)}</a>'
     lift = row["stable_lift"]

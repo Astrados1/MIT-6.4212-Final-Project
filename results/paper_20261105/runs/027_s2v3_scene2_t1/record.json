@@ -1,0 +1,173 @@
+{
+  "artifacts": {
+    "log": "/workspace/MIT-6.4212-Final-Project/results/paper_20261105/runs/027_s2v3_scene2_t1/observed_eval.log",
+    "server_log": "/opt/tiptop-project/tiptop/tiptop_server_outputs/2026-11-05_06-38-10/tiptop_run.log",
+    "server_outputs": "/opt/tiptop-project/tiptop/tiptop_server_outputs/2026-11-05_06-38-10",
+    "server_plan": "/opt/tiptop-project/tiptop/tiptop_server_outputs/2026-11-05_06-38-10/tiptop_plan.json"
+  },
+  "criteria": {
+    "close_threshold": 0.5,
+    "max_obj_to_gripper_m": 0.2,
+    "min_hold_s": 0.5,
+    "min_rise_m": 0.05
+  },
+  "executed_steps": 0,
+  "failure_category": "unknown",
+  "failure_category_source": "auto",
+  "failure_detail": "server returned no plan; check server log: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-robotics-er-2-preview, description: Generate content requests per day limit exceeded on Free Tier. See https://ai.google.dev/gemini-api/docs/rate-limits.\\nPlease retry in 1h21m46.945803336s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'description': 'Generate content requests per day limit exceeded on Free Tier. See https://ai.google.dev/gemini-api/docs/rate-limits.', 'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-robotics-er-2-preview'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '4906s'}]}}",
+  "final_object_centers": {
+    "_10_potted_meat_can": [
+      0.4381632320856845,
+      -0.17438778520998008,
+      0.07421711252589777
+    ],
+    "_25_mug": [
+      0.5155414274978589,
+      0.05266410879452965,
+      0.08700901270451569
+    ]
+  },
+  "final_object_positions": {
+    "_10_potted_meat_can": [
+      0.46073898673057556,
+      -0.17435455322265625,
+      0.08579360693693161
+    ],
+    "_25_mug": [
+      0.5155364274978638,
+      0.05266410857439041,
+      0.0870090126991272
+    ]
+  },
+  "final_object_quats": {
+    "_10_potted_meat_can": [
+      0.7060961127281189,
+      -0.7081127762794495,
+      -0.0015157938469201326,
+      -0.001504736952483654
+    ],
+    "_25_mug": [
+      0.7071059942245483,
+      -0.7071074843406677,
+      -1.5947234714985825e-05,
+      1.5185152733465657e-05
+    ]
+  },
+  "finished_utc": "2026-11-05T06:38:13+00:00",
+  "goal": [
+    {
+      "container": "_25_mug",
+      "objects": [
+        "$target"
+      ],
+      "relation": "in"
+    }
+  ],
+  "harness_exception": null,
+  "initial_object_centers": {
+    "_10_potted_meat_can": [
+      0.4381632320856845,
+      -0.17438778520998008,
+      0.07421711252589777
+    ],
+    "_25_mug": [
+      0.5155414274978589,
+      0.05266410879452965,
+      0.08700901270451569
+    ]
+  },
+  "initial_object_positions": {
+    "_10_potted_meat_can": [
+      0.46073898673057556,
+      -0.17435455322265625,
+      0.08579360693693161
+    ],
+    "_25_mug": [
+      0.5155364274978638,
+      0.05266410857439041,
+      0.0870090126991272
+    ]
+  },
+  "initial_object_quats": {
+    "_10_potted_meat_can": [
+      0.7060961127281189,
+      -0.7081127762794495,
+      -0.0015157938469201326,
+      -0.001504736952483654
+    ],
+    "_25_mug": [
+      0.7071059942245483,
+      -0.7071074843406677,
+      -1.5947234714985825e-05,
+      1.5185152733465657e-05
+    ]
+  },
+  "instruction": "Put the can in the mug.",
+  "object_bounds_notes": {},
+  "object_local_bounds": {
+    "_10_potted_meat_can": [
+      [
+        -0.0582,
+        -0.01776,
+        -0.02016
+      ],
+      [
+        0.01295,
+        0.04072,
+        0.02016
+      ]
+    ],
+    "_25_mug": [
+      [
+        -0.05849,
+        -0.04065,
+        -0.04654
+      ],
+      [
+        0.0585,
+        0.04065,
+        0.04654
+      ]
+    ]
+  },
+  "plan_done": false,
+  "plan_num_close_steps": null,
+  "plan_num_steps": null,
+  "plan_q_init_max_abs_diff_rad": null,
+  "plan_source": "server",
+  "planning_time_s": 2.2019231179729104,
+  "probe": {
+    "label": "scene2",
+    "type": "baseline"
+  },
+  "replayed_plan": null,
+  "run_id": "027_s2v3_scene2_t1",
+  "scene": 2,
+  "score": null,
+  "seed": 3301,
+  "server_error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-robotics-er-2-preview, description: Generate content requests per day limit exceeded on Free Tier. See https://ai.google.dev/gemini-api/docs/rate-limits.\\nPlease retry in 1h21m46.945803336s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'description': 'Generate content requests per day limit exceeded on Free Tier. See https://ai.google.dev/gemini-api/docs/rate-limits.', 'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-robotics-er-2-preview'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '4906s'}]}}",
+  "server_response_received": true,
+  "server_save_dir": "/opt/tiptop-project/tiptop/tiptop_server_outputs/2026-11-05_06-38-10",
+  "server_success": false,
+  "sim_duration_s": 0.0,
+  "stable_lift": null,
+  "started_utc": "2026-11-05T06:37:41+00:00",
+  "target_object": "_10_potted_meat_can",
+  "target_source": "explicit",
+  "task_success": null,
+  "terminated": false,
+  "trial": 1,
+  "truncated": false,
+  "variant": 3,
+  "versions": {
+    "project_dirty": false,
+    "project_sha": "e4bb12239c0f5e52820e57320bd6bb582d159665",
+    "provenance_file": "/workspace/MIT-6.4212-Final-Project/provenance/paper_split_host_20261105.json",
+    "provenance_sha256": "888d5fbdf524768204a0f5542b7267e1f284e7bbad1ad37de64c45d60cfcbd66",
+    "sim_dirty": false,
+    "sim_sha": "69a914cf56e0da6adafe9428de39b6ceffe9bcc6",
+    "tiptop_diff_sha256": "f192094e9d726c4471054fec374fad7dcaeff597260529d10fe8dfcd62cbffb1",
+    "tiptop_sha": "d8f5afdaa94a7432220c3042f9f80be5ab45aae8"
+  },
+  "wall_duration_s": 31.940454721450806
+}

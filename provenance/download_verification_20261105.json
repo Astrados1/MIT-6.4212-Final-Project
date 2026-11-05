@@ -1,0 +1,35 @@
+{
+  "verified_utc": "2026-11-05T06:59:35.862300+00:00",
+  "verification": [
+    {
+      "source": "pilot_scene1_20261105",
+      "files": 290,
+      "mismatches": []
+    },
+    {
+      "source": "paper_20261105",
+      "files": 275,
+      "mismatches": []
+    },
+    {
+      "source": "panda_model_check_20261105",
+      "files": 32,
+      "mismatches": []
+    },
+    {
+      "source": "planner-sanitized-logs",
+      "files": 117,
+      "mismatches": []
+    },
+    {
+      "source": "blackwell-sanitized-logs",
+      "files": 476,
+      "mismatches": []
+    },
+    {
+      "source": "planner-diagnostics",
+      "files": 50,
+      "mismatches": []
+    }
+  ]
+}

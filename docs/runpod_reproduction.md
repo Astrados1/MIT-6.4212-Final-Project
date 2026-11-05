@@ -119,3 +119,28 @@ Panda joint 6 upper limit is 3.7525 rad; the planner FR3 model allows 4.5169 rad
 commanded 4.219 rad just before release, producing saturation and a placement error. This is a
 model/asset integration defect, not evidence that the grasp was unstable. Any Panda-config
 validation must be identified as a separate condition rather than mixed into this baseline.
+
+The scheduler now stops on upstream API quota/rate-limit errors even when both local services
+remain healthy. Resolve the API limit before using `--resume`; do not count rejected calls as
+robot grasp failures. The November 5 key's project reported a free-tier daily request limit of
+20 for Gemini ER 2. The first run lacked this stop condition and retained all 35 quota failures.
+
+The scene inspections covered variant 0 of each scene. Later records exposed cubes falling
+below the table in scene 4 variants 1–3. Inspect the actual variants before a future survey;
+a passing variant-0 inspection does not establish valid initial states for every variant.
+
+For the separate cached-scene Panda diagnostic, run the following in the pinned TiPToP pixi
+environment, then replay the resulting plan in scene 1 variant 2 with seed 1200 and frozen
+scoring. The script uses saved geometry, goals and grasp candidates and makes no VLM calls.
+
+```bash
+pixi run python /workspace/MIT-6.4212-Final-Project/scripts/replan_saved_scene.py \
+  --source /opt/tiptop-project/tiptop/tiptop_server_outputs/2026-11-05_05-13-21 \
+  --config /workspace/MIT-6.4212-Final-Project/configs/tiptop_panda_sim.yml \
+  --out /opt/tiptop-project/tiptop/tiptop_server_outputs/panda_cached_check \
+  --seed 1200
+```
+
+This script rebuilds the original movable/static roles because the saved post-planning pickle
+contains an in-place mutation by cuTAMP. The configuration selects Panda's full robot model,
+including limits; this changes more than one joint bound. Preserve it as a diagnostic condition.

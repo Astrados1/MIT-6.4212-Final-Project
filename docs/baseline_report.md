@@ -1,9 +1,10 @@
 # TiPToP baseline execution and failure analysis — November 5, 2026
 
-**Status: all 15 pilot trials complete; 40-trial paper suite running.** The pilot returned and executed
-15/15 plans, produced 11/15 stable lifts (73%), and completed 9/15 tasks (60%). Its six task failures
-are four missed M2T2 grasps, one joint-limit integration failure, and one grasp-transform failure.
-The paper suite started at 06:05:03 UTC. Its results remain pending.
+**Status: pilot complete; paper suite attempted but limited by Gemini quota.** The pilot returned
+and executed 15/15 plans, produced 11/15 stable lifts (73%), and completed 9/15 tasks (60%).
+The larger suite executed five plans, with three stable lifts and three completed tasks; 35 other
+attempts were blocked by the model API daily quota. These are infrastructure failures, not robot
+failures. A separate cached-scene Panda-model diagnostic is documented below.
 
 ## What caused the delay
 
@@ -23,6 +24,14 @@ Isaac Sim 6.x migration experiments were unsuccessful and are excluded from the 
 The Google credential was valid: model lookup, a generation request and real planning calls passed.
 The simulator host has no Google key, so its local credential-presence WARN is expected. Model access
 was verified on the planner host. Two SSH loopback forwards carry the planner service traffic.
+
+The later paper run received `429 RESOURCE_EXHAUSTED` with
+`generativelanguage.googleapis.com/generate_content_free_tier_requests`, limit **20** for
+`gemini-robotics-er-2-preview`. No key replacement or GPU upgrade resolves that project quota.
+The evidence is retained in paper-run records and sanitized server logs. The original scheduler
+continued because HTTP health checks still passed; it spent approximately 40 seconds per rejected
+attempt. A regression-tested circuit breaker now stops before scheduling another simulator after
+a quota/rate-limit response. No Google billing change or model substitution was made.
 
 ## Tested environment and provenance
 
@@ -161,6 +170,37 @@ Sampled device peaks were 7,513 MiB simulator and 7,791 MiB planner. Their summe
 
 Target: scenes 1–5, first four variants each, two trials (40 intended). Started at 06:05:03 UTC with
 `--max-hours 2.6` and the frozen criteria. [Paper provenance](../provenance/paper_split_host_20261105.json).
+The suite ended at **06:47:29 UTC**, after 42.43 minutes. All 40 attempts have immutable records,
+but only five executed a plan: scene 1 variants 0–3, and scene 2 variant 2 on its second trial.
+The first quota rejection occurred at attempt 004; attempt 026 subsequently succeeded, while all
+other remaining attempts were rejected. The account's precise quota-reset behavior was not established.
+
+| measured outcome | count |
+|---|---:|
+| executed plans | 5/40 scheduled |
+| API-quota rejections | 35/40 scheduled |
+| stable lift among executed plans | 3/5 (60%; 95% Wilson 23–88%) |
+| task completion among executed plans | 3/5 (60%; 95% Wilson 23–88%) |
+| reviewed robot failures | 2 missed M2T2 grasps |
+
+The two misses reach only 1.21 and 1.65 cm rise; video shows empty carries. Two cubes are placed
+in bowls and one can in a mug. The can task succeeds despite a joint-7 command exceeding the
+simulator's negative limit by 0.117 rad, so a limit violation does not automatically imply task failure.
+Median executed-run wall time was 158.74 s (150.41–213.80); scheduling-to-finish median 166 s
+(159–222), planning median 10.18 s (9.73–13.18). Device peaks were 6,657 MiB simulator and
+8,961 MiB planner. The planner peak includes overlap with the separate replanning diagnostic.
+
+Six quota-blocked scene-4 attempts (variants 1–3, both trials) also show the cube below the table
+at initialization, at approximately z = −218 m. Variant-0 inspections had not exposed this.
+These variants need an asset/placement check before a future scene survey. No valid task outcomes
+are claimed for scenes 3–5. The 3/40 scheduled success count is a service-availability outcome,
+not an estimate of the robot's task competence across all five scenes.
+
+[Reviewed summary](../results/paper_20261105/summary.md) ·
+[Portable video review](../results/paper_20261105/review.html) ·
+[Labels](../results/paper_20261105/manual_labels.csv) ·
+[Trace/resource audit](../results/paper_20261105/measurement_audit.json).
+
 The paper's failure figure describes 173 separate DROID hardware trials with different tasks.
 This suite evaluates the five released simulation scenes; compare failure mechanisms, not raw
 success percentages as if the populations were matched.
@@ -191,7 +231,33 @@ success percentages as if the populations were matched.
 A separate [Panda configuration](../configs/tiptop_panda_sim.yml) changes only `robot.type` from
 `fr3_robotiq` to `panda_robotiq`. It loads successfully through
 [planner_with_config.py](../scripts/planner_with_config.py) without editing upstream source.
-A bounded end-to-end fix validation is pending; its results must stay separate from the baseline.
+The separate diagnostic reuses the failed pilot-002 scene geometry, grounded goal and M2T2
+candidates, with planner and simulator seed 1200. It changes the robot model to `panda_robotiq`,
+which includes its joint/velocity limits; this is not an isolated one-joint ablation. No VLM or
+perception request is made. Replanning found a nine-step plan in **1.26 s**; all **2,253** trajectory
+samples respect the simulator's joint limits, with at least 0.0141 rad margin. The old failed
+trajectory exceeded joint 6's limit by approximately 0.47 rad before release.
+
+The first cached-environment diagnostic failed before producing a skeleton. Inspection found
+that cuTAMP mutates `env.movables` by appending static objects, and the server saves this object
+after planning. Reconstructing the original roles through upstream `create_tamp_environment`
+using the unchanged saved meshes and grounded atoms fixes this diagnostic input issue.
+Both diagnostic outputs are preserved; the initial failure is not a Panda model failure.
+[Replanning script](../scripts/replan_saved_scene.py).
+
+The replay executed **799 control steps / 53.27 simulated seconds**, taking 210.70 s evaluator
+wall time (219 s from scheduling). It missed the cube: maximum rise **2.09 cm**, no stable lift,
+and no task completion. Video confirms an empty carry. No commanded joint violates the simulator
+limits; peak joint tracking error is 0.079 rad, and 0.029 rad during the first grasp. Thus the
+model correction resolves out-of-range commands in this test, but **does not establish improved
+success**. Replanning can choose a different grasp candidate, so this is not a matched-grasp
+causal ablation. No second attempt or recovery policy was added.
+
+[Diagnostic review](../results/panda_model_check_20261105/review.html) ·
+[Diagnostic summary](../results/panda_model_check_20261105/summary.md) ·
+[Planner metadata and trajectory limits](../provenance/panda_replan_result_20261105.json).
+The metadata also clarifies two baseline fields inherited by the diagnostic provenance file;
+its actual configuration hash and saved `tiptop.yml` identify the Panda condition.
 
 ## Behavior-changing modifications and measurement changes
 
@@ -204,10 +270,11 @@ A bounded end-to-end fix validation is pending; its results must stay separate f
 | proximity threshold 10 → 20 cm | corrects finger-origin reference mismatch; smoke correction is manual, later runs explicitly pass 20 cm |
 | portable local artifact links | review-only change; no simulation, record or policy change |
 | reviewed unattributed task-failure bucket | preserves confirmed failures in the denominator when the causal module is uncertain; postprocessing only |
-| Panda configuration | separate validation only, not active in the baseline |
+| Panda configuration and cached-scene replay | separate validation only, not active in the baseline |
+| quota circuit breaker | stops later paid simulator launches after API quota/rate-limit rejection; added after the paper run |
 
 No retries, learned policies, contact forces, friction, object geometry, physical attachment,
-waypoint timing or baseline planner defaults were changed. Local harness tests: 69 passing.
+waypoint timing or baseline planner defaults were changed. Local harness tests: **70 passing**, including the quota stop regression test.
 
 ## Artifacts, accounting and remaining limits
 
@@ -216,9 +283,21 @@ records, schedules, summaries, taxonomy files, review labels, provenance and doc
 large media and server outputs are gitignored. Sanitized startup/native logs, plots, GPU telemetry
 and diagnostic exports live beside the repository in `output/tiptop-baseline-20261104/`.
 
-Active account spend was $2.331/hour for the two pods including storage. The initial suite budget
-was capped at four additional hours. Final elapsed time, per-run memory/timing ranges, remaining
-trial counts, download hash verification and pod termination will be recorded at completion.
+The two active pods cost $2.331/hour including storage. Both were **terminated at 06:59:49–50 UTC**,
+and a provider listing confirmed neither remained. Three unrelated pods were left untouched.
+The four-hour additional-suite cap began at 05:03:20 UTC; shutdown occurred after 1.94 hours,
+well before the 09:03:20 deadline. All experiment hosts, including earlier failed startup hosts,
+account for approximately **6.22 GPU-hours / $6.22 GPU rental**
+from allocation timestamps; this estimate excludes storage and billing rounding.
+[Compute accounting](../provenance/compute_accounting_20261105.json) ·
+[Verified shutdown](../provenance/pod_shutdown_20261105.json).
+
+Downloads verified **290 pilot**, **275 paper**, **32 replay**, and **50 component/replanning**
+artifact hashes with zero mismatches, plus **593 sanitized-log hashes**. Each local review resolves
+its copied videos, traces and planner evidence. [Verification manifest](../provenance/download_verification_20261105.json).
+The 35 API-blocked paper attempts were not rerun or relabeled as robot failures; the intended
+40-trial robot evaluation remains incomplete. Before expanding it, restore Gemini quota and
+repair the invalid scene-4 variants. The cached-model replay is an additional diagnostic only.
 Automatic taxonomy labels are hypotheses until reviewed against the video, trace and planner
 artifacts. Finger-origin distance is not a contact sensor, and no complete USD link-by-link FK
 comparison has been performed.
