@@ -1,0 +1,23 @@
+{
+  "run_id": "021_s1v1_scene1_t1",
+  "thresholds": {
+    "perception_xy_error_m": 0.02,
+    "gripper_xy_offset_at_close_m": 0.02,
+    "joint_tracking_error_rad": 0.05,
+    "pushed_before_close_m": 0.01,
+    "missed_detection_radius_m": 0.05
+  },
+  "trace_available": false,
+  "plan_timing": {
+    "trajectory_dts_s": []
+  },
+  "cutamp_failure_reason": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-robotics-er-2-preview, description: Generate content requests per day limit exceeded on Free Tier. See https://ai.google.dev/gemini-api/docs/rate-limits.\\nPlease retry in 1h29m33.785158649s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'description': 'Generate content requests per day limit exceeded on Free Tier. See https://ai.google.dev/gemini-api/docs/rate-limits.', 'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-robotics-er-2-preview'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '5373s'}]}}",
+  "cutamp_failure_kind": "other",
+  "perceived_scene_available": false,
+  "perceived_scene_error": "cutamp_env.pkl not found (perception may have failed before scene construction)",
+  "stage_hint": null,
+  "paper_category": "infrastructure",
+  "evidence": [
+    "server error looks like infrastructure: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google."
+  ]
+}

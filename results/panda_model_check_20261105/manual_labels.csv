@@ -1,0 +1,2 @@
+run_id,stable_lift,failure_category,task_success,paper_category,note
+000_s1v2_scene1_t0,false,missed_grasp,false,grasp_failure/m2t2_unstable_grasp,"Separate cached-scene Panda diagnostic. Reviewed video shows closure followed by an empty carry; cube stays on table. Maximum rise 2.09 cm. All commanded joint positions remain inside simulator limits. Validates limit compliance, not task-success improvement; replanning may choose a different M2T2 candidate."

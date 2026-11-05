@@ -1,0 +1,50 @@
+{
+  "comparable_trials": 5,
+  "excluded": {
+    "infrastructure": 35
+  },
+  "nodes": [
+    "All Trials",
+    "Failure",
+    "Grasp Failure",
+    "M2T2 Unstable Grasp",
+    "Success"
+  ],
+  "links": [
+    {
+      "source": "All Trials",
+      "target": "Failure",
+      "value": 2
+    },
+    {
+      "source": "Failure",
+      "target": "Grasp Failure",
+      "value": 2
+    },
+    {
+      "source": "Grasp Failure",
+      "target": "M2T2 Unstable Grasp",
+      "value": 2
+    },
+    {
+      "source": "All Trials",
+      "target": "Success",
+      "value": 3
+    }
+  ],
+  "paper_reference_counts": {
+    "Success": 118,
+    "Failure": 55,
+    "Grasp Failure": 31,
+    "M2T2 Unstable Grasp": 20,
+    "Heuristic Unstable Grasp": 11,
+    "Scene Completion Failure": 13,
+    "Partial Observability": 13,
+    "Gemini VLM Failure": 6,
+    "Object Detection Failure": 5,
+    "Goal Translation Failure": 1,
+    "cuTAMP Failure": 5,
+    "cuRobo Motion Planning Failure": 3,
+    "Rigid Grasp Assumption": 2
+  }
+}

@@ -1,0 +1,624 @@
+{
+  "generated_utc": "2026-11-05T06:56:18.205361+00:00",
+  "notes": [
+    "Read-only audit; hypothetical threshold scores do not replace recorded outcomes.",
+    "GPU peaks cover scheduling through record completion, sampled at approximately 1 Hz.",
+    "Summing separate-host peak memory is an upper bound, not a tested single-host deployment."
+  ],
+  "telemetry_files": {
+    "simulator": "../output/tiptop-baseline-20261104/telemetry/simulator.csv",
+    "planner": "../output/tiptop-baseline-20261104/telemetry/planner.csv"
+  },
+  "runs": [
+    {
+      "run_id": "000_s1v0_scene1_t0",
+      "recorded_stable_lift": false,
+      "recorded_wall_s": 152.64664936065674,
+      "planning_s": 9.725625789957121,
+      "schedule_to_finish_s": 160.0,
+      "peak_memory_mib": {
+        "simulator": 6657.0,
+        "planner": 7481.0
+      },
+      "position_reference": "objects_center",
+      "max_rise_m": 0.012060360553942759,
+      "raised_closed_distance_m_min_median_max": null,
+      "proximity_sensitivity": {
+        "0.1": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.15": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.175": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.2": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.225": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        }
+      },
+      "max_joint_tracking_error_rad": 0.12597322463989258,
+      "first_grasp_max_joint_tracking_error_rad": 0.12597322463989258,
+      "joint_limit_violations": {}
+    },
+    {
+      "run_id": "001_s1v1_scene1_t0",
+      "recorded_stable_lift": true,
+      "recorded_wall_s": 158.73527431488037,
+      "planning_s": 10.03134925593622,
+      "schedule_to_finish_s": 166.0,
+      "peak_memory_mib": {
+        "simulator": 6657.0,
+        "planner": 7481.0
+      },
+      "position_reference": "objects_center",
+      "max_rise_m": 0.0980279119933121,
+      "raised_closed_distance_m_min_median_max": [
+        0.15497766028642387,
+        0.15502458468739244,
+        0.15502912904328917
+      ],
+      "proximity_sensitivity": {
+        "0.1": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.15": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.175": {
+          "stable_lift": true,
+          "longest_hold_s": 7.0
+        },
+        "0.2": {
+          "stable_lift": true,
+          "longest_hold_s": 7.0
+        },
+        "0.225": {
+          "stable_lift": true,
+          "longest_hold_s": 7.0
+        }
+      },
+      "max_joint_tracking_error_rad": 0.10541807115077972,
+      "first_grasp_max_joint_tracking_error_rad": 0.10541807115077972,
+      "joint_limit_violations": {}
+    },
+    {
+      "run_id": "002_s1v2_scene1_t0",
+      "recorded_stable_lift": false,
+      "recorded_wall_s": 150.411554813385,
+      "planning_s": 10.17602598387748,
+      "schedule_to_finish_s": 159.0,
+      "peak_memory_mib": {
+        "simulator": 6657.0,
+        "planner": 8961.0
+      },
+      "position_reference": "objects_center",
+      "max_rise_m": 0.016450832526379328,
+      "raised_closed_distance_m_min_median_max": null,
+      "proximity_sensitivity": {
+        "0.1": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.15": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.175": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.2": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.225": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        }
+      },
+      "max_joint_tracking_error_rad": 0.0976676344871521,
+      "first_grasp_max_joint_tracking_error_rad": 0.0976676344871521,
+      "joint_limit_violations": {}
+    },
+    {
+      "run_id": "003_s1v3_scene1_t0",
+      "recorded_stable_lift": true,
+      "recorded_wall_s": 168.3308641910553,
+      "planning_s": 13.183065711054951,
+      "schedule_to_finish_s": 177.0,
+      "peak_memory_mib": {
+        "simulator": 6657.0,
+        "planner": 7749.0
+      },
+      "position_reference": "objects_center",
+      "max_rise_m": 0.09600074166573898,
+      "raised_closed_distance_m_min_median_max": [
+        0.1559874914932684,
+        0.15601155826283183,
+        0.15601776536495865
+      ],
+      "proximity_sensitivity": {
+        "0.1": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.15": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.175": {
+          "stable_lift": true,
+          "longest_hold_s": 5.933333333333335
+        },
+        "0.2": {
+          "stable_lift": true,
+          "longest_hold_s": 5.933333333333335
+        },
+        "0.225": {
+          "stable_lift": true,
+          "longest_hold_s": 5.933333333333335
+        }
+      },
+      "max_joint_tracking_error_rad": 0.11379683017730713,
+      "first_grasp_max_joint_tracking_error_rad": 0.11089956760406494,
+      "joint_limit_violations": {}
+    },
+    {
+      "run_id": "004_s2v0_scene2_t0",
+      "recorded_stable_lift": null,
+      "recorded_wall_s": 30.463011264801025,
+      "planning_s": 1.6530990530736744,
+      "schedule_to_finish_s": 39.0,
+      "peak_memory_mib": {
+        "simulator": 6577.0,
+        "planner": 7481.0
+      }
+    },
+    {
+      "run_id": "005_s2v1_scene2_t0",
+      "recorded_stable_lift": null,
+      "recorded_wall_s": 30.699382781982422,
+      "planning_s": 1.8555337490979582,
+      "schedule_to_finish_s": 38.0,
+      "peak_memory_mib": {
+        "simulator": 6577.0,
+        "planner": 7481.0
+      }
+    },
+    {
+      "run_id": "006_s2v2_scene2_t0",
+      "recorded_stable_lift": null,
+      "recorded_wall_s": 31.132769107818604,
+      "planning_s": 2.219306926941499,
+      "schedule_to_finish_s": 39.0,
+      "peak_memory_mib": {
+        "simulator": 6577.0,
+        "planner": 7481.0
+      }
+    },
+    {
+      "run_id": "007_s2v3_scene2_t0",
+      "recorded_stable_lift": null,
+      "recorded_wall_s": 30.816953420639038,
+      "planning_s": 1.8475601561367512,
+      "schedule_to_finish_s": 39.0,
+      "peak_memory_mib": {
+        "simulator": 6577.0,
+        "planner": 7481.0
+      }
+    },
+    {
+      "run_id": "008_s3v0_scene3_t0",
+      "recorded_stable_lift": null,
+      "recorded_wall_s": 32.10169959068298,
+      "planning_s": 2.2572396909818053,
+      "schedule_to_finish_s": 40.0,
+      "peak_memory_mib": {
+        "simulator": 6641.0,
+        "planner": 7481.0
+      }
+    },
+    {
+      "run_id": "009_s3v1_scene3_t0",
+      "recorded_stable_lift": null,
+      "recorded_wall_s": 31.56817078590393,
+      "planning_s": 1.8963999398984015,
+      "schedule_to_finish_s": 39.0,
+      "peak_memory_mib": {
+        "simulator": 6641.0,
+        "planner": 7481.0
+      }
+    },
+    {
+      "run_id": "010_s3v2_scene3_t0",
+      "recorded_stable_lift": null,
+      "recorded_wall_s": 31.86592125892639,
+      "planning_s": 2.216777137015015,
+      "schedule_to_finish_s": 40.0,
+      "peak_memory_mib": {
+        "simulator": 6641.0,
+        "planner": 7481.0
+      }
+    },
+    {
+      "run_id": "011_s3v3_scene3_t0",
+      "recorded_stable_lift": null,
+      "recorded_wall_s": 31.609788179397583,
+      "planning_s": 1.8457611599005759,
+      "schedule_to_finish_s": 40.0,
+      "peak_memory_mib": {
+        "simulator": 6641.0,
+        "planner": 7481.0
+      }
+    },
+    {
+      "run_id": "012_s4v0_scene4_t0",
+      "recorded_stable_lift": null,
+      "recorded_wall_s": 32.162028551101685,
+      "planning_s": 2.143053518142551,
+      "schedule_to_finish_s": 40.0,
+      "peak_memory_mib": {
+        "simulator": 6785.0,
+        "planner": 7481.0
+      }
+    },
+    {
+      "run_id": "013_s4v1_scene4_t0",
+      "recorded_stable_lift": null,
+      "recorded_wall_s": 32.32908034324646,
+      "planning_s": 2.088687479030341,
+      "schedule_to_finish_s": 41.0,
+      "peak_memory_mib": {
+        "simulator": 6865.0,
+        "planner": 7481.0
+      }
+    },
+    {
+      "run_id": "014_s4v2_scene4_t0",
+      "recorded_stable_lift": null,
+      "recorded_wall_s": 32.295682430267334,
+      "planning_s": 1.8713249920401722,
+      "schedule_to_finish_s": 40.0,
+      "peak_memory_mib": {
+        "simulator": 6785.0,
+        "planner": 7481.0
+      }
+    },
+    {
+      "run_id": "015_s4v3_scene4_t0",
+      "recorded_stable_lift": null,
+      "recorded_wall_s": 31.762701988220215,
+      "planning_s": 1.8160918701905757,
+      "schedule_to_finish_s": 40.0,
+      "peak_memory_mib": {
+        "simulator": 6785.0,
+        "planner": 7481.0
+      }
+    },
+    {
+      "run_id": "016_s5v0_scene5_t0",
+      "recorded_stable_lift": null,
+      "recorded_wall_s": 31.942651748657227,
+      "planning_s": 1.750402427976951,
+      "schedule_to_finish_s": 40.0,
+      "peak_memory_mib": {
+        "simulator": 6817.0,
+        "planner": 7481.0
+      }
+    },
+    {
+      "run_id": "017_s5v1_scene5_t0",
+      "recorded_stable_lift": null,
+      "recorded_wall_s": 32.105701208114624,
+      "planning_s": 1.8325247820466757,
+      "schedule_to_finish_s": 40.0,
+      "peak_memory_mib": {
+        "simulator": 6817.0,
+        "planner": 7481.0
+      }
+    },
+    {
+      "run_id": "018_s5v2_scene5_t0",
+      "recorded_stable_lift": null,
+      "recorded_wall_s": 32.34421920776367,
+      "planning_s": 2.0927875549532473,
+      "schedule_to_finish_s": 41.0,
+      "peak_memory_mib": {
+        "simulator": 6817.0,
+        "planner": 7481.0
+      }
+    },
+    {
+      "run_id": "019_s5v3_scene5_t0",
+      "recorded_stable_lift": null,
+      "recorded_wall_s": 32.21504211425781,
+      "planning_s": 2.214839863125235,
+      "schedule_to_finish_s": 39.0,
+      "peak_memory_mib": {
+        "simulator": 6945.0,
+        "planner": 7481.0
+      }
+    },
+    {
+      "run_id": "020_s1v0_scene1_t1",
+      "recorded_stable_lift": null,
+      "recorded_wall_s": 31.79670786857605,
+      "planning_s": 1.9537244280800223,
+      "schedule_to_finish_s": 40.0,
+      "peak_memory_mib": {
+        "simulator": 6657.0,
+        "planner": 7481.0
+      }
+    },
+    {
+      "run_id": "021_s1v1_scene1_t1",
+      "recorded_stable_lift": null,
+      "recorded_wall_s": 32.28747749328613,
+      "planning_s": 2.129714934155345,
+      "schedule_to_finish_s": 40.0,
+      "peak_memory_mib": {
+        "simulator": 6657.0,
+        "planner": 7749.0
+      }
+    },
+    {
+      "run_id": "022_s1v2_scene1_t1",
+      "recorded_stable_lift": null,
+      "recorded_wall_s": 32.56292152404785,
+      "planning_s": 1.9605397989507765,
+      "schedule_to_finish_s": 40.0,
+      "peak_memory_mib": {
+        "simulator": 6657.0,
+        "planner": 7481.0
+      }
+    },
+    {
+      "run_id": "023_s1v3_scene1_t1",
+      "recorded_stable_lift": null,
+      "recorded_wall_s": 34.75358200073242,
+      "planning_s": 1.905322975013405,
+      "schedule_to_finish_s": 42.0,
+      "peak_memory_mib": {
+        "simulator": 6657.0,
+        "planner": 7481.0
+      }
+    },
+    {
+      "run_id": "024_s2v0_scene2_t1",
+      "recorded_stable_lift": null,
+      "recorded_wall_s": 30.74545907974243,
+      "planning_s": 1.6782391211017966,
+      "schedule_to_finish_s": 39.0,
+      "peak_memory_mib": {
+        "simulator": 6577.0,
+        "planner": 7481.0
+      }
+    },
+    {
+      "run_id": "025_s2v1_scene2_t1",
+      "recorded_stable_lift": null,
+      "recorded_wall_s": 31.529929161071777,
+      "planning_s": 2.007163339992985,
+      "schedule_to_finish_s": 40.0,
+      "peak_memory_mib": {
+        "simulator": 6577.0,
+        "planner": 7481.0
+      }
+    },
+    {
+      "run_id": "026_s2v2_scene2_t1",
+      "recorded_stable_lift": true,
+      "recorded_wall_s": 213.80210518836975,
+      "planning_s": 12.59301960002631,
+      "schedule_to_finish_s": 222.0,
+      "peak_memory_mib": {
+        "simulator": 6577.0,
+        "planner": 7499.0
+      },
+      "position_reference": "objects_center",
+      "max_rise_m": 0.13457609521505506,
+      "raised_closed_distance_m_min_median_max": [
+        0.13870008683651636,
+        0.13878721647845116,
+        0.13882090412636514
+      ],
+      "proximity_sensitivity": {
+        "0.1": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.15": {
+          "stable_lift": true,
+          "longest_hold_s": 11.533333333333335
+        },
+        "0.175": {
+          "stable_lift": true,
+          "longest_hold_s": 11.533333333333335
+        },
+        "0.2": {
+          "stable_lift": true,
+          "longest_hold_s": 11.533333333333335
+        },
+        "0.225": {
+          "stable_lift": true,
+          "longest_hold_s": 11.533333333333335
+        }
+      },
+      "max_joint_tracking_error_rad": 0.15167564153671265,
+      "first_grasp_max_joint_tracking_error_rad": 0.15167564153671265,
+      "joint_limit_violations": {
+        "panda_joint7": {
+          "simulator_limits_rad": [
+            -2.897300087848498,
+            2.897300087848498
+          ],
+          "command_min_max_rad": [
+            -3.0145065784454346,
+            1.0459476709365845
+          ],
+          "measured_min_max_rad": [
+            -2.8973004817962646,
+            1.0453451871871948
+          ],
+          "max_excess_rad": 0.11720649059693677,
+          "violating_samples": 103,
+          "violating_samples_during_first_grasp": 49
+        }
+      }
+    },
+    {
+      "run_id": "027_s2v3_scene2_t1",
+      "recorded_stable_lift": null,
+      "recorded_wall_s": 31.940454721450806,
+      "planning_s": 2.2019231179729104,
+      "schedule_to_finish_s": 40.0,
+      "peak_memory_mib": {
+        "simulator": 6577.0,
+        "planner": 7499.0
+      }
+    },
+    {
+      "run_id": "028_s3v0_scene3_t1",
+      "recorded_stable_lift": null,
+      "recorded_wall_s": 31.623120307922363,
+      "planning_s": 1.8130960890557617,
+      "schedule_to_finish_s": 39.0,
+      "peak_memory_mib": {
+        "simulator": 6641.0,
+        "planner": 7499.0
+      }
+    },
+    {
+      "run_id": "029_s3v1_scene3_t1",
+      "recorded_stable_lift": null,
+      "recorded_wall_s": 31.503377437591553,
+      "planning_s": 2.109386674128473,
+      "schedule_to_finish_s": 39.0,
+      "peak_memory_mib": {
+        "simulator": 6641.0,
+        "planner": 7499.0
+      }
+    },
+    {
+      "run_id": "030_s3v2_scene3_t1",
+      "recorded_stable_lift": null,
+      "recorded_wall_s": 32.25201416015625,
+      "planning_s": 1.998067663051188,
+      "schedule_to_finish_s": 40.0,
+      "peak_memory_mib": {
+        "simulator": 6641.0,
+        "planner": 7499.0
+      }
+    },
+    {
+      "run_id": "031_s3v3_scene3_t1",
+      "recorded_stable_lift": null,
+      "recorded_wall_s": 31.581910848617554,
+      "planning_s": 1.933404834009707,
+      "schedule_to_finish_s": 39.0,
+      "peak_memory_mib": {
+        "simulator": 6641.0,
+        "planner": 7499.0
+      }
+    },
+    {
+      "run_id": "032_s4v0_scene4_t1",
+      "recorded_stable_lift": null,
+      "recorded_wall_s": 32.20543813705444,
+      "planning_s": 1.9214544789865613,
+      "schedule_to_finish_s": 40.0,
+      "peak_memory_mib": {
+        "simulator": 6785.0,
+        "planner": 7499.0
+      }
+    },
+    {
+      "run_id": "033_s4v1_scene4_t1",
+      "recorded_stable_lift": null,
+      "recorded_wall_s": 31.84497904777527,
+      "planning_s": 2.1107431850396097,
+      "schedule_to_finish_s": 39.0,
+      "peak_memory_mib": {
+        "simulator": 6785.0,
+        "planner": 7499.0
+      }
+    },
+    {
+      "run_id": "034_s4v2_scene4_t1",
+      "recorded_stable_lift": null,
+      "recorded_wall_s": 32.02884888648987,
+      "planning_s": 2.030923280166462,
+      "schedule_to_finish_s": 40.0,
+      "peak_memory_mib": {
+        "simulator": 6785.0,
+        "planner": 7499.0
+      }
+    },
+    {
+      "run_id": "035_s4v3_scene4_t1",
+      "recorded_stable_lift": null,
+      "recorded_wall_s": 32.09945583343506,
+      "planning_s": 2.054654449922964,
+      "schedule_to_finish_s": 40.0,
+      "peak_memory_mib": {
+        "simulator": 6785.0,
+        "planner": 7499.0
+      }
+    },
+    {
+      "run_id": "036_s5v0_scene5_t1",
+      "recorded_stable_lift": null,
+      "recorded_wall_s": 31.78163981437683,
+      "planning_s": 1.8320519451517612,
+      "schedule_to_finish_s": 40.0,
+      "peak_memory_mib": {
+        "simulator": 6817.0,
+        "planner": 7767.0
+      }
+    },
+    {
+      "run_id": "037_s5v1_scene5_t1",
+      "recorded_stable_lift": null,
+      "recorded_wall_s": 32.00749468803406,
+      "planning_s": 1.9087048538494855,
+      "schedule_to_finish_s": 40.0,
+      "peak_memory_mib": {
+        "simulator": 6977.0,
+        "planner": 7499.0
+      }
+    },
+    {
+      "run_id": "038_s5v2_scene5_t1",
+      "recorded_stable_lift": null,
+      "recorded_wall_s": 32.32211256027222,
+      "planning_s": 2.2651435371953994,
+      "schedule_to_finish_s": 40.0,
+      "peak_memory_mib": {
+        "simulator": 6817.0,
+        "planner": 7499.0
+      }
+    },
+    {
+      "run_id": "039_s5v3_scene5_t1",
+      "recorded_stable_lift": null,
+      "recorded_wall_s": 32.4551055431366,
+      "planning_s": 1.788569119060412,
+      "schedule_to_finish_s": 40.0,
+      "peak_memory_mib": {
+        "simulator": 6817.0,
+        "planner": 7499.0
+      }
+    }
+  ]
+}

@@ -9,6 +9,7 @@ results/**/*.mp4
 results/**/*.npz
 results/**/console.log
 results/**/observed_eval.log
+results/**/server_outputs/
 
 # Upstream checkouts if someone puts TIPTOP_DIR inside this repo
 /tiptop/

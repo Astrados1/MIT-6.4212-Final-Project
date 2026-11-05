@@ -1,0 +1,13 @@
+{
+  "verified_utc": "2026-11-05T06:59:51.288459+00:00",
+  "experiment_pod_ids": [
+    "9ykaj1fmzb2xx9",
+    "t811w0kcx16xwc"
+  ],
+  "remaining_experiment_pods": [],
+  "account": {
+    "currentSpendPerHr": 2.331
+  },
+  "unrelated_pods_untouched": 3,
+  "privacy_note": "Account balance omitted from public provenance; complete private response retained locally."
+}

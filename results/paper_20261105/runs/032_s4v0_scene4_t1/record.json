@@ -1,0 +1,445 @@
+{
+  "artifacts": {
+    "log": "/workspace/MIT-6.4212-Final-Project/results/paper_20261105/runs/032_s4v0_scene4_t1/observed_eval.log",
+    "server_log": "/opt/tiptop-project/tiptop/tiptop_server_outputs/2026-11-05_06-41-59/tiptop_run.log",
+    "server_outputs": "/opt/tiptop-project/tiptop/tiptop_server_outputs/2026-11-05_06-41-59",
+    "server_plan": "/opt/tiptop-project/tiptop/tiptop_server_outputs/2026-11-05_06-41-59/tiptop_plan.json"
+  },
+  "criteria": {
+    "close_threshold": 0.5,
+    "max_obj_to_gripper_m": 0.2,
+    "min_hold_s": 0.5,
+    "min_rise_m": 0.05
+  },
+  "executed_steps": 0,
+  "failure_category": "unknown",
+  "failure_category_source": "auto",
+  "failure_detail": "server returned no plan; check server log: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-robotics-er-2-preview, description: Generate content requests per day limit exceeded on Free Tier. See https://ai.google.dev/gemini-api/docs/rate-limits.\\nPlease retry in 1h17m58.50506783s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'description': 'Generate content requests per day limit exceeded on Free Tier. See https://ai.google.dev/gemini-api/docs/rate-limits.', 'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-robotics-er-2-preview'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '4678s'}]}}",
+  "final_object_centers": {
+    "_04_sugar_box": [
+      0.318703950960001,
+      0.030493040855601443,
+      0.06641540416668748
+    ],
+    "_05_tomato_soup_can": [
+      0.71681809425354,
+      0.2960648536682129,
+      0.09595413506031036
+    ],
+    "_06_mustard_bottle": [
+      0.6907375454902649,
+      -0.051755793392658234,
+      0.14036515355110168
+    ],
+    "_10_potted_meat_can": [
+      0.5920638284593137,
+      0.13038738595113858,
+      0.08668030079594441
+    ],
+    "_11_banana": [
+      0.7298501236551953,
+      -0.30563108809497486,
+      0.060312372113947056
+    ],
+    "_24_bowl": [
+      0.42311001238756774,
+      0.344242300858869,
+      0.07386093786137007
+    ],
+    "_25_mug": [
+      0.5435511572802696,
+      -0.1624646783749672,
+      0.08701041198351345
+    ],
+    "rubiks_cube": [
+      0.33480312738089224,
+      -0.18285193251616982,
+      0.08119079001211435
+    ]
+  },
+  "final_object_positions": {
+    "_04_sugar_box": [
+      0.3186677098274231,
+      0.030271612107753754,
+      0.07878836989402771
+    ],
+    "_05_tomato_soup_can": [
+      0.71681809425354,
+      0.2960648536682129,
+      0.09595413506031036
+    ],
+    "_06_mustard_bottle": [
+      0.6907375454902649,
+      -0.051755793392658234,
+      0.14036515355110168
+    ],
+    "_10_potted_meat_can": [
+      0.31786951422691345,
+      0.09542187303304672,
+      0.0947783961892128
+    ],
+    "_11_banana": [
+      0.6586543917655945,
+      -0.35672682523727417,
+      0.06559139490127563
+    ],
+    "_24_bowl": [
+      0.4075862765312195,
+      0.17241427302360535,
+      0.07386038452386856
+    ],
+    "_25_mug": [
+      0.5435461401939392,
+      -0.1624646633863449,
+      0.07918041199445724
+    ],
+    "rubiks_cube": [
+      0.3455713987350464,
+      0.018682152032852173,
+      0.09069494158029556
+    ]
+  },
+  "final_object_quats": {
+    "_04_sugar_box": [
+      0.9999567866325378,
+      0.00894390232861042,
+      -0.0014830568106845021,
+      0.002091294154524803
+    ],
+    "_05_tomato_soup_can": [
+      -0.7069835662841797,
+      0.7072262167930603,
+      0.001618794514797628,
+      0.0016195906791836023
+    ],
+    "_06_mustard_bottle": [
+      -0.5055217146873474,
+      0.4945581257343292,
+      -0.4933869242668152,
+      0.5063885450363159
+    ],
+    "_10_potted_meat_can": [
+      -0.681649386882782,
+      0.6843814849853516,
+      -0.18179567158222198,
+      0.18419139087200165
+    ],
+    "_11_banana": [
+      0.5424671173095703,
+      0.7454192042350769,
+      0.31458136439323425,
+      0.2260933667421341
+    ],
+    "_24_bowl": [
+      0.7070746421813965,
+      -0.707072377204895,
+      -0.006850509438663721,
+      0.006850367411971092
+    ],
+    "_25_mug": [
+      0.7071074843406677,
+      -0.7071061730384827,
+      3.382117938599549e-05,
+      -3.227809429517947e-05
+    ],
+    "rubiks_cube": [
+      0.7063567042350769,
+      0.7072586417198181,
+      0.02103244885802269,
+      0.020078711211681366
+    ]
+  },
+  "finished_utc": "2026-11-05T06:42:01+00:00",
+  "goal": [
+    {
+      "container": "_25_mug",
+      "objects": [
+        "rubiks_cube"
+      ],
+      "relation": "on"
+    },
+    {
+      "container": "_24_bowl",
+      "objects": [
+        "_05_tomato_soup_can",
+        "_10_potted_meat_can"
+      ],
+      "relation": "in"
+    }
+  ],
+  "harness_exception": null,
+  "initial_object_centers": {
+    "_04_sugar_box": [
+      0.318703950960001,
+      0.030493040855601443,
+      0.06641540416668748
+    ],
+    "_05_tomato_soup_can": [
+      0.71681809425354,
+      0.2960648536682129,
+      0.09595413506031036
+    ],
+    "_06_mustard_bottle": [
+      0.6907375454902649,
+      -0.051755793392658234,
+      0.14036515355110168
+    ],
+    "_10_potted_meat_can": [
+      0.5920638284593137,
+      0.13038738595113858,
+      0.08668030079594441
+    ],
+    "_11_banana": [
+      0.7298501236551953,
+      -0.30563108809497486,
+      0.060312372113947056
+    ],
+    "_24_bowl": [
+      0.42311001238756774,
+      0.344242300858869,
+      0.07386093786137007
+    ],
+    "_25_mug": [
+      0.5435511572802696,
+      -0.1624646783749672,
+      0.08701041198351345
+    ],
+    "rubiks_cube": [
+      0.33480312738089224,
+      -0.18285193251616982,
+      0.08119079001211435
+    ]
+  },
+  "initial_object_positions": {
+    "_04_sugar_box": [
+      0.3186677098274231,
+      0.030271612107753754,
+      0.07878836989402771
+    ],
+    "_05_tomato_soup_can": [
+      0.71681809425354,
+      0.2960648536682129,
+      0.09595413506031036
+    ],
+    "_06_mustard_bottle": [
+      0.6907375454902649,
+      -0.051755793392658234,
+      0.14036515355110168
+    ],
+    "_10_potted_meat_can": [
+      0.31786951422691345,
+      0.09542187303304672,
+      0.0947783961892128
+    ],
+    "_11_banana": [
+      0.6586543917655945,
+      -0.35672682523727417,
+      0.06559139490127563
+    ],
+    "_24_bowl": [
+      0.4075862765312195,
+      0.17241427302360535,
+      0.07386038452386856
+    ],
+    "_25_mug": [
+      0.5435461401939392,
+      -0.1624646633863449,
+      0.07918041199445724
+    ],
+    "rubiks_cube": [
+      0.3455713987350464,
+      0.018682152032852173,
+      0.09069494158029556
+    ]
+  },
+  "initial_object_quats": {
+    "_04_sugar_box": [
+      0.9999567866325378,
+      0.00894390232861042,
+      -0.0014830568106845021,
+      0.002091294154524803
+    ],
+    "_05_tomato_soup_can": [
+      -0.7069835662841797,
+      0.7072262167930603,
+      0.001618794514797628,
+      0.0016195906791836023
+    ],
+    "_06_mustard_bottle": [
+      -0.5055217146873474,
+      0.4945581257343292,
+      -0.4933869242668152,
+      0.5063885450363159
+    ],
+    "_10_potted_meat_can": [
+      -0.681649386882782,
+      0.6843814849853516,
+      -0.18179567158222198,
+      0.18419139087200165
+    ],
+    "_11_banana": [
+      0.5424671173095703,
+      0.7454192042350769,
+      0.31458136439323425,
+      0.2260933667421341
+    ],
+    "_24_bowl": [
+      0.7070746421813965,
+      -0.707072377204895,
+      -0.006850509438663721,
+      0.006850367411971092
+    ],
+    "_25_mug": [
+      0.7071074843406677,
+      -0.7071061730384827,
+      3.382117938599549e-05,
+      -3.227809429517947e-05
+    ],
+    "rubiks_cube": [
+      0.7063567042350769,
+      0.7072586417198181,
+      0.02103244885802269,
+      0.020078711211681366
+    ]
+  },
+  "instruction": "Put the cube on the mug and the cans in the bowl.",
+  "object_bounds_notes": {},
+  "object_local_bounds": {
+    "_04_sugar_box": [
+      [
+        -0.04634,
+        -0.08813,
+        -0.03494
+      ],
+      [
+        0.04634,
+        0.08813,
+        0.01019
+      ]
+    ],
+    "_05_tomato_soup_can": [
+      [
+        -0.03383,
+        -0.05093,
+        -0.03386
+      ],
+      [
+        0.03383,
+        0.05093,
+        0.03386
+      ]
+    ],
+    "_06_mustard_bottle": [
+      [
+        -0.04801,
+        -0.09565,
+        -0.02912
+      ],
+      [
+        0.04801,
+        0.09565,
+        0.02912
+      ]
+    ],
+    "_10_potted_meat_can": [
+      [
+        0.16913,
+        -0.03321,
+        0.13859
+      ],
+      [
+        0.27077,
+        0.05033,
+        0.19619
+      ]
+    ],
+    "_11_banana": [
+      [
+        -0.01224,
+        -0.01933,
+        -0.02116
+      ],
+      [
+        0.18493,
+        0.01932,
+        0.05291
+      ]
+    ],
+    "_24_bowl": [
+      [
+        -0.06173,
+        -0.0275,
+        0.09076
+      ],
+      [
+        0.09943,
+        0.0275,
+        0.25223
+      ]
+    ],
+    "_25_mug": [
+      [
+        -0.05849,
+        -0.04848,
+        -0.04654
+      ],
+      [
+        0.0585,
+        0.03282,
+        0.04654
+      ]
+    ],
+    "rubiks_cube": [
+      [
+        -0.05858,
+        -0.04548,
+        0.16445
+      ],
+      [
+        0.01368,
+        0.02694,
+        0.23671
+      ]
+    ]
+  },
+  "plan_done": false,
+  "plan_num_close_steps": null,
+  "plan_num_steps": null,
+  "plan_q_init_max_abs_diff_rad": null,
+  "plan_source": "server",
+  "planning_time_s": 1.9214544789865613,
+  "probe": {
+    "label": "scene4",
+    "type": "baseline"
+  },
+  "replayed_plan": null,
+  "run_id": "032_s4v0_scene4_t1",
+  "scene": 4,
+  "score": null,
+  "seed": 5001,
+  "server_error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-robotics-er-2-preview, description: Generate content requests per day limit exceeded on Free Tier. See https://ai.google.dev/gemini-api/docs/rate-limits.\\nPlease retry in 1h17m58.50506783s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'description': 'Generate content requests per day limit exceeded on Free Tier. See https://ai.google.dev/gemini-api/docs/rate-limits.', 'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-robotics-er-2-preview'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '4678s'}]}}",
+  "server_response_received": true,
+  "server_save_dir": "/opt/tiptop-project/tiptop/tiptop_server_outputs/2026-11-05_06-41-59",
+  "server_success": false,
+  "sim_duration_s": 0.0,
+  "stable_lift": null,
+  "started_utc": "2026-11-05T06:41:29+00:00",
+  "target_object": "from-plan",
+  "target_source": "unresolved",
+  "task_success": null,
+  "terminated": false,
+  "trial": 1,
+  "truncated": false,
+  "variant": 0,
+  "versions": {
+    "project_dirty": false,
+    "project_sha": "e4bb12239c0f5e52820e57320bd6bb582d159665",
+    "provenance_file": "/workspace/MIT-6.4212-Final-Project/provenance/paper_split_host_20261105.json",
+    "provenance_sha256": "888d5fbdf524768204a0f5542b7267e1f284e7bbad1ad37de64c45d60cfcbd66",
+    "sim_dirty": false,
+    "sim_sha": "69a914cf56e0da6adafe9428de39b6ceffe9bcc6",
+    "tiptop_diff_sha256": "f192094e9d726c4471054fec374fad7dcaeff597260529d10fe8dfcd62cbffb1",
+    "tiptop_sha": "d8f5afdaa94a7432220c3042f9f80be5ab45aae8"
+  },
+  "wall_duration_s": 32.20543813705444
+}

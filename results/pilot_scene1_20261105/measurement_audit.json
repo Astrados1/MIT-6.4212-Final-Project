@@ -1,0 +1,732 @@
+{
+  "generated_utc": "2026-11-05T06:04:16.637942+00:00",
+  "notes": [
+    "Read-only audit; hypothetical threshold scores do not replace recorded outcomes.",
+    "GPU peaks cover scheduling through record completion, sampled at approximately 1 Hz.",
+    "Summing separate-host peak memory is an upper bound, not a tested single-host deployment."
+  ],
+  "telemetry_files": {
+    "simulator": "../output/tiptop-baseline-20261104/telemetry/simulator.csv",
+    "planner": "../output/tiptop-baseline-20261104/telemetry/planner.csv"
+  },
+  "runs": [
+    {
+      "run_id": "000_s1v0_baseline_t0",
+      "recorded_stable_lift": true,
+      "recorded_wall_s": 171.14080953598022,
+      "planning_s": 11.961267699021846,
+      "schedule_to_finish_s": 180.0,
+      "peak_memory_mib": {
+        "simulator": 6657.0,
+        "planner": 7607.0
+      },
+      "position_reference": "objects_center",
+      "max_rise_m": 0.09856727496590623,
+      "raised_closed_distance_m_min_median_max": [
+        0.16112321281552922,
+        0.16126878801598532,
+        0.16127404228207545
+      ],
+      "proximity_sensitivity": {
+        "0.1": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.15": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.175": {
+          "stable_lift": true,
+          "longest_hold_s": 7.7333333333333325
+        },
+        "0.2": {
+          "stable_lift": true,
+          "longest_hold_s": 7.7333333333333325
+        },
+        "0.225": {
+          "stable_lift": true,
+          "longest_hold_s": 7.7333333333333325
+        }
+      },
+      "max_joint_tracking_error_rad": 0.10222798585891724,
+      "first_grasp_max_joint_tracking_error_rad": 0.04086923599243164,
+      "joint_limit_violations": {}
+    },
+    {
+      "run_id": "001_s1v1_baseline_t0",
+      "recorded_stable_lift": true,
+      "recorded_wall_s": 150.98608708381653,
+      "planning_s": 10.500037305057049,
+      "schedule_to_finish_s": 159.0,
+      "peak_memory_mib": {
+        "simulator": 6689.0,
+        "planner": 7295.0
+      },
+      "position_reference": "objects_center",
+      "max_rise_m": 0.08448847700782747,
+      "raised_closed_distance_m_min_median_max": [
+        0.1715763902092961,
+        0.17210411490575206,
+        0.1722682209837112
+      ],
+      "proximity_sensitivity": {
+        "0.1": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.15": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.175": {
+          "stable_lift": true,
+          "longest_hold_s": 4.800000000000001
+        },
+        "0.2": {
+          "stable_lift": true,
+          "longest_hold_s": 4.800000000000001
+        },
+        "0.225": {
+          "stable_lift": true,
+          "longest_hold_s": 4.800000000000001
+        }
+      },
+      "max_joint_tracking_error_rad": 0.10010371543467045,
+      "first_grasp_max_joint_tracking_error_rad": 0.10010371543467045,
+      "joint_limit_violations": {}
+    },
+    {
+      "run_id": "002_s1v2_baseline_t0",
+      "recorded_stable_lift": true,
+      "recorded_wall_s": 232.17290711402893,
+      "planning_s": 11.159694300033152,
+      "schedule_to_finish_s": 240.0,
+      "peak_memory_mib": {
+        "simulator": 7513.0,
+        "planner": 7563.0
+      },
+      "position_reference": "objects_center",
+      "max_rise_m": 0.24607806727187176,
+      "raised_closed_distance_m_min_median_max": [
+        0.15320858882725563,
+        0.1532533592025376,
+        0.15341502639902113
+      ],
+      "proximity_sensitivity": {
+        "0.1": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.15": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.175": {
+          "stable_lift": true,
+          "longest_hold_s": 11.133333333333336
+        },
+        "0.2": {
+          "stable_lift": true,
+          "longest_hold_s": 11.133333333333336
+        },
+        "0.225": {
+          "stable_lift": true,
+          "longest_hold_s": 11.133333333333336
+        }
+      },
+      "max_joint_tracking_error_rad": 0.5598089694976807,
+      "first_grasp_max_joint_tracking_error_rad": 0.5586893558502197,
+      "joint_limit_violations": {
+        "panda_joint6": {
+          "simulator_limits_rad": [
+            -0.01749999978815516,
+            3.752499969733032
+          ],
+          "command_min_max_rad": [
+            1.8849554061889648,
+            4.312309265136719
+          ],
+          "measured_min_max_rad": [
+            1.884955644607544,
+            3.7525012493133545
+          ],
+          "max_excess_rad": 0.5598092954036868,
+          "violating_samples": 206,
+          "violating_samples_during_first_grasp": 112
+        },
+        "panda_joint7": {
+          "simulator_limits_rad": [
+            -2.897300087848498,
+            2.897300087848498
+          ],
+          "command_min_max_rad": [
+            0.0,
+            3.009460210800171
+          ],
+          "measured_min_max_rad": [
+            0.0,
+            2.8973007202148438
+          ],
+          "max_excess_rad": 0.1121601229516731,
+          "violating_samples": 68,
+          "violating_samples_during_first_grasp": 15
+        }
+      }
+    },
+    {
+      "run_id": "003_s1v3_baseline_t0",
+      "recorded_stable_lift": true,
+      "recorded_wall_s": 160.2181041240692,
+      "planning_s": 20.767416049027815,
+      "schedule_to_finish_s": 168.0,
+      "peak_memory_mib": {
+        "simulator": 6657.0,
+        "planner": 7299.0
+      },
+      "position_reference": "objects_center",
+      "max_rise_m": 0.1048615300969966,
+      "raised_closed_distance_m_min_median_max": [
+        0.1505905717597634,
+        0.150593422836377,
+        0.1506058551219028
+      ],
+      "proximity_sensitivity": {
+        "0.1": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.15": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.175": {
+          "stable_lift": true,
+          "longest_hold_s": 6.199999999999999
+        },
+        "0.2": {
+          "stable_lift": true,
+          "longest_hold_s": 6.199999999999999
+        },
+        "0.225": {
+          "stable_lift": true,
+          "longest_hold_s": 6.199999999999999
+        }
+      },
+      "max_joint_tracking_error_rad": 0.06660207360982895,
+      "first_grasp_max_joint_tracking_error_rad": 0.042459070682525635,
+      "joint_limit_violations": {}
+    },
+    {
+      "run_id": "004_s1v4_baseline_t0",
+      "recorded_stable_lift": false,
+      "recorded_wall_s": 139.4633891582489,
+      "planning_s": 9.557395537151024,
+      "schedule_to_finish_s": 148.0,
+      "peak_memory_mib": {
+        "simulator": 6657.0,
+        "planner": 7335.0
+      },
+      "position_reference": "objects_center",
+      "max_rise_m": 0.007939337116732864,
+      "raised_closed_distance_m_min_median_max": null,
+      "proximity_sensitivity": {
+        "0.1": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.15": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.175": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.2": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.225": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        }
+      },
+      "max_joint_tracking_error_rad": 0.08628061413764954,
+      "first_grasp_max_joint_tracking_error_rad": 0.08628061413764954,
+      "joint_limit_violations": {}
+    },
+    {
+      "run_id": "005_s1v0_baseline_t1",
+      "recorded_stable_lift": true,
+      "recorded_wall_s": 148.80969643592834,
+      "planning_s": 9.664413925027475,
+      "schedule_to_finish_s": 157.0,
+      "peak_memory_mib": {
+        "simulator": 6657.0,
+        "planner": 7715.0
+      },
+      "position_reference": "objects_center",
+      "max_rise_m": 0.08806649112184986,
+      "raised_closed_distance_m_min_median_max": [
+        0.1669237607883431,
+        0.16693039096375384,
+        0.16704839116901835
+      ],
+      "proximity_sensitivity": {
+        "0.1": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.15": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.175": {
+          "stable_lift": true,
+          "longest_hold_s": 4.599999999999998
+        },
+        "0.2": {
+          "stable_lift": true,
+          "longest_hold_s": 4.599999999999998
+        },
+        "0.225": {
+          "stable_lift": true,
+          "longest_hold_s": 4.599999999999998
+        }
+      },
+      "max_joint_tracking_error_rad": 0.0802375078201294,
+      "first_grasp_max_joint_tracking_error_rad": 0.048540592193603516,
+      "joint_limit_violations": {}
+    },
+    {
+      "run_id": "006_s1v1_baseline_t1",
+      "recorded_stable_lift": true,
+      "recorded_wall_s": 156.0354142189026,
+      "planning_s": 9.79710761201568,
+      "schedule_to_finish_s": 164.0,
+      "peak_memory_mib": {
+        "simulator": 6657.0,
+        "planner": 7429.0
+      },
+      "position_reference": "objects_center",
+      "max_rise_m": 0.10091185579713724,
+      "raised_closed_distance_m_min_median_max": [
+        0.15313323857079716,
+        0.15319799057644834,
+        0.15323944419183075
+      ],
+      "proximity_sensitivity": {
+        "0.1": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.15": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.175": {
+          "stable_lift": true,
+          "longest_hold_s": 5.933333333333332
+        },
+        "0.2": {
+          "stable_lift": true,
+          "longest_hold_s": 5.933333333333332
+        },
+        "0.225": {
+          "stable_lift": true,
+          "longest_hold_s": 5.933333333333332
+        }
+      },
+      "max_joint_tracking_error_rad": 0.1038827896118164,
+      "first_grasp_max_joint_tracking_error_rad": 0.03462028503417969,
+      "joint_limit_violations": {}
+    },
+    {
+      "run_id": "007_s1v2_baseline_t1",
+      "recorded_stable_lift": true,
+      "recorded_wall_s": 153.30551171302795,
+      "planning_s": 10.125495634041727,
+      "schedule_to_finish_s": 162.0,
+      "peak_memory_mib": {
+        "simulator": 6657.0,
+        "planner": 7697.0
+      },
+      "position_reference": "objects_center",
+      "max_rise_m": 0.05132202777889605,
+      "raised_closed_distance_m_min_median_max": [
+        0.14831329849715438,
+        0.14843492655953056,
+        0.14875342496197794
+      ],
+      "proximity_sensitivity": {
+        "0.1": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.15": {
+          "stable_lift": true,
+          "longest_hold_s": 1.3333333333333357
+        },
+        "0.175": {
+          "stable_lift": true,
+          "longest_hold_s": 1.3333333333333357
+        },
+        "0.2": {
+          "stable_lift": true,
+          "longest_hold_s": 1.3333333333333357
+        },
+        "0.225": {
+          "stable_lift": true,
+          "longest_hold_s": 1.3333333333333357
+        }
+      },
+      "max_joint_tracking_error_rad": 0.08609902858734131,
+      "first_grasp_max_joint_tracking_error_rad": 0.07144832611083984,
+      "joint_limit_violations": {}
+    },
+    {
+      "run_id": "008_s1v3_baseline_t1",
+      "recorded_stable_lift": true,
+      "recorded_wall_s": 212.1712019443512,
+      "planning_s": 9.9798751862254,
+      "schedule_to_finish_s": 220.0,
+      "peak_memory_mib": {
+        "simulator": 6657.0,
+        "planner": 7429.0
+      },
+      "position_reference": "objects_center",
+      "max_rise_m": 0.12962686303554938,
+      "raised_closed_distance_m_min_median_max": [
+        0.16515145990359673,
+        0.17790478742140708,
+        0.18407808773673265
+      ],
+      "proximity_sensitivity": {
+        "0.1": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.15": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.175": {
+          "stable_lift": true,
+          "longest_hold_s": 1.3333333333333321
+        },
+        "0.2": {
+          "stable_lift": true,
+          "longest_hold_s": 7.2666666666666675
+        },
+        "0.225": {
+          "stable_lift": true,
+          "longest_hold_s": 7.2666666666666675
+        }
+      },
+      "max_joint_tracking_error_rad": 0.09964442253112793,
+      "first_grasp_max_joint_tracking_error_rad": 0.09964442253112793,
+      "joint_limit_violations": {}
+    },
+    {
+      "run_id": "009_s1v4_baseline_t1",
+      "recorded_stable_lift": false,
+      "recorded_wall_s": 178.72199273109436,
+      "planning_s": 9.07873187889345,
+      "schedule_to_finish_s": 187.0,
+      "peak_memory_mib": {
+        "simulator": 6657.0,
+        "planner": 7429.0
+      },
+      "position_reference": "objects_center",
+      "max_rise_m": 0.010680422406178253,
+      "raised_closed_distance_m_min_median_max": null,
+      "proximity_sensitivity": {
+        "0.1": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.15": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.175": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.2": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.225": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        }
+      },
+      "max_joint_tracking_error_rad": 0.11387419700622559,
+      "first_grasp_max_joint_tracking_error_rad": 0.0753241777420044,
+      "joint_limit_violations": {
+        "panda_joint7": {
+          "simulator_limits_rad": [
+            -2.897300087848498,
+            2.897300087848498
+          ],
+          "command_min_max_rad": [
+            -2.9456846714019775,
+            0.0
+          ],
+          "measured_min_max_rad": [
+            -2.8973002433776855,
+            0.0
+          ],
+          "max_excess_rad": 0.04838458355347974,
+          "violating_samples": 23,
+          "violating_samples_during_first_grasp": 23
+        }
+      }
+    },
+    {
+      "run_id": "010_s1v0_baseline_t2",
+      "recorded_stable_lift": false,
+      "recorded_wall_s": 206.07372784614563,
+      "planning_s": 11.180311528034508,
+      "schedule_to_finish_s": 214.0,
+      "peak_memory_mib": {
+        "simulator": 6657.0,
+        "planner": 7477.0
+      },
+      "position_reference": "objects_center",
+      "max_rise_m": 0.003421398432770076,
+      "raised_closed_distance_m_min_median_max": null,
+      "proximity_sensitivity": {
+        "0.1": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.15": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.175": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.2": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.225": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        }
+      },
+      "max_joint_tracking_error_rad": 0.11852121353149414,
+      "first_grasp_max_joint_tracking_error_rad": 0.1125175952911377,
+      "joint_limit_violations": {
+        "panda_joint7": {
+          "simulator_limits_rad": [
+            -2.897300087848498,
+            2.897300087848498
+          ],
+          "command_min_max_rad": [
+            -3.0158212184906006,
+            0.0
+          ],
+          "measured_min_max_rad": [
+            -2.8973002433776855,
+            0.0
+          ],
+          "max_excess_rad": 0.11852113064210279,
+          "violating_samples": 94,
+          "violating_samples_during_first_grasp": 49
+        }
+      }
+    },
+    {
+      "run_id": "011_s1v1_baseline_t2",
+      "recorded_stable_lift": true,
+      "recorded_wall_s": 183.88750910758972,
+      "planning_s": 9.30616893293336,
+      "schedule_to_finish_s": 192.0,
+      "peak_memory_mib": {
+        "simulator": 6689.0,
+        "planner": 7791.0
+      },
+      "position_reference": "objects_center",
+      "max_rise_m": 0.1858889099347563,
+      "raised_closed_distance_m_min_median_max": [
+        0.15832696071657631,
+        0.15949175690282005,
+        0.16042071855723153
+      ],
+      "proximity_sensitivity": {
+        "0.1": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.15": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.175": {
+          "stable_lift": true,
+          "longest_hold_s": 8.133333333333333
+        },
+        "0.2": {
+          "stable_lift": true,
+          "longest_hold_s": 8.133333333333333
+        },
+        "0.225": {
+          "stable_lift": true,
+          "longest_hold_s": 8.133333333333333
+        }
+      },
+      "max_joint_tracking_error_rad": 0.15210594981908798,
+      "first_grasp_max_joint_tracking_error_rad": 0.15210594981908798,
+      "joint_limit_violations": {}
+    },
+    {
+      "run_id": "012_s1v2_baseline_t2",
+      "recorded_stable_lift": true,
+      "recorded_wall_s": 223.85666418075562,
+      "planning_s": 14.850398330949247,
+      "schedule_to_finish_s": 232.0,
+      "peak_memory_mib": {
+        "simulator": 6657.0,
+        "planner": 7477.0
+      },
+      "position_reference": "objects_center",
+      "max_rise_m": 0.10869921167621158,
+      "raised_closed_distance_m_min_median_max": [
+        0.15546432882493993,
+        0.15547436186078112,
+        0.1554842917836108
+      ],
+      "proximity_sensitivity": {
+        "0.1": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.15": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.175": {
+          "stable_lift": true,
+          "longest_hold_s": 9.8
+        },
+        "0.2": {
+          "stable_lift": true,
+          "longest_hold_s": 9.8
+        },
+        "0.225": {
+          "stable_lift": true,
+          "longest_hold_s": 9.8
+        }
+      },
+      "max_joint_tracking_error_rad": 0.11255073547363281,
+      "first_grasp_max_joint_tracking_error_rad": 0.11255073547363281,
+      "joint_limit_violations": {
+        "panda_joint7": {
+          "simulator_limits_rad": [
+            -2.897300087848498,
+            2.897300087848498
+          ],
+          "command_min_max_rad": [
+            -3.0098507404327393,
+            0.0
+          ],
+          "measured_min_max_rad": [
+            -2.8973004817962646,
+            0.0
+          ],
+          "max_excess_rad": 0.11255065258424146,
+          "violating_samples": 102,
+          "violating_samples_during_first_grasp": 49
+        }
+      }
+    },
+    {
+      "run_id": "013_s1v3_baseline_t2",
+      "recorded_stable_lift": true,
+      "recorded_wall_s": 152.16489624977112,
+      "planning_s": 9.970588753931224,
+      "schedule_to_finish_s": 161.0,
+      "peak_memory_mib": {
+        "simulator": null,
+        "planner": null
+      },
+      "position_reference": "objects_center",
+      "max_rise_m": 0.10302922009672709,
+      "raised_closed_distance_m_min_median_max": [
+        0.16337957808010256,
+        0.16338268654617272,
+        0.16338698056349402
+      ],
+      "proximity_sensitivity": {
+        "0.1": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.15": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.175": {
+          "stable_lift": true,
+          "longest_hold_s": 5.933333333333334
+        },
+        "0.2": {
+          "stable_lift": true,
+          "longest_hold_s": 5.933333333333334
+        },
+        "0.225": {
+          "stable_lift": true,
+          "longest_hold_s": 5.933333333333334
+        }
+      },
+      "max_joint_tracking_error_rad": 0.06822569668292999,
+      "first_grasp_max_joint_tracking_error_rad": 0.03220008313655853,
+      "joint_limit_violations": {}
+    },
+    {
+      "run_id": "014_s1v4_baseline_t2",
+      "recorded_stable_lift": false,
+      "recorded_wall_s": 144.05105710029602,
+      "planning_s": 8.794915051897988,
+      "schedule_to_finish_s": 152.0,
+      "peak_memory_mib": {
+        "simulator": null,
+        "planner": null
+      },
+      "position_reference": "objects_center",
+      "max_rise_m": 0.00924105311421193,
+      "raised_closed_distance_m_min_median_max": null,
+      "proximity_sensitivity": {
+        "0.1": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.15": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.175": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.2": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.225": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        }
+      },
+      "max_joint_tracking_error_rad": 0.09676873683929443,
+      "first_grasp_max_joint_tracking_error_rad": 0.07048523426055908,
+      "joint_limit_violations": {}
+    }
+  ]
+}

@@ -2,8 +2,8 @@
 
 Written by summarize.py into each results directory. Open it in a browser on any machine
 that has the results folder: videos and run files are linked by relative path, so copy the
-whole results directory (videos are gitignored). Server logs live outside it, under the
-TiPToP server's tiptop_server_outputs/, so those links only work on the GPU machine.
+whole results directory (videos are gitignored). If server outputs are copied under
+server_outputs/<timestamp>/, their links also work without the original GPU filesystem.
 Standard library only.
 """
 
@@ -42,6 +42,18 @@ def _e(x) -> str:
 def _rel(path: str | None, base: Path) -> str | None:
     if not path:
         return None
+    original = Path(path)
+    # Records retain their immutable GPU-machine paths. When a whole results
+    # folder is copied to a laptop, resolve its local run artifacts first.
+    if original.parent.parent.name == "runs":
+        local = base / "runs" / original.parent.name / original.name
+        if local.exists():
+            return local.relative_to(base).as_posix()
+    if "tiptop_server_outputs" in original.parts:
+        index = original.parts.index("tiptop_server_outputs")
+        local = base / "server_outputs" / Path(*original.parts[index + 1:])
+        if local.exists():
+            return local.relative_to(base).as_posix()
     try:
         return Path(os.path.relpath(path, base)).as_posix()
     except ValueError:  # different drive on Windows
@@ -103,6 +115,8 @@ def _run_card(row: dict, rec: dict | None, attr: dict | None, base: Path) -> str
              ("trace log", run_dir / "observed_eval.log"), ("console", run_dir / "console.log")]
     link_html = " · ".join(f'<a href="{_e(_rel(str(p), base))}">{_e(n)}</a>' for n, p in links)
     for name, key in (("server log", "server_log"), ("plan", "server_plan")):
+        if key == "server_plan" and not r.get("server_success"):
+            continue  # failed requests record an intended path, but create no plan
         if arts.get(key):
             link_html += f' · <a href="{_e(_rel(arts[key], base))}">{_e(name)}</a>'
     lift = row["stable_lift"]

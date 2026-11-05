@@ -1,0 +1,57 @@
+{
+  "generated_utc": "2026-11-05T05:28:46.296528+00:00",
+  "notes": [
+    "Read-only audit; hypothetical threshold scores do not replace recorded outcomes.",
+    "GPU peaks cover scheduling through record completion, sampled at approximately 1 Hz.",
+    "Summing separate-host peak memory is an upper bound, not a tested single-host deployment."
+  ],
+  "telemetry_files": {
+    "simulator": "../output/tiptop-baseline-20261104/telemetry/simulator.csv",
+    "planner": "../output/tiptop-baseline-20261104/telemetry/planner.csv"
+  },
+  "runs": [
+    {
+      "run_id": "000_s1v0_scene1_t0",
+      "recorded_stable_lift": false,
+      "recorded_wall_s": 176.9106879234314,
+      "planning_s": 22.628637911984697,
+      "schedule_to_finish_s": 185.0,
+      "peak_memory_mib": {
+        "simulator": 10394.0,
+        "planner": 7245.0
+      },
+      "position_reference": "objects_pos",
+      "max_rise_m": 0.1085495725274086,
+      "raised_closed_distance_m_min_median_max": [
+        0.15467280421974852,
+        0.1547380180378407,
+        0.15478731663124648
+      ],
+      "proximity_sensitivity": {
+        "0.1": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.15": {
+          "stable_lift": false,
+          "longest_hold_s": 0.0
+        },
+        "0.175": {
+          "stable_lift": true,
+          "longest_hold_s": 6.866666666666665
+        },
+        "0.2": {
+          "stable_lift": true,
+          "longest_hold_s": 6.866666666666665
+        },
+        "0.225": {
+          "stable_lift": true,
+          "longest_hold_s": 6.866666666666665
+        }
+      },
+      "max_joint_tracking_error_rad": 0.11407032608985901,
+      "first_grasp_max_joint_tracking_error_rad": 0.11407032608985901,
+      "joint_limit_violations": {}
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+run_id,stable_lift,failure_category,task_success,paper_category,note
+000_s1v0_scene1_t0,false,missed_grasp,false,grasp_failure/m2t2_unstable_grasp,"Reviewed video approach, closure, carry, release and final frame plus rise/hold trace. Empty carry after closure; cube remains on table, never reaches 5 cm rise; M2T2 candidates used."
+001_s1v1_scene1_t0,true,,true,success,"Reviewed video approach, closure, carry, release and final frame plus rise/hold trace. Cube carried and retained in bowl; task criterion passes."
+002_s1v2_scene1_t0,false,missed_grasp,false,grasp_failure/m2t2_unstable_grasp,"Reviewed video approach, closure, carry, release and final frame plus rise/hold trace. Empty carry after closure; cube remains on table, never reaches 5 cm rise; M2T2 candidates used."
+003_s1v3_scene1_t0,true,,true,success,"Reviewed video approach, closure, carry, release and final frame plus rise/hold trace. Cube carried and retained in bowl; task criterion passes."
+004_s2v0_scene2_t0,,infrastructure,,infrastructure,No executed plan; server reports 429 RESOURCE_EXHAUSTED free-tier daily request quota (20). Excluded from robot failure denominator.
+005_s2v1_scene2_t0,,infrastructure,,infrastructure,No executed plan; server reports 429 RESOURCE_EXHAUSTED free-tier daily request quota (20). Excluded from robot failure denominator.
+006_s2v2_scene2_t0,,infrastructure,,infrastructure,No executed plan; server reports 429 RESOURCE_EXHAUSTED free-tier daily request quota (20). Excluded from robot failure denominator.
+007_s2v3_scene2_t0,,infrastructure,,infrastructure,No executed plan; server reports 429 RESOURCE_EXHAUSTED free-tier daily request quota (20). Excluded from robot failure denominator.
+008_s3v0_scene3_t0,,infrastructure,,infrastructure,No executed plan; server reports 429 RESOURCE_EXHAUSTED free-tier daily request quota (20). Excluded from robot failure denominator.
+009_s3v1_scene3_t0,,infrastructure,,infrastructure,No executed plan; server reports 429 RESOURCE_EXHAUSTED free-tier daily request quota (20). Excluded from robot failure denominator.
+010_s3v2_scene3_t0,,infrastructure,,infrastructure,No executed plan; server reports 429 RESOURCE_EXHAUSTED free-tier daily request quota (20). Excluded from robot failure denominator.
+011_s3v3_scene3_t0,,infrastructure,,infrastructure,No executed plan; server reports 429 RESOURCE_EXHAUSTED free-tier daily request quota (20). Excluded from robot failure denominator.
+012_s4v0_scene4_t0,,infrastructure,,infrastructure,No executed plan; server reports 429 RESOURCE_EXHAUSTED free-tier daily request quota (20). Excluded from robot failure denominator.
+013_s4v1_scene4_t0,,infrastructure,,infrastructure,No executed plan; server reports 429 RESOURCE_EXHAUSTED free-tier daily request quota (20). Excluded from robot failure denominator. Separate scene validity issue: cube has fallen below table before planning; must repair before rerun.
+014_s4v2_scene4_t0,,infrastructure,,infrastructure,No executed plan; server reports 429 RESOURCE_EXHAUSTED free-tier daily request quota (20). Excluded from robot failure denominator. Separate scene validity issue: cube has fallen below table before planning; must repair before rerun.
+015_s4v3_scene4_t0,,infrastructure,,infrastructure,No executed plan; server reports 429 RESOURCE_EXHAUSTED free-tier daily request quota (20). Excluded from robot failure denominator. Separate scene validity issue: cube has fallen below table before planning; must repair before rerun.
+016_s5v0_scene5_t0,,infrastructure,,infrastructure,No executed plan; server reports 429 RESOURCE_EXHAUSTED free-tier daily request quota (20). Excluded from robot failure denominator.
+017_s5v1_scene5_t0,,infrastructure,,infrastructure,No executed plan; server reports 429 RESOURCE_EXHAUSTED free-tier daily request quota (20). Excluded from robot failure denominator.
+018_s5v2_scene5_t0,,infrastructure,,infrastructure,No executed plan; server reports 429 RESOURCE_EXHAUSTED free-tier daily request quota (20). Excluded from robot failure denominator.
+019_s5v3_scene5_t0,,infrastructure,,infrastructure,No executed plan; server reports 429 RESOURCE_EXHAUSTED free-tier daily request quota (20). Excluded from robot failure denominator.
+020_s1v0_scene1_t1,,infrastructure,,infrastructure,No executed plan; server reports 429 RESOURCE_EXHAUSTED free-tier daily request quota (20). Excluded from robot failure denominator.
+021_s1v1_scene1_t1,,infrastructure,,infrastructure,No executed plan; server reports 429 RESOURCE_EXHAUSTED free-tier daily request quota (20). Excluded from robot failure denominator.
+022_s1v2_scene1_t1,,infrastructure,,infrastructure,No executed plan; server reports 429 RESOURCE_EXHAUSTED free-tier daily request quota (20). Excluded from robot failure denominator.
+023_s1v3_scene1_t1,,infrastructure,,infrastructure,No executed plan; server reports 429 RESOURCE_EXHAUSTED free-tier daily request quota (20). Excluded from robot failure denominator.
+024_s2v0_scene2_t1,,infrastructure,,infrastructure,No executed plan; server reports 429 RESOURCE_EXHAUSTED free-tier daily request quota (20). Excluded from robot failure denominator.
+025_s2v1_scene2_t1,,infrastructure,,infrastructure,No executed plan; server reports 429 RESOURCE_EXHAUSTED free-tier daily request quota (20). Excluded from robot failure denominator.
+026_s2v2_scene2_t1,true,,true,success,"Reviewed video approach, closure, carry, release and final frame plus rise/hold trace. Can carried and retained in mug; task criterion passes."
+027_s2v3_scene2_t1,,infrastructure,,infrastructure,No executed plan; server reports 429 RESOURCE_EXHAUSTED free-tier daily request quota (20). Excluded from robot failure denominator.
+028_s3v0_scene3_t1,,infrastructure,,infrastructure,No executed plan; server reports 429 RESOURCE_EXHAUSTED free-tier daily request quota (20). Excluded from robot failure denominator.
+029_s3v1_scene3_t1,,infrastructure,,infrastructure,No executed plan; server reports 429 RESOURCE_EXHAUSTED free-tier daily request quota (20). Excluded from robot failure denominator.
+030_s3v2_scene3_t1,,infrastructure,,infrastructure,No executed plan; server reports 429 RESOURCE_EXHAUSTED free-tier daily request quota (20). Excluded from robot failure denominator.
+031_s3v3_scene3_t1,,infrastructure,,infrastructure,No executed plan; server reports 429 RESOURCE_EXHAUSTED free-tier daily request quota (20). Excluded from robot failure denominator.
+032_s4v0_scene4_t1,,infrastructure,,infrastructure,No executed plan; server reports 429 RESOURCE_EXHAUSTED free-tier daily request quota (20). Excluded from robot failure denominator.
+033_s4v1_scene4_t1,,infrastructure,,infrastructure,No executed plan; server reports 429 RESOURCE_EXHAUSTED free-tier daily request quota (20). Excluded from robot failure denominator. Separate scene validity issue: cube has fallen below table before planning; must repair before rerun.
+034_s4v2_scene4_t1,,infrastructure,,infrastructure,No executed plan; server reports 429 RESOURCE_EXHAUSTED free-tier daily request quota (20). Excluded from robot failure denominator. Separate scene validity issue: cube has fallen below table before planning; must repair before rerun.
+035_s4v3_scene4_t1,,infrastructure,,infrastructure,No executed plan; server reports 429 RESOURCE_EXHAUSTED free-tier daily request quota (20). Excluded from robot failure denominator. Separate scene validity issue: cube has fallen below table before planning; must repair before rerun.
+036_s5v0_scene5_t1,,infrastructure,,infrastructure,No executed plan; server reports 429 RESOURCE_EXHAUSTED free-tier daily request quota (20). Excluded from robot failure denominator.
+037_s5v1_scene5_t1,,infrastructure,,infrastructure,No executed plan; server reports 429 RESOURCE_EXHAUSTED free-tier daily request quota (20). Excluded from robot failure denominator.
+038_s5v2_scene5_t1,,infrastructure,,infrastructure,No executed plan; server reports 429 RESOURCE_EXHAUSTED free-tier daily request quota (20). Excluded from robot failure denominator.
+039_s5v3_scene5_t1,,infrastructure,,infrastructure,No executed plan; server reports 429 RESOURCE_EXHAUSTED free-tier daily request quota (20). Excluded from robot failure denominator.

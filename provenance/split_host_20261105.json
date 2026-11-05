@@ -1,0 +1,42 @@
+{
+  "collected_utc": "2026-11-05T05:03:20.573172+00:00",
+  "project_sha": "e4bb12239c0f5e52820e57320bd6bb582d159665",
+  "simulator_host": {
+    "gpu": "NVIDIA RTX PRO 6000 Blackwell Max-Q Workstation Edition, 590.48.01, 97887 MiB, 12.0",
+    "packages": {
+      "isaacsim": "5.0.0.0",
+      "isaaclab": "2.2.0",
+      "torch": "2.7.0+cu128",
+      "torchvision": "0.22.0+cu128",
+      "warp-lang": "1.12.0",
+      "numpy": "1.26.0"
+    },
+    "image": "nvidia/cuda:12.8.1-devel-ubuntu22.04",
+    "gpu_usd_per_hour": 1.64
+  },
+  "planner_host": {
+    "gpu": "NVIDIA RTX A6000",
+    "driver": "595.91.07",
+    "gpu_usd_per_hour": 0.59,
+    "tiptop_torch": "2.7.1 / CUDA 12.9",
+    "m2t2_torch": "2.4.1 / CUDA 12.0",
+    "host_provenance": "provenance_planner_20261105.txt"
+  },
+  "runtime_override": "torch==2.7.0+cu128 torchvision==0.22.0+cu128; UV_NO_SYNC=1",
+  "sim_sha": "69a914cf56e0da6adafe9428de39b6ceffe9bcc6",
+  "sim_tracked_diff": "",
+  "assets_sha256": "b791aef3585fea0b56605e9ac847970d399866e909f8349f358749321fb9567d",
+  "deployment": "SSH loopback forwards for 8765 and 8123; server artifacts fetched before attribution",
+  "measurement_reference": "geometry-box centers; raw root poses retained",
+  "provisional_thresholds": {
+    "min_rise_m": 0.05,
+    "min_hold_s": 0.5,
+    "max_obj_to_gripper_m": 0.2
+  },
+  "pilot": {
+    "planned_trials": 15,
+    "max_hours": 1.25,
+    "per_run_timeout_seconds": 1200
+  },
+  "maximum_total_additional_suite_hours": 4
+}

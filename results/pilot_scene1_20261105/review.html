@@ -1,0 +1,236 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"><title>Run review: pilot_scene1_20261105</title>
+<style>
+:root { --bg:#fff; --fg:#1d1d1f; --muted:#666; --card:#f5f5f7; --line:#ddd; --ok:#1a7f37; --bad:#c62828; --warn:#9a6700; }
+@media (prefers-color-scheme: dark) { :root { --bg:#111; --fg:#eee; --muted:#aaa; --card:#1c1c1e; --line:#333;
+  --ok:#4ade80; --bad:#f87171; --warn:#fbbf24; } }
+body { background:var(--bg); color:var(--fg); font:15px/1.45 system-ui, sans-serif; margin:0 auto; max-width:1200px; padding:16px; }
+h1 { margin:0 0 4px } .muted { color:var(--muted) } a { color:inherit }
+.card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:14px; margin:14px 0 }
+.grid { display:grid; grid-template-columns:minmax(0,3fr) minmax(0,2fr); gap:14px }
+@media (max-width:800px) { .grid { grid-template-columns:1fr } }
+video { width:100%; border-radius:6px; background:#000 }
+.badge { display:inline-block; padding:2px 8px; border-radius:999px; font-size:13px; border:1px solid currentColor }
+.ok { color:var(--ok) } .bad { color:var(--bad) } .warn { color:var(--warn) }
+table { border-collapse:collapse; width:100%; table-layout:fixed }
+td { padding:3px 6px; border-top:1px solid var(--line); vertical-align:top; overflow-wrap:anywhere }
+td:first-child { color:var(--muted); width:50% } ul { margin:4px 0 4px 18px; padding:0 }
+</style></head><body>
+<h1>Run review: pilot_scene1_20261105</h1>
+<div class="muted">Generated 2026-11-05 06:59 UTC by grasp_eval.summarize. Causes are automatic first passes: confirm on the video,
+then correct them in manual_labels.csv and re-run the summary. Details and denominators: summary.md.</div>
+<div class="card">15 scheduled runs · stable lift 11/15 ·
+ task success 9/15 checked (0 unchecked)
+ <ul><li><b>Grasp Failure → M2T2 Unstable Grasp</b>: 4 — <a href="#004_s1v4_baseline_t0">004_s1v4_baseline_t0</a>, <a href="#009_s1v4_baseline_t1">009_s1v4_baseline_t1</a>, <a href="#010_s1v0_baseline_t2">010_s1v0_baseline_t2</a>, <a href="#014_s1v4_baseline_t2">014_s1v4_baseline_t2</a></li><li><b>cuTAMP Failure → Rigid Grasp Assumption</b>: 1 — <a href="#007_s1v2_baseline_t1">007_s1v2_baseline_t1</a></li><li><b>Execution Failure (not in paper) → Tracking or Collision</b>: 1 — <a href="#002_s1v2_baseline_t0">002_s1v2_baseline_t0</a></li><li><b>Success → Success</b>: 9 — <a href="#000_s1v0_baseline_t0">000_s1v0_baseline_t0</a>, <a href="#001_s1v1_baseline_t0">001_s1v1_baseline_t0</a>, <a href="#003_s1v3_baseline_t0">003_s1v3_baseline_t0</a>, <a href="#005_s1v0_baseline_t1">005_s1v0_baseline_t1</a>, <a href="#006_s1v1_baseline_t1">006_s1v1_baseline_t1</a>, <a href="#008_s1v3_baseline_t1">008_s1v3_baseline_t1</a>, <a href="#011_s1v1_baseline_t2">011_s1v1_baseline_t2</a>, <a href="#012_s1v2_baseline_t2">012_s1v2_baseline_t2</a>, <a href="#013_s1v3_baseline_t2">013_s1v3_baseline_t2</a></li></ul></div>
+
+<div class="card" id="004_s1v4_baseline_t0">
+  <div><strong>004_s1v4_baseline_t0</strong> <span class="badge bad">Grasp Failure → M2T2 Unstable Grasp</span>
+   <span class="muted">(manual label)</span></div>
+  <div class="muted">scene 1, variant 4, condition baseline,
+   trial 0 · “Put the Rubik&#x27;s cube in the bowl.” · target rubiks_cube</div>
+  <div>stable lift: <b class="bad">no</b> ·
+   task success: <b class="bad">no</b>
+   (manual)</div>
+  <div class="grid">
+    <div><video controls preload="none" src="runs/004_s1v4_baseline_t0/video.mp4"></video></div>
+    <div><b>Why</b><ul><li>no stable lift (missed_grasp)</li><li>grasp source: m2t2</li></ul><table><tr><td>Gemini goal (mapped to sim)</td><td>(on, rubiks_cube, _24_bowl)</td></tr><tr><td>goal translation correct</td><td>yes</td></tr><tr><td>plan picks first</td><td>rubiks_cube</td></tr><tr><td>perceived vs true position (xy)</td><td>0.3 cm</td></tr><tr><td>grasp source</td><td>m2t2</td></tr><tr><td>planning time</td><td>9.6 s</td></tr><tr><td>object pushed before close</td><td>1.0 cm</td></tr><tr><td>gripper vs object at close (xy)</td><td>2.4 cm</td></tr><tr><td>joint tracking error at close</td><td>0.029 rad</td></tr><tr><td>closes</td><td>1</td></tr><tr><td>max lift near gripper</td><td>0.8 cm</td></tr><tr><td>longest hold</td><td>0.00 s</td></tr><tr><td>shape of _24_bowl (perceived/true per axis, IoU)</td><td>[0.874, 0.887, 0.971] , 0.753</td></tr><tr><td>shape of rubiks_cube (perceived/true per axis, IoU)</td><td>[0.917, 0.942, 0.918] , 0.787</td></tr></table></div>
+  </div>
+  <div class="muted"><a href="runs/004_s1v4_baseline_t0/record.json">record</a> · <a href="runs/004_s1v4_baseline_t0/attribution.json">attribution</a> · <a href="runs/004_s1v4_baseline_t0/observed_eval.log">trace log</a> · <a href="runs/004_s1v4_baseline_t0/console.log">console</a> · <a href="server_outputs/2026-11-05_05-20-32/tiptop_run.log">server log</a> · <a href="server_outputs/2026-11-05_05-20-32/tiptop_plan.json">plan</a></div>
+</div>
+<div class="card" id="009_s1v4_baseline_t1">
+  <div><strong>009_s1v4_baseline_t1</strong> <span class="badge bad">Grasp Failure → M2T2 Unstable Grasp</span>
+   <span class="muted">(manual label)</span></div>
+  <div class="muted">scene 1, variant 4, condition baseline,
+   trial 1 · “Put the Rubik&#x27;s cube in the bowl.” · target rubiks_cube</div>
+  <div>stable lift: <b class="bad">no</b> ·
+   task success: <b class="bad">no</b>
+   (manual)</div>
+  <div class="grid">
+    <div><video controls preload="none" src="runs/009_s1v4_baseline_t1/video.mp4"></video></div>
+    <div><b>Why</b><ul><li>no stable lift (missed_grasp)</li><li>grasp source: m2t2</li></ul><table><tr><td>Gemini goal (mapped to sim)</td><td>(on, rubiks_cube, _24_bowl)</td></tr><tr><td>goal translation correct</td><td>yes</td></tr><tr><td>plan picks first</td><td>rubiks_cube</td></tr><tr><td>perceived vs true position (xy)</td><td>0.3 cm</td></tr><tr><td>grasp source</td><td>m2t2</td></tr><tr><td>planning time</td><td>9.1 s</td></tr><tr><td>object pushed before close</td><td>1.7 cm</td></tr><tr><td>gripper vs object at close (xy)</td><td>3.2 cm</td></tr><tr><td>joint tracking error at close</td><td>0.036 rad</td></tr><tr><td>closes</td><td>1</td></tr><tr><td>max lift near gripper</td><td>1.1 cm</td></tr><tr><td>longest hold</td><td>0.00 s</td></tr><tr><td>shape of _24_bowl (perceived/true per axis, IoU)</td><td>[0.874, 0.887, 0.971] , 0.753</td></tr><tr><td>shape of rubiks_cube (perceived/true per axis, IoU)</td><td>[0.917, 0.941, 0.918] , 0.786</td></tr></table></div>
+  </div>
+  <div class="muted"><a href="runs/009_s1v4_baseline_t1/record.json">record</a> · <a href="runs/009_s1v4_baseline_t1/attribution.json">attribution</a> · <a href="runs/009_s1v4_baseline_t1/observed_eval.log">trace log</a> · <a href="runs/009_s1v4_baseline_t1/console.log">console</a> · <a href="server_outputs/2026-11-05_05-35-36/tiptop_run.log">server log</a> · <a href="server_outputs/2026-11-05_05-35-36/tiptop_plan.json">plan</a></div>
+</div>
+<div class="card" id="010_s1v0_baseline_t2">
+  <div><strong>010_s1v0_baseline_t2</strong> <span class="badge bad">Grasp Failure → M2T2 Unstable Grasp</span>
+   <span class="muted">(manual label)</span></div>
+  <div class="muted">scene 1, variant 0, condition baseline,
+   trial 2 · “Put the Rubik&#x27;s cube in the bowl.” · target rubiks_cube</div>
+  <div>stable lift: <b class="bad">no</b> ·
+   task success: <b class="bad">no</b>
+   (manual)</div>
+  <div class="grid">
+    <div><video controls preload="none" src="runs/010_s1v0_baseline_t2/video.mp4"></video></div>
+    <div><b>Why</b><ul><li>no stable lift (missed_grasp)</li><li>grasp source: m2t2</li></ul><table><tr><td>Gemini goal (mapped to sim)</td><td>(on, rubiks_cube, _24_bowl)</td></tr><tr><td>goal translation correct</td><td>yes</td></tr><tr><td>plan picks first</td><td>rubiks_cube</td></tr><tr><td>perceived vs true position (xy)</td><td>0.2 cm</td></tr><tr><td>grasp source</td><td>m2t2</td></tr><tr><td>planning time</td><td>11.2 s</td></tr><tr><td>object pushed before close</td><td>0.0 cm</td></tr><tr><td>gripper vs object at close (xy)</td><td>5.5 cm</td></tr><tr><td>joint tracking error at close</td><td>0.002 rad</td></tr><tr><td>closes</td><td>1</td></tr><tr><td>max lift near gripper</td><td>0.3 cm</td></tr><tr><td>longest hold</td><td>0.00 s</td></tr><tr><td>shape of _24_bowl (perceived/true per axis, IoU)</td><td>[0.963, 0.904, 0.979] , 0.851</td></tr><tr><td>shape of rubiks_cube (perceived/true per axis, IoU)</td><td>[0.964, 0.961, 0.944] , 0.862</td></tr></table></div>
+  </div>
+  <div class="muted"><a href="runs/010_s1v0_baseline_t2/record.json">record</a> · <a href="runs/010_s1v0_baseline_t2/attribution.json">attribution</a> · <a href="runs/010_s1v0_baseline_t2/observed_eval.log">trace log</a> · <a href="runs/010_s1v0_baseline_t2/console.log">console</a> · <a href="server_outputs/2026-11-05_05-38-53/tiptop_run.log">server log</a> · <a href="server_outputs/2026-11-05_05-38-53/tiptop_plan.json">plan</a></div>
+</div>
+<div class="card" id="014_s1v4_baseline_t2">
+  <div><strong>014_s1v4_baseline_t2</strong> <span class="badge bad">Grasp Failure → M2T2 Unstable Grasp</span>
+   <span class="muted">(manual label)</span></div>
+  <div class="muted">scene 1, variant 4, condition baseline,
+   trial 2 · “Put the Rubik&#x27;s cube in the bowl.” · target rubiks_cube</div>
+  <div>stable lift: <b class="bad">no</b> ·
+   task success: <b class="bad">no</b>
+   (manual)</div>
+  <div class="grid">
+    <div><video controls preload="none" src="runs/014_s1v4_baseline_t2/video.mp4"></video></div>
+    <div><b>Why</b><ul><li>no stable lift (missed_grasp)</li><li>grasp source: m2t2</li></ul><table><tr><td>Gemini goal (mapped to sim)</td><td>(on, rubiks_cube, _24_bowl)</td></tr><tr><td>goal translation correct</td><td>yes</td></tr><tr><td>plan picks first</td><td>rubiks_cube</td></tr><tr><td>perceived vs true position (xy)</td><td>0.3 cm</td></tr><tr><td>grasp source</td><td>m2t2</td></tr><tr><td>planning time</td><td>8.8 s</td></tr><tr><td>object pushed before close</td><td>1.2 cm</td></tr><tr><td>gripper vs object at close (xy)</td><td>1.7 cm</td></tr><tr><td>joint tracking error at close</td><td>0.037 rad</td></tr><tr><td>closes</td><td>1</td></tr><tr><td>max lift near gripper</td><td>0.9 cm</td></tr><tr><td>longest hold</td><td>0.00 s</td></tr><tr><td>shape of _24_bowl (perceived/true per axis, IoU)</td><td>[0.874, 0.887, 0.971] , 0.753</td></tr><tr><td>shape of rubiks_cube (perceived/true per axis, IoU)</td><td>[0.917, 0.942, 0.918] , 0.787</td></tr></table></div>
+  </div>
+  <div class="muted"><a href="runs/014_s1v4_baseline_t2/record.json">record</a> · <a href="runs/014_s1v4_baseline_t2/attribution.json">attribution</a> · <a href="runs/014_s1v4_baseline_t2/observed_eval.log">trace log</a> · <a href="runs/014_s1v4_baseline_t2/console.log">console</a> · <a href="server_outputs/2026-11-05_05-52-52/tiptop_run.log">server log</a> · <a href="server_outputs/2026-11-05_05-52-52/tiptop_plan.json">plan</a></div>
+</div>
+<div class="card" id="007_s1v2_baseline_t1">
+  <div><strong>007_s1v2_baseline_t1</strong> <span class="badge bad">cuTAMP Failure → Rigid Grasp Assumption</span>
+   <span class="muted">(manual label)</span></div>
+  <div class="muted">scene 1, variant 2, condition baseline,
+   trial 1 · “Put the Rubik&#x27;s cube in the bowl.” · target rubiks_cube</div>
+  <div>stable lift: <b class="ok">yes</b> ·
+   task success: <b class="bad">no</b>
+   (manual)</div>
+  <div class="grid">
+    <div><video controls preload="none" src="runs/007_s1v2_baseline_t1/video.mp4"></video></div>
+    <div><b>Why</b><ul><li>object moved in hand: 0.008 m, 11.45 deg</li></ul><table><tr><td>Gemini goal (mapped to sim)</td><td>(on, rubiks_cube, _24_bowl)</td></tr><tr><td>goal translation correct</td><td>yes</td></tr><tr><td>plan picks first</td><td>rubiks_cube</td></tr><tr><td>perceived vs true position (xy)</td><td>0.3 cm</td></tr><tr><td>grasp source</td><td>m2t2</td></tr><tr><td>planning time</td><td>10.1 s</td></tr><tr><td>object pushed before close</td><td>0.0 cm</td></tr><tr><td>gripper vs object at close (xy)</td><td>14.4 cm</td></tr><tr><td>joint tracking error at close</td><td>0.001 rad</td></tr><tr><td>closes</td><td>1</td></tr><tr><td>max lift near gripper</td><td>5.1 cm</td></tr><tr><td>longest hold</td><td>1.33 s</td></tr><tr><td>in-hand shift / rotation while carried</td><td>0.8 cm / 11 deg</td></tr><tr><td>shape of _24_bowl (perceived/true per axis, IoU)</td><td>[0.925, 0.965, 0.974] , 0.869</td></tr><tr><td>shape of rubiks_cube (perceived/true per axis, IoU)</td><td>[0.959, 0.945, 0.916] , 0.817</td></tr></table></div>
+  </div>
+  <div class="muted"><a href="runs/007_s1v2_baseline_t1/record.json">record</a> · <a href="runs/007_s1v2_baseline_t1/attribution.json">attribution</a> · <a href="runs/007_s1v2_baseline_t1/observed_eval.log">trace log</a> · <a href="runs/007_s1v2_baseline_t1/console.log">console</a> · <a href="server_outputs/2026-11-05_05-28-57/tiptop_run.log">server log</a> · <a href="server_outputs/2026-11-05_05-28-57/tiptop_plan.json">plan</a></div>
+</div>
+<div class="card" id="002_s1v2_baseline_t0">
+  <div><strong>002_s1v2_baseline_t0</strong> <span class="badge bad">Execution Failure (not in paper) → Tracking or Collision</span>
+   <span class="muted">(manual label)</span></div>
+  <div class="muted">scene 1, variant 2, condition baseline,
+   trial 0 · “Put the Rubik&#x27;s cube in the bowl.” · target rubiks_cube</div>
+  <div>stable lift: <b class="ok">yes</b> ·
+   task success: <b class="bad">no</b>
+   (manual)</div>
+  <div class="grid">
+    <div><video controls preload="none" src="runs/002_s1v2_baseline_t0/video.mp4"></video></div>
+    <div><b>Why</b><ul><li>lifted and carried without slip, but the goal state was not reached</li></ul><table><tr><td>Gemini goal (mapped to sim)</td><td>(on, rubiks_cube, _24_bowl)</td></tr><tr><td>goal translation correct</td><td>yes</td></tr><tr><td>plan picks first</td><td>rubiks_cube</td></tr><tr><td>perceived vs true position (xy)</td><td>0.3 cm</td></tr><tr><td>grasp source</td><td>m2t2</td></tr><tr><td>planning time</td><td>11.2 s</td></tr><tr><td>object pushed before close</td><td>0.0 cm</td></tr><tr><td>gripper vs object at close (xy)</td><td>4.5 cm</td></tr><tr><td>joint tracking error at close</td><td>0.112 rad</td></tr><tr><td>closes</td><td>1</td></tr><tr><td>max lift near gripper</td><td>24.6 cm</td></tr><tr><td>longest hold</td><td>11.13 s</td></tr><tr><td>in-hand shift / rotation while carried</td><td>0.1 cm / 0 deg</td></tr><tr><td>shape of _24_bowl (perceived/true per axis, IoU)</td><td>[0.925, 0.965, 0.974] , 0.869</td></tr><tr><td>shape of rubiks_cube (perceived/true per axis, IoU)</td><td>[0.959, 0.945, 0.916] , 0.817</td></tr></table></div>
+  </div>
+  <div class="muted"><a href="runs/002_s1v2_baseline_t0/record.json">record</a> · <a href="runs/002_s1v2_baseline_t0/attribution.json">attribution</a> · <a href="runs/002_s1v2_baseline_t0/observed_eval.log">trace log</a> · <a href="runs/002_s1v2_baseline_t0/console.log">console</a> · <a href="server_outputs/2026-11-05_05-13-21/tiptop_run.log">server log</a> · <a href="server_outputs/2026-11-05_05-13-21/tiptop_plan.json">plan</a></div>
+</div>
+<div class="card" id="000_s1v0_baseline_t0">
+  <div><strong>000_s1v0_baseline_t0</strong> <span class="badge ok">Success → Success</span>
+   <span class="muted">(manual label)</span></div>
+  <div class="muted">scene 1, variant 0, condition baseline,
+   trial 0 · “Put the Rubik&#x27;s cube in the bowl.” · target rubiks_cube</div>
+  <div>stable lift: <b class="ok">yes</b> ·
+   task success: <b class="ok">yes</b>
+   (manual)</div>
+  <div class="grid">
+    <div><video controls preload="none" src="runs/000_s1v0_baseline_t0/video.mp4"></video></div>
+    <div><b>Why</b><ul><li>success</li></ul><table><tr><td>Gemini goal (mapped to sim)</td><td>(on, rubiks_cube, _24_bowl)</td></tr><tr><td>goal translation correct</td><td>yes</td></tr><tr><td>plan picks first</td><td>rubiks_cube</td></tr><tr><td>perceived vs true position (xy)</td><td>0.2 cm</td></tr><tr><td>grasp source</td><td>m2t2</td></tr><tr><td>planning time</td><td>12.0 s</td></tr><tr><td>object pushed before close</td><td>0.0 cm</td></tr><tr><td>gripper vs object at close (xy)</td><td>4.5 cm</td></tr><tr><td>joint tracking error at close</td><td>0.001 rad</td></tr><tr><td>closes</td><td>1</td></tr><tr><td>max lift near gripper</td><td>9.9 cm</td></tr><tr><td>longest hold</td><td>7.73 s</td></tr><tr><td>in-hand shift / rotation while carried</td><td>0.0 cm / 0 deg</td></tr><tr><td>shape of _24_bowl (perceived/true per axis, IoU)</td><td>[0.963, 0.904, 0.979] , 0.851</td></tr><tr><td>shape of rubiks_cube (perceived/true per axis, IoU)</td><td>[0.964, 0.961, 0.944] , 0.862</td></tr></table></div>
+  </div>
+  <div class="muted"><a href="runs/000_s1v0_baseline_t0/record.json">record</a> · <a href="runs/000_s1v0_baseline_t0/attribution.json">attribution</a> · <a href="runs/000_s1v0_baseline_t0/observed_eval.log">trace log</a> · <a href="runs/000_s1v0_baseline_t0/console.log">console</a> · <a href="server_outputs/2026-11-05_05-07-22/tiptop_run.log">server log</a> · <a href="server_outputs/2026-11-05_05-07-22/tiptop_plan.json">plan</a></div>
+</div>
+<div class="card" id="001_s1v1_baseline_t0">
+  <div><strong>001_s1v1_baseline_t0</strong> <span class="badge ok">Success → Success</span>
+   <span class="muted">(manual label)</span></div>
+  <div class="muted">scene 1, variant 1, condition baseline,
+   trial 0 · “Put the Rubik&#x27;s cube in the bowl.” · target rubiks_cube</div>
+  <div>stable lift: <b class="ok">yes</b> ·
+   task success: <b class="ok">yes</b>
+   (manual)</div>
+  <div class="grid">
+    <div><video controls preload="none" src="runs/001_s1v1_baseline_t0/video.mp4"></video></div>
+    <div><b>Why</b><ul><li>success</li></ul><table><tr><td>Gemini goal (mapped to sim)</td><td>(on, rubiks_cube, _24_bowl)</td></tr><tr><td>goal translation correct</td><td>yes</td></tr><tr><td>plan picks first</td><td>rubiks_cube</td></tr><tr><td>perceived vs true position (xy)</td><td>0.1 cm</td></tr><tr><td>grasp source</td><td>m2t2</td></tr><tr><td>planning time</td><td>10.5 s</td></tr><tr><td>object pushed before close</td><td>0.0 cm</td></tr><tr><td>gripper vs object at close (xy)</td><td>9.5 cm</td></tr><tr><td>joint tracking error at close</td><td>0.003 rad</td></tr><tr><td>closes</td><td>1</td></tr><tr><td>max lift near gripper</td><td>8.4 cm</td></tr><tr><td>longest hold</td><td>4.80 s</td></tr><tr><td>in-hand shift / rotation while carried</td><td>0.7 cm / 13 deg</td></tr><tr><td>shape of _24_bowl (perceived/true per axis, IoU)</td><td>[0.955, 0.965, 0.982] , 0.905</td></tr><tr><td>shape of rubiks_cube (perceived/true per axis, IoU)</td><td>[0.968, 0.944, 0.805] , 0.731</td></tr></table></div>
+  </div>
+  <div class="muted"><a href="runs/001_s1v1_baseline_t0/record.json">record</a> · <a href="runs/001_s1v1_baseline_t0/attribution.json">attribution</a> · <a href="runs/001_s1v1_baseline_t0/observed_eval.log">trace log</a> · <a href="runs/001_s1v1_baseline_t0/console.log">console</a> · <a href="server_outputs/2026-11-05_05-10-29/tiptop_run.log">server log</a> · <a href="server_outputs/2026-11-05_05-10-29/tiptop_plan.json">plan</a></div>
+</div>
+<div class="card" id="003_s1v3_baseline_t0">
+  <div><strong>003_s1v3_baseline_t0</strong> <span class="badge ok">Success → Success</span>
+   <span class="muted">(manual label)</span></div>
+  <div class="muted">scene 1, variant 3, condition baseline,
+   trial 0 · “Put the Rubik&#x27;s cube in the bowl.” · target rubiks_cube</div>
+  <div>stable lift: <b class="ok">yes</b> ·
+   task success: <b class="ok">yes</b>
+   (manual)</div>
+  <div class="grid">
+    <div><video controls preload="none" src="runs/003_s1v3_baseline_t0/video.mp4"></video></div>
+    <div><b>Why</b><ul><li>success</li></ul><table><tr><td>Gemini goal (mapped to sim)</td><td>(on, rubiks_cube, _24_bowl)</td></tr><tr><td>goal translation correct</td><td>yes</td></tr><tr><td>plan picks first</td><td>rubiks_cube</td></tr><tr><td>perceived vs true position (xy)</td><td>0.2 cm</td></tr><tr><td>grasp source</td><td>m2t2</td></tr><tr><td>planning time</td><td>20.8 s</td></tr><tr><td>object pushed before close</td><td>0.0 cm</td></tr><tr><td>gripper vs object at close (xy)</td><td>3.8 cm</td></tr><tr><td>joint tracking error at close</td><td>0.001 rad</td></tr><tr><td>closes</td><td>1</td></tr><tr><td>max lift near gripper</td><td>10.5 cm</td></tr><tr><td>longest hold</td><td>6.20 s</td></tr><tr><td>in-hand shift / rotation while carried</td><td>0.0 cm / 0 deg</td></tr><tr><td>shape of _24_bowl (perceived/true per axis, IoU)</td><td>[0.948, 0.962, 0.976] , 0.89</td></tr><tr><td>shape of rubiks_cube (perceived/true per axis, IoU)</td><td>[0.961, 0.965, 0.929] , 0.855</td></tr></table></div>
+  </div>
+  <div class="muted"><a href="runs/003_s1v3_baseline_t0/record.json">record</a> · <a href="runs/003_s1v3_baseline_t0/attribution.json">attribution</a> · <a href="runs/003_s1v3_baseline_t0/observed_eval.log">trace log</a> · <a href="runs/003_s1v3_baseline_t0/console.log">console</a> · <a href="server_outputs/2026-11-05_05-17-33/tiptop_run.log">server log</a> · <a href="server_outputs/2026-11-05_05-17-33/tiptop_plan.json">plan</a></div>
+</div>
+<div class="card" id="005_s1v0_baseline_t1">
+  <div><strong>005_s1v0_baseline_t1</strong> <span class="badge ok">Success → Success</span>
+   <span class="muted">(manual label)</span></div>
+  <div class="muted">scene 1, variant 0, condition baseline,
+   trial 1 · “Put the Rubik&#x27;s cube in the bowl.” · target rubiks_cube</div>
+  <div>stable lift: <b class="ok">yes</b> ·
+   task success: <b class="ok">yes</b>
+   (manual)</div>
+  <div class="grid">
+    <div><video controls preload="none" src="runs/005_s1v0_baseline_t1/video.mp4"></video></div>
+    <div><b>Why</b><ul><li>success</li></ul><table><tr><td>Gemini goal (mapped to sim)</td><td>(on, rubiks_cube, _24_bowl)</td></tr><tr><td>goal translation correct</td><td>yes</td></tr><tr><td>plan picks first</td><td>rubiks_cube</td></tr><tr><td>perceived vs true position (xy)</td><td>0.2 cm</td></tr><tr><td>grasp source</td><td>m2t2</td></tr><tr><td>planning time</td><td>9.7 s</td></tr><tr><td>object pushed before close</td><td>0.0 cm</td></tr><tr><td>gripper vs object at close (xy)</td><td>9.0 cm</td></tr><tr><td>joint tracking error at close</td><td>0.001 rad</td></tr><tr><td>closes</td><td>1</td></tr><tr><td>max lift near gripper</td><td>8.8 cm</td></tr><tr><td>longest hold</td><td>4.60 s</td></tr><tr><td>in-hand shift / rotation while carried</td><td>0.3 cm / 4 deg</td></tr><tr><td>shape of _24_bowl (perceived/true per axis, IoU)</td><td>[0.963, 0.904, 0.979] , 0.851</td></tr><tr><td>shape of rubiks_cube (perceived/true per axis, IoU)</td><td>[0.964, 0.961, 0.944] , 0.862</td></tr></table></div>
+  </div>
+  <div class="muted"><a href="runs/005_s1v0_baseline_t1/record.json">record</a> · <a href="runs/005_s1v0_baseline_t1/attribution.json">attribution</a> · <a href="runs/005_s1v0_baseline_t1/observed_eval.log">trace log</a> · <a href="runs/005_s1v0_baseline_t1/console.log">console</a> · <a href="server_outputs/2026-11-05_05-23-11/tiptop_run.log">server log</a> · <a href="server_outputs/2026-11-05_05-23-11/tiptop_plan.json">plan</a></div>
+</div>
+<div class="card" id="006_s1v1_baseline_t1">
+  <div><strong>006_s1v1_baseline_t1</strong> <span class="badge ok">Success → Success</span>
+   <span class="muted">(manual label)</span></div>
+  <div class="muted">scene 1, variant 1, condition baseline,
+   trial 1 · “Put the Rubik&#x27;s cube in the bowl.” · target rubiks_cube</div>
+  <div>stable lift: <b class="ok">yes</b> ·
+   task success: <b class="ok">yes</b>
+   (manual)</div>
+  <div class="grid">
+    <div><video controls preload="none" src="runs/006_s1v1_baseline_t1/video.mp4"></video></div>
+    <div><b>Why</b><ul><li>success</li></ul><table><tr><td>Gemini goal (mapped to sim)</td><td>(on, rubiks_cube, _24_bowl)</td></tr><tr><td>goal translation correct</td><td>yes</td></tr><tr><td>plan picks first</td><td>rubiks_cube</td></tr><tr><td>perceived vs true position (xy)</td><td>0.1 cm</td></tr><tr><td>grasp source</td><td>m2t2</td></tr><tr><td>planning time</td><td>9.8 s</td></tr><tr><td>object pushed before close</td><td>0.0 cm</td></tr><tr><td>gripper vs object at close (xy)</td><td>1.8 cm</td></tr><tr><td>joint tracking error at close</td><td>0.002 rad</td></tr><tr><td>closes</td><td>1</td></tr><tr><td>max lift near gripper</td><td>10.1 cm</td></tr><tr><td>longest hold</td><td>5.93 s</td></tr><tr><td>in-hand shift / rotation while carried</td><td>0.0 cm / 0 deg</td></tr><tr><td>shape of _24_bowl (perceived/true per axis, IoU)</td><td>[0.955, 0.965, 0.982] , 0.905</td></tr><tr><td>shape of rubiks_cube (perceived/true per axis, IoU)</td><td>[0.968, 0.944, 0.805] , 0.731</td></tr></table></div>
+  </div>
+  <div class="muted"><a href="runs/006_s1v1_baseline_t1/record.json">record</a> · <a href="runs/006_s1v1_baseline_t1/attribution.json">attribution</a> · <a href="runs/006_s1v1_baseline_t1/observed_eval.log">trace log</a> · <a href="runs/006_s1v1_baseline_t1/console.log">console</a> · <a href="server_outputs/2026-11-05_05-26-01/tiptop_run.log">server log</a> · <a href="server_outputs/2026-11-05_05-26-01/tiptop_plan.json">plan</a></div>
+</div>
+<div class="card" id="008_s1v3_baseline_t1">
+  <div><strong>008_s1v3_baseline_t1</strong> <span class="badge ok">Success → Success</span>
+   <span class="muted">(manual label)</span></div>
+  <div class="muted">scene 1, variant 3, condition baseline,
+   trial 1 · “Put the Rubik&#x27;s cube in the bowl.” · target rubiks_cube</div>
+  <div>stable lift: <b class="ok">yes</b> ·
+   task success: <b class="ok">yes</b>
+   (manual)</div>
+  <div class="grid">
+    <div><video controls preload="none" src="runs/008_s1v3_baseline_t1/video.mp4"></video></div>
+    <div><b>Why</b><ul><li>success</li></ul><table><tr><td>Gemini goal (mapped to sim)</td><td>(on, rubiks_cube, _24_bowl)</td></tr><tr><td>goal translation correct</td><td>yes</td></tr><tr><td>plan picks first</td><td>rubiks_cube</td></tr><tr><td>perceived vs true position (xy)</td><td>0.2 cm</td></tr><tr><td>grasp source</td><td>m2t2</td></tr><tr><td>planning time</td><td>10.0 s</td></tr><tr><td>object pushed before close</td><td>0.0 cm</td></tr><tr><td>gripper vs object at close (xy)</td><td>9.0 cm</td></tr><tr><td>joint tracking error at close</td><td>0.001 rad</td></tr><tr><td>closes</td><td>1</td></tr><tr><td>max lift near gripper</td><td>13.0 cm</td></tr><tr><td>longest hold</td><td>7.27 s</td></tr><tr><td>in-hand shift / rotation while carried</td><td>6.2 cm / 110 deg</td></tr><tr><td>shape of _24_bowl (perceived/true per axis, IoU)</td><td>[0.948, 0.962, 0.976] , 0.89</td></tr><tr><td>shape of rubiks_cube (perceived/true per axis, IoU)</td><td>[0.961, 0.965, 0.929] , 0.855</td></tr></table></div>
+  </div>
+  <div class="muted"><a href="runs/008_s1v3_baseline_t1/record.json">record</a> · <a href="runs/008_s1v3_baseline_t1/attribution.json">attribution</a> · <a href="runs/008_s1v3_baseline_t1/observed_eval.log">trace log</a> · <a href="runs/008_s1v3_baseline_t1/console.log">console</a> · <a href="server_outputs/2026-11-05_05-31-46/tiptop_run.log">server log</a> · <a href="server_outputs/2026-11-05_05-31-46/tiptop_plan.json">plan</a></div>
+</div>
+<div class="card" id="011_s1v1_baseline_t2">
+  <div><strong>011_s1v1_baseline_t2</strong> <span class="badge ok">Success → Success</span>
+   <span class="muted">(manual label)</span></div>
+  <div class="muted">scene 1, variant 1, condition baseline,
+   trial 2 · “Put the Rubik&#x27;s cube in the bowl.” · target rubiks_cube</div>
+  <div>stable lift: <b class="ok">yes</b> ·
+   task success: <b class="ok">yes</b>
+   (manual)</div>
+  <div class="grid">
+    <div><video controls preload="none" src="runs/011_s1v1_baseline_t2/video.mp4"></video></div>
+    <div><b>Why</b><ul><li>success</li></ul><table><tr><td>Gemini goal (mapped to sim)</td><td>(on, rubiks_cube, _24_bowl)</td></tr><tr><td>goal translation correct</td><td>yes</td></tr><tr><td>plan picks first</td><td>rubiks_cube</td></tr><tr><td>perceived vs true position (xy)</td><td>0.1 cm</td></tr><tr><td>grasp source</td><td>m2t2</td></tr><tr><td>planning time</td><td>9.3 s</td></tr><tr><td>object pushed before close</td><td>0.0 cm</td></tr><tr><td>gripper vs object at close (xy)</td><td>13.1 cm</td></tr><tr><td>joint tracking error at close</td><td>0.001 rad</td></tr><tr><td>closes</td><td>1</td></tr><tr><td>max lift near gripper</td><td>18.6 cm</td></tr><tr><td>longest hold</td><td>8.13 s</td></tr><tr><td>in-hand shift / rotation while carried</td><td>0.7 cm / 9 deg</td></tr><tr><td>shape of _24_bowl (perceived/true per axis, IoU)</td><td>[0.955, 0.965, 0.767] , 0.707</td></tr><tr><td>shape of rubiks_cube (perceived/true per axis, IoU)</td><td>[0.968, 0.944, 0.805] , 0.731</td></tr></table></div>
+  </div>
+  <div class="muted"><a href="runs/011_s1v1_baseline_t2/record.json">record</a> · <a href="runs/011_s1v1_baseline_t2/attribution.json">attribution</a> · <a href="runs/011_s1v1_baseline_t2/observed_eval.log">trace log</a> · <a href="runs/011_s1v1_baseline_t2/console.log">console</a> · <a href="server_outputs/2026-11-05_05-42-37/tiptop_run.log">server log</a> · <a href="server_outputs/2026-11-05_05-42-37/tiptop_plan.json">plan</a></div>
+</div>
+<div class="card" id="012_s1v2_baseline_t2">
+  <div><strong>012_s1v2_baseline_t2</strong> <span class="badge ok">Success → Success</span>
+   <span class="muted">(manual label)</span></div>
+  <div class="muted">scene 1, variant 2, condition baseline,
+   trial 2 · “Put the Rubik&#x27;s cube in the bowl.” · target rubiks_cube</div>
+  <div>stable lift: <b class="ok">yes</b> ·
+   task success: <b class="ok">yes</b>
+   (manual)</div>
+  <div class="grid">
+    <div><video controls preload="none" src="runs/012_s1v2_baseline_t2/video.mp4"></video></div>
+    <div><b>Why</b><ul><li>success</li></ul><table><tr><td>Gemini goal (mapped to sim)</td><td>(on, rubiks_cube, _24_bowl)</td></tr><tr><td>goal translation correct</td><td>yes</td></tr><tr><td>plan picks first</td><td>rubiks_cube</td></tr><tr><td>perceived vs true position (xy)</td><td>0.3 cm</td></tr><tr><td>grasp source</td><td>m2t2</td></tr><tr><td>planning time</td><td>14.9 s</td></tr><tr><td>object pushed before close</td><td>0.0 cm</td></tr><tr><td>gripper vs object at close (xy)</td><td>4.0 cm</td></tr><tr><td>joint tracking error at close</td><td>0.113 rad</td></tr><tr><td>closes</td><td>1</td></tr><tr><td>max lift near gripper</td><td>10.9 cm</td></tr><tr><td>longest hold</td><td>9.80 s</td></tr><tr><td>in-hand shift / rotation while carried</td><td>0.0 cm / 0 deg</td></tr><tr><td>shape of _24_bowl (perceived/true per axis, IoU)</td><td>[0.925, 0.965, 0.974] , 0.869</td></tr><tr><td>shape of rubiks_cube (perceived/true per axis, IoU)</td><td>[0.959, 0.945, 0.916] , 0.817</td></tr></table></div>
+  </div>
+  <div class="muted"><a href="runs/012_s1v2_baseline_t2/record.json">record</a> · <a href="runs/012_s1v2_baseline_t2/attribution.json">attribution</a> · <a href="runs/012_s1v2_baseline_t2/observed_eval.log">trace log</a> · <a href="runs/012_s1v2_baseline_t2/console.log">console</a> · <a href="server_outputs/2026-11-05_05-45-59/tiptop_run.log">server log</a> · <a href="server_outputs/2026-11-05_05-45-59/tiptop_plan.json">plan</a></div>
+</div>
+<div class="card" id="013_s1v3_baseline_t2">
+  <div><strong>013_s1v3_baseline_t2</strong> <span class="badge ok">Success → Success</span>
+   <span class="muted">(manual label)</span></div>
+  <div class="muted">scene 1, variant 3, condition baseline,
+   trial 2 · “Put the Rubik&#x27;s cube in the bowl.” · target rubiks_cube</div>
+  <div>stable lift: <b class="ok">yes</b> ·
+   task success: <b class="ok">yes</b>
+   (manual)</div>
+  <div class="grid">
+    <div><video controls preload="none" src="runs/013_s1v3_baseline_t2/video.mp4"></video></div>
+    <div><b>Why</b><ul><li>success</li></ul><table><tr><td>Gemini goal (mapped to sim)</td><td>(on, rubiks_cube, _24_bowl)</td></tr><tr><td>goal translation correct</td><td>yes</td></tr><tr><td>plan picks first</td><td>rubiks_cube</td></tr><tr><td>perceived vs true position (xy)</td><td>0.2 cm</td></tr><tr><td>grasp source</td><td>m2t2</td></tr><tr><td>planning time</td><td>10.0 s</td></tr><tr><td>object pushed before close</td><td>0.0 cm</td></tr><tr><td>gripper vs object at close (xy)</td><td>5.0 cm</td></tr><tr><td>joint tracking error at close</td><td>0.001 rad</td></tr><tr><td>closes</td><td>1</td></tr><tr><td>max lift near gripper</td><td>10.3 cm</td></tr><tr><td>longest hold</td><td>5.93 s</td></tr><tr><td>in-hand shift / rotation while carried</td><td>0.0 cm / 0 deg</td></tr><tr><td>shape of _24_bowl (perceived/true per axis, IoU)</td><td>[0.948, 0.962, 0.976] , 0.89</td></tr><tr><td>shape of rubiks_cube (perceived/true per axis, IoU)</td><td>[0.961, 0.965, 0.929] , 0.855</td></tr></table></div>
+  </div>
+  <div class="muted"><a href="runs/013_s1v3_baseline_t2/record.json">record</a> · <a href="runs/013_s1v3_baseline_t2/attribution.json">attribution</a> · <a href="runs/013_s1v3_baseline_t2/observed_eval.log">trace log</a> · <a href="runs/013_s1v3_baseline_t2/console.log">console</a> · <a href="server_outputs/2026-11-05_05-50-07/tiptop_run.log">server log</a> · <a href="server_outputs/2026-11-05_05-50-07/tiptop_plan.json">plan</a></div>
+</div>
+</body></html>

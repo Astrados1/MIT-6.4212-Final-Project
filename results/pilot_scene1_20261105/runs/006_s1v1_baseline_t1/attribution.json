@@ -1,0 +1,185 @@
+{
+  "run_id": "006_s1v1_baseline_t1",
+  "thresholds": {
+    "perception_xy_error_m": 0.02,
+    "gripper_xy_offset_at_close_m": 0.02,
+    "joint_tracking_error_rad": 0.05,
+    "pushed_before_close_m": 0.01,
+    "missed_detection_radius_m": 0.05
+  },
+  "trace_available": true,
+  "plan_timing": {
+    "trajectory_dts_s": [
+      0.02
+    ],
+    "implied_plan_hz": [
+      50.0
+    ],
+    "client_assumed_plan_hz": 50.0,
+    "client_waypoint_stride": 3,
+    "execution_time_scale": [
+      1.111
+    ]
+  },
+  "grounded_atoms": [
+    {
+      "predicate": "on",
+      "args": [
+        "Rubik's_cube",
+        "bowl"
+      ]
+    }
+  ],
+  "perceived_scene_available": true,
+  "perceived_movables": [
+    "Rubik's_cube",
+    "table",
+    "bowl"
+  ],
+  "perceived_objects": [
+    {
+      "perceived": "Rubik's_cube",
+      "role": "movable",
+      "nearest_sim_object": "rubiks_cube",
+      "xy_error_m": 0.0015,
+      "z_error_m": 0.0069
+    },
+    {
+      "perceived": "table",
+      "role": "movable",
+      "nearest_sim_object": "rubiks_cube",
+      "xy_error_m": 0.0788,
+      "z_error_m": -0.061
+    },
+    {
+      "perceived": "bowl",
+      "role": "movable",
+      "nearest_sim_object": "_24_bowl",
+      "xy_error_m": 0.0021,
+      "z_error_m": 0.0001
+    },
+    {
+      "perceived": "bowl",
+      "role": "static",
+      "nearest_sim_object": "_24_bowl",
+      "xy_error_m": 0.0021,
+      "z_error_m": 0.0001
+    }
+  ],
+  "sim_objects_without_nearby_detection": [],
+  "plan_pick_objects": [
+    "Rubik's_cube"
+  ],
+  "first_pick_found_in_perceived_scene": true,
+  "first_pick_maps_to_sim_object": "rubiks_cube",
+  "perception_xy_error_m": 0.0015,
+  "perception_z_error_m": 0.0069,
+  "first_pick_matches_target": true,
+  "first_pick_m2t2_grasp_count": 363,
+  "grasp_source": "m2t2",
+  "goal_objects_without_detection": [],
+  "shape": {
+    "_24_bowl": {
+      "perceived": "bowl",
+      "perceived_extent_m": [
+        0.154,
+        0.1558,
+        0.054
+      ],
+      "true_extent_m": [
+        0.1612,
+        0.1615,
+        0.055
+      ],
+      "extent_ratio": [
+        0.955,
+        0.965,
+        0.982
+      ],
+      "aabb_iou": 0.905
+    },
+    "rubiks_cube": {
+      "perceived": "Rubik's_cube",
+      "perceived_extent_m": [
+        0.0699,
+        0.0681,
+        0.0582
+      ],
+      "true_extent_m": [
+        0.0722,
+        0.0722,
+        0.0723
+      ],
+      "extent_ratio": [
+        0.968,
+        0.944,
+        0.805
+      ],
+      "aabb_iou": 0.731
+    }
+  },
+  "grounded_atoms_mapped": [
+    [
+      "on",
+      "rubiks_cube",
+      "_24_bowl"
+    ]
+  ],
+  "expected_atoms": [
+    [
+      "on",
+      "rubiks_cube",
+      "_24_bowl"
+    ]
+  ],
+  "goal_translation_correct": true,
+  "max_joint_tracking_error_rad": 0.1039,
+  "first_close_t_s": 8.4,
+  "gripper_minus_target_at_close_m": [
+    -0.0013,
+    0.0182,
+    0.1558
+  ],
+  "gripper_xy_offset_at_close_m": 0.0182,
+  "target_pushed_before_close_m": 0.0,
+  "joint_tracking_error_at_close_rad": 0.0018,
+  "in_hand": {
+    "carried": true,
+    "carry_start_t": 14.4,
+    "carry_end_t": 20.333333333333332,
+    "released_by_plan": true,
+    "max_in_hand_shift_m": 0.0002,
+    "max_in_hand_rot_deg": 0.06,
+    "in_hand_shift_at_release_m": 0.0,
+    "in_hand_rot_at_release_deg": 0.0,
+    "dropped_before_release": false,
+    "drop_t": null
+  },
+  "stage_hint": null,
+  "task_check": {
+    "task_success": true,
+    "clauses": [
+      {
+        "relation": "in",
+        "container": "_24_bowl",
+        "required": 1,
+        "satisfied_count": 1,
+        "ok": true,
+        "objects": {
+          "rubiks_cube": {
+            "satisfied": true,
+            "center_xy_inside_container": true,
+            "object_bottom_z": 0.0488,
+            "container_z_range": [
+              0.0464,
+              0.1014
+            ]
+          }
+        }
+      }
+    ],
+    "reason": null
+  },
+  "paper_category": "success",
+  "evidence": []
+}
