@@ -28,6 +28,7 @@ class AttemptRecord:
     # Evaluator-only ground truth at the start of the attempt (never sent to a sensor detector).
     object_positions: dict[str, list[float]] = field(default_factory=dict)
     object_quats: dict[str, list[float]] = field(default_factory=dict)
+    object_centers: dict[str, list[float]] = field(default_factory=dict)  # geometry-box centers (scored)
     # Fingerprint of the observation sent to TiPToP, to show each attempt planned from a new view.
     request: dict[str, Any] = field(default_factory=dict)
 
@@ -117,6 +118,12 @@ class RecoveryTrialRecord:
     object_names: list[str] = field(default_factory=list)
     initial_object_positions: dict[str, list[float]] = field(default_factory=dict)
     final_object_positions: dict[str, list[float]] = field(default_factory=dict)
+    # Geometry-box centers, used for all scoring; raw rigid-body origins above are kept unchanged.
+    # Some scene-4/5 meshes sit >10 cm from their body origin (docs/scoring.md).
+    initial_object_centers: dict[str, list[float]] = field(default_factory=dict)
+    final_object_centers: dict[str, list[float]] = field(default_factory=dict)
+    object_local_bounds: dict[str, Any] = field(default_factory=dict)
+    object_bounds_notes: dict[str, Any] = field(default_factory=dict)
     artifacts: dict[str, str] = field(default_factory=dict)
     harness_exception: str | None = None
 

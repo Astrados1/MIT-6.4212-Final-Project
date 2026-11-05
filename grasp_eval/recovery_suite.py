@@ -26,6 +26,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from grasp_eval.checkpoint import is_api_quota_error  # noqa: E402
 from grasp_eval.records import read_jsonl  # noqa: E402
 from grasp_eval.recovery_records import TRIALS_FILE  # noqa: E402
 from grasp_eval.run_suite import DEFAULT_INSTRUCTION, run_process, wait_for_servers  # noqa: E402
@@ -85,6 +86,20 @@ def first_plan(out: Path, source: Trial) -> str | None:
         return None
     plan = (attempts[0].get("artifacts") or {}).get("server_plan")
     return plan if plan and Path(plan).exists() else None
+
+
+def quota_error(out: Path, trial_id: str) -> str | None:
+    """The first API quota/rate-limit rejection recorded by this trial, if any."""
+    path = out / "trials" / trial_id / "attempts.json"
+    try:
+        attempts = json.loads(path.read_text())
+    except (OSError, ValueError):
+        return None
+    for att in attempts or []:
+        err = att.get("server_error")
+        if not att.get("server_success") and is_api_quota_error(err):
+            return str(err)
+    return None
 
 
 def schedule_entry(r: Trial, a) -> dict:
@@ -203,6 +218,11 @@ def main(argv=None) -> int:
         with open(exit_file, "a") as f:
             f.write(f"{r.trial_id}\t{code}\n")
         print(f"    exit code {code} ({(time.monotonic() - t0) / 60:.1f} min)", flush=True)
+        if quota_error(out, r.trial_id):
+            # The planner stays healthy while its model API rejects every request; stop before
+            # paying to start more simulators (same circuit breaker as run_suite).
+            stopped = "upstream API quota/rate limit; resolve it before --resume"
+            break
     from grasp_eval.recovery_summary import main as summarize
 
     rc = summarize([str(out)]) if (out / TRIALS_FILE).exists() else 1

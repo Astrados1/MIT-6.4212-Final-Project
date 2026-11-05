@@ -79,8 +79,8 @@ New code imports week-one helpers read-only: `LiftCriteria`/`score_first_grasp`/
 
 Evaluated on the window from the start of the close to the end of the hold:
 
-- `holding_target`: the target rose with the hand (≥ 0.6 × the hand's rise), stayed within 10 cm of the finger
-  midpoint for the whole hold, and its offset in the hand drifted ≤ 1 cm during the hold. Another object
+- `holding_target`: the target rose with the hand (≥ 0.6 × the hand's rise), stayed within 20 cm of the finger
+  midpoint for the whole hold (the value frozen for the baseline on 2026-11-05; see below), and its offset in the hand drifted ≤ 1 cm during the hold. Another object
   following the hand at the same time makes it `uncertain`.
 - `failed_empty`: the hand rose ≥ 3 cm, the target's height changed ≤ 1 cm and it moved ≤ 5 mm during the hold
   (settled), no other object followed the hand, and no disturbed object is within 8 cm of the hand.
@@ -98,6 +98,26 @@ threshold for week-one results.
 
 All detector thresholds are first guesses (`OracleCheckCriteria`, CLI flags of the same names). Validate on the
 GPU smoke traces, then freeze them before any comparison and record the frozen values.
+
+### Changes after the November 5 baseline run
+
+The A6000 baseline run ([baseline_report.md](baseline_report.md), [scoring.md](scoring.md)) found measurement
+problems that also applied to this code. They are fixed here the same way:
+
+- **Proximity 10 → 20 cm.** The finger "midpoint" is the inner-finger *link-origin* midpoint, about 15.5 cm from
+  a held cube. The old 10 cm limit rejected every real grasp. `OracleCheckCriteria.max_obj_to_gripper_m` and the
+  `--max-obj-to-gripper-m` default (shared with `historical_lift`) are now the frozen 0.20 m.
+- **Geometry-box centers.** Some scene-4/5 meshes sit far from their rigid-body origin (one cube by ~20 cm).
+  The trace keeps raw `objects_pos`/`objects_quat` and adds `objects_center`. The checkpoint, `historical_lift`
+  and the return-motion disturbance check use the centers. Records add `object_centers`,
+  `initial/final_object_centers` and the USD boxes. `historical_lift.position_reference` says which was used.
+- **API quota is infrastructure.** A Gemini `429 RESOURCE_EXHAUSTED` used to stop a trial as
+  `planning_failure`. It now stops as `infrastructure`, and `recovery_suite` stops before starting another
+  simulator (exit 3; fix the quota, then `--resume`).
+
+Still to check on the GPU: `other_near_m` (8 cm) is measured from the same finger-origin reference, which sits
+well behind the contact region, so the "disturbed neighbour" check may never fire. Validate it against video
+before trusting `failed_empty` in cluttered scenes.
 
 ## Empty-hand return (first version)
 
@@ -189,3 +209,8 @@ connection/API errors are `infrastructure`; neither gets an extra budget.
   checked (`finger_joint` ≈ π/4 rad when closed).
 - Per-attempt stage attribution (week one's `attribution.py`) is not wired in yet.
 - No learning, failed-grasp memory, IIWA work or placement continuation, by design.
+- The displacement probe rotates yaw about the rigid-body origin, not the geometry center. That only matters for
+  assets whose mesh is offset from the origin (scenes 4-5).
+- Scene 4 variants 1-3 initialise the cube far below the table (baseline report); exclude them until repaired.
+- The planner's FR3 joint-6/7 limits exceed the simulated Panda's. A plan can saturate a joint near release
+  (baseline pilot run 002). `configs/tiptop_panda_sim.yml` is the Panda alternative; it is not the default.
