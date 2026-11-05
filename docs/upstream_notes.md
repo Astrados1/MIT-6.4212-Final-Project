@@ -1,7 +1,8 @@
 # Upstream code-reading notes (pinned revisions)
 
-Read on October 29, 2026 at TiPToP `d8f5afd` and droid-sim-evals `69a914c`. Nothing here has been
-executed yet. Items marked **CHECK** must be verified on the GPU machine before baseline results are interpreted.
+Initial code reading: October 29, 2026 at TiPToP `d8f5afd` and droid-sim-evals `69a914c`.
+The historical notes below are supplemented by the November 5 execution findings at the end.
+Items marked **CHECK** require experiment-specific verification.
 
 ## Robot, gripper and frames
 
@@ -97,3 +98,29 @@ executed yet. Items marked **CHECK** must be verified on the GPU machine before 
 `replay_json_traj.py`, `save_h5_obs.py`, `tiptop/tiptop_offline.py` (episode limits and the execution path
 for the offline route), `tiptop/planning.py` (cuTAMP settings, serialization) and the perception wrapper.
 Read these before using the offline route or interpreting planner-side failures.
+
+## November 5 execution findings
+
+- All five configured scenes load on the Blackwell/R590 split-host deployment. Both inner-finger
+  body names exist. The cube is approximately 7.21 cm across. Scene 4 has two cans and scene 5
+  has five blocks; object/container mappings are now populated from inspection.
+- The original 10 cm finger-origin proximity threshold rejected a visually successful carry.
+  The smoke's held cube was about 15.47 cm from the reference. See the pilot validation and
+  explicit criteria in [scoring.md](scoring.md).
+- Some scene-4/5 geometry centers are offset from body origins. Scoring now uses geometry-box
+  centers while preserving raw body poses. Direct mesh-vertex inspection confirms the offsets.
+- Recorded trajectory `dt=0.02`; stride 3 at 15 Hz yields approximately 1.111 times planned
+  duration. Original timing and the 1.5 cm camera adjustment remain unchanged.
+- FR3 and Panda grasp-frame FK agree at all 467 measured joint configurations in the successful
+  smoke (zero translation difference, maximum angular difference below 0.000003 degrees).
+  **Their joint limits do not agree.** The planner's FR3 joint 6 upper bound is 4.5169 rad,
+  versus 3.7525 rad in both the Panda URDF and the actual simulator USD. Pilot variant 2
+  saturated at the Panda bound while the command reached 4.219 rad before release. This caused
+  a large pose-tracking error despite a stable grasp. Joint 7 limits also differ. These checks
+  do not constitute a complete direct comparison of every USD link's FK.
+- Contrary to the initial code-reading note above, actual saved pipeline directories include
+  `rgb.png`, `bboxes_viz.png`, `masks_viz.png`, `perception/bboxes.json`, masks, depth, intrinsics,
+  point clouds, grasp tensors and the perceived scene, as well as plan/config/provenance files.
+  Preserve the complete per-run directory for failure review.
+- The server's tracked diff consists of the supplied Gemini patch, including the model default
+  in `compute_gripper_mask.py`. Saved per-run `git.diff` and metadata provide direct evidence.

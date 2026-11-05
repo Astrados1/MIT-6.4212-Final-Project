@@ -1,0 +1,16 @@
+ WARN Encountered 1 warning while parsing the manifest:
+  ⚠ the `[system-requirements]` table is deprecated in favor of virtual
+  │ packages on `platforms`
+    ╭─[/opt/tiptop-project/tiptop/pixi.toml:8:1]
+  7 │     
+  8 │ ╭─▶ [system-requirements]
+  9 │ │   cuda = "12"
+ 10 │ ├─▶ libc = { family = "glibc", version = "2.31" }
+    · ╰──── declare these on the `platforms` entries instead
+ 11 │     
+    ╰────
+  help: e.g. platforms = [{ name = "my-linux-64", platform = "linux-64", cuda
+        = "12", glibc = "2.31" }]
+
+ WARN the lock file is up-to-date but uses an older format (v6), run `pixi lock` to upgrade to v7 for improved reproducibility
+Wrote /workspace/MIT-6.4212-Final-Project/results/preflight_smoke_20261105T045535Z/perceived/2026-11-05_04-56-17.json

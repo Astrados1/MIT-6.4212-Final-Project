@@ -1,0 +1,185 @@
+{
+  "artifacts": {
+    "log": "/workspace/MIT-6.4212-Final-Project/results/pilot_scene1_20261105/runs/009_s1v4_baseline_t1/observed_eval.log",
+    "server_log": "/opt/tiptop-project/tiptop/tiptop_server_outputs/2026-11-05_05-35-36/tiptop_run.log",
+    "server_outputs": "/opt/tiptop-project/tiptop/tiptop_server_outputs/2026-11-05_05-35-36",
+    "server_plan": "/opt/tiptop-project/tiptop/tiptop_server_outputs/2026-11-05_05-35-36/tiptop_plan.json",
+    "trace": "/workspace/MIT-6.4212-Final-Project/results/pilot_scene1_20261105/runs/009_s1v4_baseline_t1/trace.npz",
+    "video": "/workspace/MIT-6.4212-Final-Project/results/pilot_scene1_20261105/runs/009_s1v4_baseline_t1/video.mp4"
+  },
+  "criteria": {
+    "close_threshold": 0.5,
+    "max_obj_to_gripper_m": 0.2,
+    "min_hold_s": 0.5,
+    "min_rise_m": 0.05
+  },
+  "executed_steps": 629,
+  "failure_category": "missed_grasp",
+  "failure_category_source": "auto",
+  "failure_detail": "trace-based hint; confirm on video",
+  "final_object_centers": {
+    "_24_bowl": [
+      0.5441421270370483,
+      0.15708781778812408,
+      0.07386093586683273
+    ],
+    "rubiks_cube": [
+      0.5385449389065218,
+      -0.08118380240220911,
+      0.08118996011163468
+    ]
+  },
+  "final_object_positions": {
+    "_24_bowl": [
+      0.5441421270370483,
+      0.15708781778812408,
+      0.07386093586683273
+    ],
+    "rubiks_cube": [
+      0.5385333895683289,
+      -0.08121684193611145,
+      0.08118991553783417
+    ]
+  },
+  "final_object_quats": {
+    "_24_bowl": [
+      0.7071057558059692,
+      -0.7071075439453125,
+      -0.000259590131463483,
+      0.00026059223455376923
+    ],
+    "rubiks_cube": [
+      0.9858971834182739,
+      0.0007338486611843109,
+      0.0005182579625397921,
+      -0.16735030710697174
+    ]
+  },
+  "finished_utc": "2026-11-05T05:38:05+00:00",
+  "goal": [
+    {
+      "container": "_24_bowl",
+      "objects": [
+        "$target"
+      ],
+      "relation": "in"
+    }
+  ],
+  "harness_exception": null,
+  "initial_object_centers": {
+    "_24_bowl": [
+      0.5441398024559021,
+      0.15722601115703583,
+      0.07386092841625214
+    ],
+    "rubiks_cube": [
+      0.5016679167987907,
+      -0.05820508587048244,
+      0.08118994665844716
+    ]
+  },
+  "initial_object_positions": {
+    "_24_bowl": [
+      0.5441398024559021,
+      0.15722601115703583,
+      0.07386092841625214
+    ],
+    "rubiks_cube": [
+      0.5016679167747498,
+      -0.05824008584022522,
+      0.08118990063667297
+    ]
+  },
+  "initial_object_quats": {
+    "_24_bowl": [
+      0.7071059942245483,
+      -0.7071075439453125,
+      -3.459022263996303e-05,
+      3.5789093089988455e-05
+    ],
+    "rubiks_cube": [
+      0.9999996423721313,
+      0.0006574541912414134,
+      0.0006558250752277672,
+      8.773146475959948e-08
+    ]
+  },
+  "instruction": "Put the Rubik's cube in the bowl.",
+  "object_bounds_notes": {},
+  "object_local_bounds": {
+    "_24_bowl": [
+      [
+        -0.08058,
+        -0.0275,
+        -0.08073
+      ],
+      [
+        0.08058,
+        0.0275,
+        0.08073
+      ]
+    ],
+    "rubiks_cube": [
+      [
+        -0.03605,
+        -0.03601,
+        -0.03605
+      ],
+      [
+        0.03605,
+        0.03608,
+        0.03605
+      ]
+    ]
+  },
+  "plan_done": true,
+  "plan_num_close_steps": 1,
+  "plan_num_steps": 9,
+  "plan_q_init_max_abs_diff_rad": null,
+  "plan_source": "server",
+  "planning_time_s": 9.07873187889345,
+  "probe": {
+    "label": "baseline",
+    "type": "baseline"
+  },
+  "replayed_plan": null,
+  "run_id": "009_s1v4_baseline_t1",
+  "scene": 1,
+  "score": {
+    "failure_hint": "missed_grasp",
+    "first_close_t": 9.6,
+    "lifted": false,
+    "longest_hold_s": 0.0,
+    "max_rise_m": 0.010680422406178253,
+    "max_rise_near_gripper_m": 0.010680422406178253,
+    "num_close_commands": 1,
+    "position_reference": "geometry_box_center",
+    "release_t": 29.2
+  },
+  "seed": 1401,
+  "server_error": null,
+  "server_response_received": true,
+  "server_save_dir": "/opt/tiptop-project/tiptop/tiptop_server_outputs/2026-11-05_05-35-36",
+  "server_success": true,
+  "sim_duration_s": 41.93333333333333,
+  "stable_lift": false,
+  "started_utc": "2026-11-05T05:35:06+00:00",
+  "target_object": "rubiks_cube",
+  "target_source": "explicit",
+  "task_success": null,
+  "terminated": false,
+  "trial": 1,
+  "truncated": false,
+  "variant": 4,
+  "versions": {
+    "project_dirty": false,
+    "project_sha": "e4bb12239c0f5e52820e57320bd6bb582d159665",
+    "provenance_file": "/workspace/MIT-6.4212-Final-Project/provenance/split_host_20261105.json",
+    "provenance_sha256": "5fc9b035dc674ff24f63a29abb5c403488fc64c49c9eeaf2ca2a6a753219d84b",
+    "sim_dirty": false,
+    "sim_sha": "69a914cf56e0da6adafe9428de39b6ceffe9bcc6",
+    "tiptop_diff_sha256": "f192094e9d726c4471054fec374fad7dcaeff597260529d10fe8dfcd62cbffb1",
+    "tiptop_sha": "d8f5afdaa94a7432220c3042f9f80be5ab45aae8"
+  },
+  "wall_duration_s": 178.72199273109436
+}

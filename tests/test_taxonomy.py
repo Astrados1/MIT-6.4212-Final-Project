@@ -298,6 +298,22 @@ class PaperSummaryTest(unittest.TestCase):
             with self.assertRaises(ValueError):
                 build_rows(d)
 
+    def test_reviewed_failure_with_unknown_cause_stays_in_denominator(self):
+        from grasp_eval.summarize import paper_sankey
+        with tempfile.TemporaryDirectory() as d:
+            d = Path(d)
+            records = [dict(ClassifyTest.ok, run_id=name) for name in ('success', 'uncertain')]
+            self._write(d, records, [],
+                        "run_id,task_success,paper_category\n"
+                        "success,true,success\n"
+                        "uncertain,false,unattributed_task_failure/cause_not_established\n")
+            rows, _ = build_rows(d)
+            sankey = paper_sankey(rows)
+            self.assertEqual(sankey['comparable_trials'], 2)
+            self.assertEqual(sankey['excluded'], {'infrastructure': 1})
+            self.assertIn({'source': 'All Trials', 'target': 'Failure', 'value': 1}, sankey['links'])
+            self.assertIn('| Success | 1 | 50% |', render_paper_taxonomy(rows))
+
 
 if __name__ == "__main__":
     unittest.main()

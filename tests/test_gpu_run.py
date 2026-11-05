@@ -173,6 +173,21 @@ class ClusterPlanTest(unittest.TestCase):
 
 
 class VideoAndReviewTest(unittest.TestCase):
+    def test_review_links_survive_copy_from_gpu_to_laptop(self):
+        from grasp_eval.review_page import _rel
+        with tempfile.TemporaryDirectory() as d:
+            base = Path(d)
+            video = base / "runs" / "trial1" / "video.mp4"
+            video.parent.mkdir(parents=True)
+            video.touch()
+            remote = "/workspace/project/results/pilot/runs/trial1/video.mp4"
+            self.assertEqual(_rel(remote, base), "runs/trial1/video.mp4")
+            plan = base / "server_outputs" / "2026-11-05_05-07-22" / "tiptop_plan.json"
+            plan.parent.mkdir(parents=True)
+            plan.touch()
+            remote_plan = "/opt/tiptop/tiptop_server_outputs/2026-11-05_05-07-22/tiptop_plan.json"
+            self.assertEqual(_rel(remote_plan, base), "server_outputs/2026-11-05_05-07-22/tiptop_plan.json")
+
     def test_plan_step_text(self):
         from grasp_eval.video_overlay import caption_line, plan_step_text
 

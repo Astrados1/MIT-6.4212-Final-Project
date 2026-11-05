@@ -1,0 +1,35 @@
+{
+  "frozen_utc": "2026-11-05T06:04:57.392994+00:00",
+  "pilot": "pilot_scene1_20261105",
+  "completed_trials": 15,
+  "reviewed_stable_lifts": 11,
+  "reviewed_task_successes": 9,
+  "criteria": {
+    "min_rise_m": 0.05,
+    "min_hold_s": 0.5,
+    "max_obj_to_gripper_m": 0.2,
+    "close_threshold": 0.5
+  },
+  "evidence": {
+    "positive_hold_s_range": [
+      1.3333333333333357,
+      11.133333333333336
+    ],
+    "negative_max_rise_m_range": [
+      0.003421398432770076,
+      0.010680422406178253
+    ],
+    "proximity_sensitivity_lift_counts": {
+      "0.10": 0,
+      "0.15": 1,
+      "0.175": 11,
+      "0.20": 11,
+      "0.225": 11
+    },
+    "largest_raised_closed_distance_m": 0.18407808773673265,
+    "review": "Approach, acquisition, carry, release and final keyframes; full-resolution tilted-container check; raw traces; planner/mesh/FK diagnostics.",
+    "limitations": "One positive reaches only 5.132 cm rise; tilt/containment uses the documented AABB rule. Criteria freeze does not validate a causal taxonomy label."
+  },
+  "manual_labels_sha256": "4858b8eec66442c4330e9295f405cbf032ccc7eb5554942c60e2019b0d239de0",
+  "measurement_audit_sha256": "7e0d21f43dee61e42f7ef6f0748f8592fd3e8cc29210efa2eac919fc91c29f1e"
+}

@@ -1,0 +1,80 @@
+[
+  {
+    "name": "panda_joint1",
+    "path": "/panda/panda_link0/panda_joint1",
+    "lower_rad": -2.897300087848498,
+    "upper_rad": 2.897300087848498
+  },
+  {
+    "name": "panda_joint2",
+    "path": "/panda/panda_link1/panda_joint2",
+    "lower_rad": -1.762799988219413,
+    "upper_rad": 1.762799988219413
+  },
+  {
+    "name": "panda_joint3",
+    "path": "/panda/panda_link2/panda_joint3",
+    "lower_rad": -2.897300087848498,
+    "upper_rad": 2.897300087848498
+  },
+  {
+    "name": "panda_joint4",
+    "path": "/panda/panda_link3/panda_joint4",
+    "lower_rad": -3.0717999898504136,
+    "upper_rad": -0.06979999575475569
+  },
+  {
+    "name": "panda_joint5",
+    "path": "/panda/panda_link4/panda_joint5",
+    "lower_rad": -2.897300087848498,
+    "upper_rad": 2.897300087848498
+  },
+  {
+    "name": "panda_joint6",
+    "path": "/panda/panda_link5/panda_joint6",
+    "lower_rad": -0.01749999978815516,
+    "upper_rad": 3.752499969733032
+  },
+  {
+    "name": "panda_joint7",
+    "path": "/panda/panda_link6/panda_joint7",
+    "lower_rad": -2.897300087848498,
+    "upper_rad": 2.897300087848498
+  },
+  {
+    "name": "finger_joint",
+    "path": "/panda/Gripper/Robotiq_2F_85/Joints/finger_joint",
+    "lower_rad": 0.0,
+    "upper_rad": 0.7853981633974483
+  },
+  {
+    "name": "right_outer_knuckle_joint",
+    "path": "/panda/Gripper/Robotiq_2F_85/Joints/right_outer_knuckle_joint",
+    "lower_rad": 0.0,
+    "upper_rad": 0.7853981633974483
+  },
+  {
+    "name": "right_inner_finger_joint",
+    "path": "/panda/Gripper/Robotiq_2F_85/Joints/right_inner_finger_joint",
+    "lower_rad": -3.141592653589793,
+    "upper_rad": 3.141592653589793
+  },
+  {
+    "name": "right_inner_finger_knuckle_joint",
+    "path": "/panda/Gripper/Robotiq_2F_85/Joints/right_inner_finger_knuckle_joint",
+    "lower_rad": -3.141592653589793,
+    "upper_rad": 3.141592653589793
+  },
+  {
+    "name": "left_inner_finger_knuckle_joint",
+    "path": "/panda/Gripper/Robotiq_2F_85/Joints/left_inner_finger_knuckle_joint",
+    "lower_rad": -3.141592653589793,
+    "upper_rad": 3.141592653589793
+  },
+  {
+    "name": "left_inner_finger_joint",
+    "path": "/panda/Gripper/Robotiq_2F_85/Joints/left_inner_finger_joint",
+    "lower_rad": -3.141592653589793,
+    "upper_rad": 3.141592653589793
+  }
+]

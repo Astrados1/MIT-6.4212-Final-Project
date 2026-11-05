@@ -1,0 +1,126 @@
+# Provenance record
+collected_utc: 2026-11-05T05:09:31Z
+hostname: f60c32cab1a2
+project_repo: e4bb12239c0f5e52820e57320bd6bb582d159665
+
+## Source revisions
+tiptop: d8f5afdaa94a7432220c3042f9f80be5ab45aae8  describe=v0.3.0  modified_tracked_files=2
+   tiptop/perception/gemini.py            | 8 ++++----
+   tiptop/scripts/compute_gripper_mask.py | 2 +-
+   2 files changed, 5 insertions(+), 5 deletions(-)
+droid-sim-evals: 69a914cf56e0da6adafe9428de39b6ceffe9bcc6  describe=69a914c  modified_tracked_files=0
+M2T2: 96201acdb77baa1bc9d01bdf4d6f870d79b4b696  describe=96201ac  modified_tracked_files=0
+cuRobo: b5fad1df2a3ac4d3e33e369918b7d62d0e59ebd1  describe=b5fad1d  modified_tracked_files=0
+cuTAMP: e206ab817599406abd709e8ba19f445889bd641c  describe=v0.0.6  modified_tracked_files=0
+droid-sim-evals submodules:
+
+## Project patches to upstream (patches/README.md)
+  tiptop/0001-gemini-robotics-er-2.patch: applied  sha256=f192094e9d726c4471054fec374fad7dcaeff597260529d10fe8dfcd62cbffb1
+
+## Installed planner versions (tiptop pixi env)
+ WARN Encountered 1 warning while parsing the manifest:
+  ⚠ the `[system-requirements]` table is deprecated in favor of virtual
+  │ packages on `platforms`
+    ╭─[/opt/tiptop-project/tiptop/pixi.toml:8:1]
+  7 │     
+  8 │ ╭─▶ [system-requirements]
+  9 │ │   cuda = "12"
+ 10 │ ├─▶ libc = { family = "glibc", version = "2.31" }
+    · ╰──── declare these on the `platforms` entries instead
+ 11 │     
+    ╰────
+  help: e.g. platforms = [{ name = "my-linux-64", platform = "linux-64", cuda
+        = "12", glibc = "2.31" }]
+
+ WARN the lock file is up-to-date but uses an older format (v6), run `pixi lock` to upgrade to v7 for improved reproducibility
+  cutamp: 0.0.6
+  nvidia-curobo: 0.0.post1.dev67
+  curobo: not installed under this name
+  torch: 2.7.1
+  sam2: not installed under this name
+  google-genai: 1.70.0
+  torch.cuda: 12.9  available=True
+expected cuTAMP: 0.0.6
+
+## Configuration
+tiptop config:
+  1e18012f5212f2c96aa5fa8873ecb5b5af1ee7927c293e8d36470cda41d7b5c2  /opt/tiptop-project/tiptop/tiptop/config/tiptop.yml  (3320 bytes)
+robot.type: fr3_robotiq
+gemini default model(s) in code:
+  69:    model_id: str = "gemini-robotics-er-2-preview",
+  102:    model_id: str = "gemini-robotics-er-2-preview",
+expected gemini model: gemini-robotics-er-2-preview (upstream default was gemini-robotics-er-1.6-preview)
+gemini thinking config in code:
+  92:            temperature=temperature, thinking_config=types.ThinkingConfig(thinking_level=types.ThinkingLevel.MINIMAL)
+  125:            temperature=temperature, thinking_config=types.ThinkingConfig(thinking_level=types.ThinkingLevel.MINIMAL)
+GOOGLE_API_KEY: unset (value never recorded)
+
+## Lockfiles
+lockfiles:
+  fe8c615de6036bc1bd5f653cb11ec350dca5016320a077e1d49451144f41451f  /opt/tiptop-project/M2T2/pixi.lock  (213379 bytes)
+  674b427d2e2fadff4d4ab2fae8b74647978f5ab3b4d671f2f088e53eda6ce9a4  /opt/tiptop-project/droid-sim-evals/uv.lock  (637355 bytes)
+  2e017bf607e4c7a6664e42e5cc817bb9f837e99e56c26b2424804dcd29765994  /opt/tiptop-project/tiptop/pixi.lock  (317993 bytes)
+
+## Model checkpoints
+M2T2 weights:
+  e35c3cb11e06f46c5d406bdfc756bc06f48b256dd6d638408d9a5ff13deb97fb  /opt/tiptop-project/M2T2/weights/m2t2.pth  (137562712 bytes)
+  8cc96daf6a50cdc3e52bb27bb163dcf78cdeb64c0972d9e7d51b24b70e1cf5fa  /opt/tiptop-project/M2T2/weights/m2t2_language.pth  (90319155 bytes)
+SAM2 checkpoints:
+  2647878d5dfa5098f2f8649825738a9345572bae2d4350a2468587ece47dd318  /opt/tiptop-project/tiptop/tiptop/.cache/sam2.1_hiera_large.pt  (898083611 bytes)
+
+## Simulation assets
+assets.zip: not given (set ASSETS_ZIP and ASSETS_URL to record the archive)
+scene USDs:
+  c8d72259834e2e5290754f8580b37efbc0dec079ac6a98b27b167efe6461eb2c  /opt/tiptop-project/droid-sim-evals/assets/franka_robotiq_2f_85_flattened.usd  (14161197 bytes)
+  63c7a4611688db391b7c4c9836c6f5ed97be05a5aee95d652b027b1f86646eb3  /opt/tiptop-project/droid-sim-evals/assets/scene1_0.usd  (7962 bytes)
+  d5ebad1ccd11aa78e577b491a018dd036d6bb2b3ee8b194c763db51b8ce518f6  /opt/tiptop-project/droid-sim-evals/assets/scene1_1.usd  (7962 bytes)
+  a0a23449877daa56ef16116a8fa5963a84d1f5bcd95f8816f2adb735230a806b  /opt/tiptop-project/droid-sim-evals/assets/scene1_2.usd  (7962 bytes)
+  de3f78218398e52161c20a03bc3997e60296a0bf3ceb8de4c005dab8d0cd85bf  /opt/tiptop-project/droid-sim-evals/assets/scene1_3.usd  (7962 bytes)
+  524754db7f2aae408c996cb6cd299dfe724041260f9568a63c36f2ce5be15ffb  /opt/tiptop-project/droid-sim-evals/assets/scene1_4.usd  (7962 bytes)
+  f6f5b7c31a8c916901b9f4dd5e3501081f602781f4117d533f161c6f93bbd06d  /opt/tiptop-project/droid-sim-evals/assets/scene1_5.usd  (7962 bytes)
+  69bd6c29c7a913621348679a704cd235c11914696995036516781398980fb791  /opt/tiptop-project/droid-sim-evals/assets/scene1_6.usd  (7962 bytes)
+  607a207d9d6fdf161c1e04546244994e7b07359cf188c9a158d5e03dc4e687f5  /opt/tiptop-project/droid-sim-evals/assets/scene1_7.usd  (7962 bytes)
+  8aa1053ccf2fa06412c321c4a964cb1f9d945b63acfc3c19734ce5e432cd1a9d  /opt/tiptop-project/droid-sim-evals/assets/scene1_8.usd  (7962 bytes)
+  4723921d97bd9512fd659397454c632f5fcd459f1fbf46199c1589188c53c0be  /opt/tiptop-project/droid-sim-evals/assets/scene1_9.usd  (7962 bytes)
+  6d774b2a61eea0f509bae5fc4b115e701e8c9f4932516abfba04d7d3912b5e7a  /opt/tiptop-project/droid-sim-evals/assets/scene2_0.usd  (12237 bytes)
+  2c3b8aa2d749088145c07ded6d3c7fbd00079c9903b9cce15c30f233fe90ed60  /opt/tiptop-project/droid-sim-evals/assets/scene2_1.usd  (12237 bytes)
+  ba65f40b002322a5da60937f5ef72b8e5851088351c812cda0fad0804d84b856  /opt/tiptop-project/droid-sim-evals/assets/scene2_2.usd  (12237 bytes)
+  dca7aa0b37941d5a7ee1e450593d39ed6d57821b1f329f1105615b8acb9d0ec5  /opt/tiptop-project/droid-sim-evals/assets/scene2_3.usd  (12237 bytes)
+  5920d00d22e09177f27e691d642c88460af9210a6805551a823bbb020d20fb40  /opt/tiptop-project/droid-sim-evals/assets/scene2_4.usd  (12237 bytes)
+  2eaf55f0a140119da8d71342e13b2d5683b5ac642e30c27d3cfe09a04b27c8ab  /opt/tiptop-project/droid-sim-evals/assets/scene2_5.usd  (12237 bytes)
+  0a6696745b4393559c7a8b1fd1f236ab7656d808ee46826e18e99174418bad5c  /opt/tiptop-project/droid-sim-evals/assets/scene2_6.usd  (12237 bytes)
+  b82d9581a9f47cbde201f89fbb72a3c8c6f907f0ddb70a334a21532e93b9132b  /opt/tiptop-project/droid-sim-evals/assets/scene2_7.usd  (12237 bytes)
+  6a632e87c335915793b3dffe01d058fd5e8ca46f20b2b8422a7fc2227cb6c674  /opt/tiptop-project/droid-sim-evals/assets/scene2_8.usd  (12237 bytes)
+  19103adbe807276647e1a0b71f7f31da8c1f463125fa18de2b66e881b1b5499f  /opt/tiptop-project/droid-sim-evals/assets/scene2_9.usd  (12237 bytes)
+  eb6cf160087daa0bdfa5bfcbd25dba7e72d5fcb2f744a14d4b39d434999747f4  /opt/tiptop-project/droid-sim-evals/assets/scene3_0.usd  (14935 bytes)
+  2560cc5deba495a4082644d1a72051377ac767854b53a93f9030b50084141607  /opt/tiptop-project/droid-sim-evals/assets/scene3_1.usd  (15387 bytes)
+  441652997ceb68cf3f17d342781daa295234833f45d7683d81aa05069f17d7a1  /opt/tiptop-project/droid-sim-evals/assets/scene3_10.usd  (15387 bytes)
+  cddf71c7de014cdf4246be648b58606414b3a7cb9d99de209dfefb5bd3a4397b  /opt/tiptop-project/droid-sim-evals/assets/scene3_11.usd  (15387 bytes)
+  c7b93164c4e01d3951aa26701003446a32c03a8f85480509217a394f4d2e2eed  /opt/tiptop-project/droid-sim-evals/assets/scene3_2.usd  (15387 bytes)
+  897ca02af53182112804d905a70c1fe54d0cb5666d5c093db95e607eb1ff90dd  /opt/tiptop-project/droid-sim-evals/assets/scene3_3.usd  (15387 bytes)
+  5d75e5d68545f6f92faf2f9051d482769358a9b763afe959ddcc19d97dc4c1da  /opt/tiptop-project/droid-sim-evals/assets/scene3_4.usd  (15387 bytes)
+  7586d10b6f8a6728d20b290d1e193d407f84253a33b61fb8a90235872321148c  /opt/tiptop-project/droid-sim-evals/assets/scene3_5.usd  (15387 bytes)
+  c1411a00dfa887886f307304a82e8f09cdbea10b106421dbee753dfa7716b6fa  /opt/tiptop-project/droid-sim-evals/assets/scene3_6.usd  (15387 bytes)
+  e1fa4172f953f213cb1551405a6be86340e5527aa1cc4a037c35942115b4758a  /opt/tiptop-project/droid-sim-evals/assets/scene3_7.usd  (15387 bytes)
+  8236f7bd649996e7e8d93eb0ea76f7f21fb58377b700da6ce701eb1a2ea1148b  /opt/tiptop-project/droid-sim-evals/assets/scene3_8.usd  (15387 bytes)
+  b9415aa4f14134863a73465398b3836a881c2e897398848fb631847ce1a9e9d2  /opt/tiptop-project/droid-sim-evals/assets/scene4_0.usd  (43851 bytes)
+  b198d11be18b4a69a6cc2d411d592abf0d45921db802e93e73f853f612b98cff  /opt/tiptop-project/droid-sim-evals/assets/scene4_1.usd  (7807 bytes)
+  e50a46b89ca7b6c4c8c0c2d752b555d8b84ec1532db8dbf49cb64dc2fa194156  /opt/tiptop-project/droid-sim-evals/assets/scene4_2.usd  (7813 bytes)
+  11a892059e16c6622302e9ba2fa3c29a1d4a0d8bf091a18cd823b55137342163  /opt/tiptop-project/droid-sim-evals/assets/scene4_3.usd  (9158 bytes)
+  6a4a320b3a0c53f5121f648a7c35ee5259f00cd4954a9d45aa1883150aa61906  /opt/tiptop-project/droid-sim-evals/assets/scene4_4.usd  (7764 bytes)
+  aebd065b7f206827d9e10094890900b20c748cb558544dc078ec0f115346c19a  /opt/tiptop-project/droid-sim-evals/assets/scene4_5.usd  (7770 bytes)
+  34ae8336e19048e56bd67fe04f332f18daf12693e0107aba0a43892fddf1235d  /opt/tiptop-project/droid-sim-evals/assets/scene4_6.usd  (7770 bytes)
+  21cd4ec8120dadd9c4eff9571515a9b1e922b7e292e30076c9f22d022e4b95ea  /opt/tiptop-project/droid-sim-evals/assets/scene4_7.usd  (7770 bytes)
+  65bf071a31e9071ea4009f40cbf2ca187a0492cad479c5155019f67e3e723ae7  /opt/tiptop-project/droid-sim-evals/assets/scene4_8.usd  (7770 bytes)
+  ac27a70e1099a25edbb8079baf086c5555f7c5abc74d11cf54410ee753221714  /opt/tiptop-project/droid-sim-evals/assets/scene4_9.usd  (9108 bytes)
+  8a6819fac8a5ac18769e1f7efaa00d49bf88f6483eb5fb86b787f75b5968d078  /opt/tiptop-project/droid-sim-evals/assets/scene5_0.usd  (25441 bytes)
+  fcf5b2849d3716620590e85008004b9c6f3d1aed88fccee60e2b16fbf9424b5f  /opt/tiptop-project/droid-sim-evals/assets/scene5_1.usd  (8097 bytes)
+  2b56235896446b999c6de687a3cf71846d497c1511ac3b85c137dafcddb06530  /opt/tiptop-project/droid-sim-evals/assets/scene5_2.usd  (6303 bytes)
+  a20630f3169abd88906f1e1a7dd03d00bc472a2b861be15ec3ebda56380bde53  /opt/tiptop-project/droid-sim-evals/assets/scene5_3.usd  (6286 bytes)
+  ab9e22d51b832bf31debcd768ed59824794b73999cb5b99ff6b338f2b0de96ee  /opt/tiptop-project/droid-sim-evals/assets/scene5_4.usd  (6309 bytes)
+  c1f24eee542b2c0e048748f34a31129547f3a86f8eaa42a1c8b677fe5bd05193  /opt/tiptop-project/droid-sim-evals/assets/scene5_5.usd  (6803 bytes)
+  7b4835c7e199407fcd8e9d3d21eeb3c447ade5712b3943c9a5094b9cfa0e57d4  /opt/tiptop-project/droid-sim-evals/assets/scene5_6.usd  (7341 bytes)
+  8ee3b449421dd0f09fa2cbb7f27c3548c5c2461d0351e615fc6969c562de8699  /opt/tiptop-project/droid-sim-evals/assets/scene5_7.usd  (6803 bytes)
+  571d97174ca41bf9c85ce6ea0d3c77b72aa3f88de9466cb8cb4ae9824dbf9120  /opt/tiptop-project/droid-sim-evals/assets/scene5_8.usd  (6803 bytes)
+  6fdfce2442b7f7a675006db84fadf783ed63e7d494124b896f80cd4160930e9f  /opt/tiptop-project/droid-sim-evals/assets/scene5_9.usd  (6803 bytes)
+  7191c8d257aa7389a894033264f69cccf02331eeb2608499c25fd241323f5bde  /opt/tiptop-project/droid-sim-evals/assets/table.usd  (5014 bytes)
