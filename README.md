@@ -13,6 +13,7 @@ observation-only evaluator. No learning, retries or IIWA work happens this week.
 | what | where |
 |---|---|
 | Step-by-step runbook (Linux + NVIDIA GPU) | [docs/setup.md](docs/setup.md) |
+| Staged GPU checks: pod, simulator, scenes, arm, before any trial (no Gemini calls) | [docs/staged_testing.md](docs/staged_testing.md), `python3 -m grasp_eval.stages <stage>` |
 | Success definition, failure labels, denominators | [docs/scoring.md](docs/scoring.md) |
 | Findings from reading the pinned upstream code | [docs/upstream_notes.md](docs/upstream_notes.md) |
 | Results write-up (template) | [docs/baseline_report.md](docs/baseline_report.md) |
