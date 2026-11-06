@@ -84,8 +84,11 @@ GPU checkpoint-only trials** (real slow lift) before the paired run, then freeze
 2. Each lift mode on one held and one naturally missed baseline trial (scene 1 v0/v2/v6/v9 missed
    tonight): `python3 -m grasp_eval.task_suite --baseline results/baseline_panda_20261106 --runs <ids>
    --lift-mode <mode> --out-name task_smoke_<mode>`. Watch every video.
-3. One scene-5 trial (three grasps) and one forced clean miss (`--eval-args --displace-dy-m 0.15
-   --probe-label disp_fixture`, a displacement far enough that the fingers close on air).
+3. One scene-5 trial (three grasps) and one forced clean miss (`--eval-args --displace-dy-m -0.15
+   --probe-label disp_fixture`, a displacement far enough that the fingers close on air). Pick the
+   direction away from every other object: on scene 1 v1, `+0.15` puts the cube inside the bowl and the
+   physics engine throws both off the table (first GPU smoke; the checkpoint correctly stopped with
+   `object_lost`).
 4. Checkpoint-only calibration set (`--max-retries 0`, ~10-15 trials), tune `TaskCheckCriteria`, freeze.
 5. Paired run with the chosen mode over all baseline trials (`--resume` after an interruption).
 
