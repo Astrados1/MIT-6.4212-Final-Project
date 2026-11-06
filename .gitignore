@@ -18,3 +18,5 @@ results/stages/**/*.log
 /tiptop/
 /M2T2/
 /droid-sim-evals/
+# Periodic copies of the GPU pod (scripts/backup_from_pod.sh)
+results/pod_backup/
