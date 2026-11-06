@@ -1,0 +1,40 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"><title>Run review: smoke_g3</title>
+<style>
+:root { --bg:#fff; --fg:#1d1d1f; --muted:#666; --card:#f5f5f7; --line:#ddd; --ok:#1a7f37; --bad:#c62828; --warn:#9a6700; }
+@media (prefers-color-scheme: dark) { :root { --bg:#111; --fg:#eee; --muted:#aaa; --card:#1c1c1e; --line:#333;
+  --ok:#4ade80; --bad:#f87171; --warn:#fbbf24; } }
+body { background:var(--bg); color:var(--fg); font:15px/1.45 system-ui, sans-serif; margin:0 auto; max-width:1200px; padding:16px; }
+h1 { margin:0 0 4px } .muted { color:var(--muted) } a { color:inherit }
+.card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:14px; margin:14px 0 }
+.grid { display:grid; grid-template-columns:minmax(0,3fr) minmax(0,2fr); gap:14px }
+@media (max-width:800px) { .grid { grid-template-columns:1fr } }
+video { width:100%; border-radius:6px; background:#000 }
+.badge { display:inline-block; padding:2px 8px; border-radius:999px; font-size:13px; border:1px solid currentColor }
+.ok { color:var(--ok) } .bad { color:var(--bad) } .warn { color:var(--warn) }
+table { border-collapse:collapse; width:100%; table-layout:fixed }
+td { padding:3px 6px; border-top:1px solid var(--line); vertical-align:top; overflow-wrap:anywhere }
+td:first-child { color:var(--muted); width:50% } ul { margin:4px 0 4px 18px; padding:0 }
+</style></head><body>
+<h1>Run review: smoke_g3</h1>
+<div class="muted">Generated 2026-11-06 03:18 UTC by grasp_eval.summarize. Causes are automatic first passes: confirm on the video,
+then correct them in manual_labels.csv and re-run the summary. Details and denominators: summary.md.</div>
+<div class="card">1 scheduled runs · stable lift 1/1 ·
+ task success 1/1 checked (0 unchecked)
+ <ul><li><b>Success → Success</b>: 1 — <a href="#000_s1v0_scene1_t0">000_s1v0_scene1_t0</a></li></ul></div>
+
+<div class="card" id="000_s1v0_scene1_t0">
+  <div><strong>000_s1v0_scene1_t0</strong> <span class="badge ok">Success → Success</span>
+   <span class="muted">(auto label)</span></div>
+  <div class="muted">scene 1, variant 0, condition scene1,
+   trial 0 · “Put the Rubik&#x27;s cube in the bowl.” · target rubiks_cube</div>
+  <div>stable lift: <b class="ok">yes</b> ·
+   task success: <b class="ok">yes</b>
+   (auto)</div>
+  <div class="grid">
+    <div><video controls preload="none" src="runs/000_s1v0_scene1_t0/video.mp4"></video></div>
+    <div><b>Why</b><ul><li>success</li></ul><table><tr><td>Gemini goal (mapped to sim)</td><td>(on, rubiks_cube, _24_bowl)</td></tr><tr><td>goal translation correct</td><td>yes</td></tr><tr><td>plan picks first</td><td>rubiks_cube</td></tr><tr><td>perceived vs true position (xy)</td><td>0.2 cm</td></tr><tr><td>grasp source</td><td>m2t2</td></tr><tr><td>planning time</td><td>27.2 s</td></tr><tr><td>object pushed before close</td><td>0.0 cm</td></tr><tr><td>gripper vs object at close (xy)</td><td>7.9 cm</td></tr><tr><td>joint tracking error at close</td><td>0.001 rad</td></tr><tr><td>closes</td><td>1</td></tr><tr><td>max lift near gripper</td><td>10.4 cm</td></tr><tr><td>longest hold</td><td>6.20 s</td></tr><tr><td>in-hand shift / rotation while carried</td><td>0.1 cm / 1 deg</td></tr><tr><td>shape of _24_bowl (perceived/true per axis, IoU)</td><td>[0.96, 0.903, 0.979] , 0.848</td></tr><tr><td>shape of rubiks_cube (perceived/true per axis, IoU)</td><td>[0.964, 0.961, 0.944] , 0.862</td></tr></table></div>
+  </div>
+  <div class="muted"><a href="runs/000_s1v0_scene1_t0/record.json">record</a> · <a href="runs/000_s1v0_scene1_t0/attribution.json">attribution</a> · <a href="runs/000_s1v0_scene1_t0/observed_eval.log">trace log</a> · <a href="runs/000_s1v0_scene1_t0/console.log">console</a> · <a href="../../../tiptop-project/tiptop/tiptop_server_outputs/2026-11-06_03-16-13/tiptop_run.log">server log</a> · <a href="../../../tiptop-project/tiptop/tiptop_server_outputs/2026-11-06_03-16-13/tiptop_plan.json">plan</a></div>
+</div>
+</body></html>

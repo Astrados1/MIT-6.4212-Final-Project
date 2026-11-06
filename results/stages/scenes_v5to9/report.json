@@ -1,0 +1,279 @@
+{
+  "stage": "scenes",
+  "utc": "20261106T042125Z",
+  "args": {
+    "stage": "scenes",
+    "tiptop_dir": "/workspace/tiptop-project",
+    "out_dir": "results/stages/scenes_v5to9",
+    "timeout_s": "1200",
+    "scene": "1",
+    "variant": "0",
+    "disk_path": "/workspace",
+    "scenes": "[1, 2, 3, 4, 5]",
+    "variants": "[5, 6, 7, 8, 9]",
+    "first_variants": "5",
+    "all_variants": "False",
+    "resume": "False",
+    "scenes_config": "/workspace/MIT-6.4212-Final-Project/configs/scenes.json",
+    "gripper_bodies": "['left_inner_finger', 'right_inner_finger']",
+    "no_limit_probe": "False"
+  },
+  "checks": [
+    {
+      "check": "scene1:variant5",
+      "status": "PASS",
+      "detail": "2 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_v5to9/s1v5"
+    },
+    {
+      "check": "scene1:variant6",
+      "status": "PASS",
+      "detail": "2 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_v5to9/s1v6"
+    },
+    {
+      "check": "scene1:variant7",
+      "status": "PASS",
+      "detail": "2 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_v5to9/s1v7"
+    },
+    {
+      "check": "scene1:variant8",
+      "status": "PASS",
+      "detail": "2 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_v5to9/s1v8"
+    },
+    {
+      "check": "scene1:variant9",
+      "status": "PASS",
+      "detail": "2 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_v5to9/s1v9"
+    },
+    {
+      "check": "scene2:variant5",
+      "status": "PASS",
+      "detail": "2 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_v5to9/s2v5"
+    },
+    {
+      "check": "scene2:variant6",
+      "status": "PASS",
+      "detail": "2 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_v5to9/s2v6"
+    },
+    {
+      "check": "scene2:variant7",
+      "status": "PASS",
+      "detail": "2 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_v5to9/s2v7"
+    },
+    {
+      "check": "scene2:variant8",
+      "status": "PASS",
+      "detail": "2 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_v5to9/s2v8"
+    },
+    {
+      "check": "scene2:variant9",
+      "status": "PASS",
+      "detail": "2 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_v5to9/s2v9"
+    },
+    {
+      "check": "scene3:variant5",
+      "status": "PASS",
+      "detail": "2 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_v5to9/s3v5"
+    },
+    {
+      "check": "scene3:variant6",
+      "status": "PASS",
+      "detail": "2 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_v5to9/s3v6"
+    },
+    {
+      "check": "scene3:variant7",
+      "status": "PASS",
+      "detail": "2 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_v5to9/s3v7"
+    },
+    {
+      "check": "scene3:variant8",
+      "status": "PASS",
+      "detail": "2 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_v5to9/s3v8"
+    },
+    {
+      "check": "scene3:variant9",
+      "status": "FAIL",
+      "detail": "\tError in 'pxrInternal_v0_24__pxrReserved__::UsdStage::Open' at line 1059 in file /builds/omniverse/usd-ci/USD/pxr/usd/usd/stage.cpp : 'Failed to open layer @/workspace/tiptop-project/droid-sim-evals/src/sim_evals/environments/../../../assets/scene3_9.usd@'; reached: before_app_start, app_started; log: /workspace/MIT-6.4212-Final-Project/results/stages/scenes_v5to9/s3v9/scene.log"
+    },
+    {
+      "check": "scene4:variant5",
+      "status": "PASS",
+      "detail": "8 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_v5to9/s4v5"
+    },
+    {
+      "check": "scene4:variant6",
+      "status": "PASS",
+      "detail": "8 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_v5to9/s4v6"
+    },
+    {
+      "check": "scene4:variant7",
+      "status": "PASS",
+      "detail": "8 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_v5to9/s4v7"
+    },
+    {
+      "check": "scene4:variant8",
+      "status": "PASS",
+      "detail": "8 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_v5to9/s4v8"
+    },
+    {
+      "check": "scene4:variant9",
+      "status": "FAIL",
+      "detail": "rubiks_cube: center z = -206.772 m, below the table (expected 0.0-0.6 m); rubiks_cube: center (0.27, 4.66) m is outside the workspace; rubiks_cube still moved 6861.4 cm while the robot held still (not settled)"
+    },
+    {
+      "check": "scene5:variant5",
+      "status": "PASS",
+      "detail": "6 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_v5to9/s5v5"
+    },
+    {
+      "check": "scene5:variant6",
+      "status": "PASS",
+      "detail": "6 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_v5to9/s5v6"
+    },
+    {
+      "check": "scene5:variant7",
+      "status": "PASS",
+      "detail": "6 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_v5to9/s5v7"
+    },
+    {
+      "check": "scene5:variant8",
+      "status": "PASS",
+      "detail": "6 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_v5to9/s5v8"
+    },
+    {
+      "check": "scene5:variant9",
+      "status": "PASS",
+      "detail": "6 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_v5to9/s5v9"
+    }
+  ],
+  "variants": [
+    {
+      "scene": 1,
+      "variant": 5,
+      "status": "PASS"
+    },
+    {
+      "scene": 1,
+      "variant": 6,
+      "status": "PASS"
+    },
+    {
+      "scene": 1,
+      "variant": 7,
+      "status": "PASS"
+    },
+    {
+      "scene": 1,
+      "variant": 8,
+      "status": "PASS"
+    },
+    {
+      "scene": 1,
+      "variant": 9,
+      "status": "PASS"
+    },
+    {
+      "scene": 2,
+      "variant": 5,
+      "status": "PASS"
+    },
+    {
+      "scene": 2,
+      "variant": 6,
+      "status": "PASS"
+    },
+    {
+      "scene": 2,
+      "variant": 7,
+      "status": "PASS"
+    },
+    {
+      "scene": 2,
+      "variant": 8,
+      "status": "PASS"
+    },
+    {
+      "scene": 2,
+      "variant": 9,
+      "status": "PASS"
+    },
+    {
+      "scene": 3,
+      "variant": 5,
+      "status": "PASS"
+    },
+    {
+      "scene": 3,
+      "variant": 6,
+      "status": "PASS"
+    },
+    {
+      "scene": 3,
+      "variant": 7,
+      "status": "PASS"
+    },
+    {
+      "scene": 3,
+      "variant": 8,
+      "status": "PASS"
+    },
+    {
+      "scene": 3,
+      "variant": 9,
+      "status": "FAIL"
+    },
+    {
+      "scene": 4,
+      "variant": 5,
+      "status": "PASS"
+    },
+    {
+      "scene": 4,
+      "variant": 6,
+      "status": "PASS"
+    },
+    {
+      "scene": 4,
+      "variant": 7,
+      "status": "PASS"
+    },
+    {
+      "scene": 4,
+      "variant": 8,
+      "status": "PASS"
+    },
+    {
+      "scene": 4,
+      "variant": 9,
+      "status": "FAIL"
+    },
+    {
+      "scene": 5,
+      "variant": 5,
+      "status": "PASS"
+    },
+    {
+      "scene": 5,
+      "variant": 6,
+      "status": "PASS"
+    },
+    {
+      "scene": 5,
+      "variant": 7,
+      "status": "PASS"
+    },
+    {
+      "scene": 5,
+      "variant": 8,
+      "status": "PASS"
+    },
+    {
+      "scene": 5,
+      "variant": 9,
+      "status": "PASS"
+    }
+  ],
+  "do_not_use": [
+    "s3v9",
+    "s4v9"
+  ]
+}
