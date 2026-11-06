@@ -185,7 +185,7 @@ class TaskSimBackend:
             self._carry = None  # released on purpose by the plan
             return
         off = cen[c["object"]] - np.asarray(self.world.gripper_ref(), dtype=float)
-        if float(np.linalg.norm(off - c["offset"])) > 0.05:
+        if left_hand(c["offset"], off):
             self._event("dropped_during_carry", object=c["object"], unit=c["unit"])
             self._carry = None
 
@@ -602,6 +602,19 @@ def build_config(args) -> tuple[TaskLimits, TaskCheckCriteria, ReturnConfig]:
     ret = ReturnConfig(max_joint_speed_rad_s=args.return_max_joint_speed,
                        max_object_motion_m=args.return_max_object_motion_m)
     return limits, crit, ret
+
+
+CARRY_LEFT_HAND_M = 0.05
+
+
+def left_hand(offset_at_confirm, offset_now, tol_m: float = CARRY_LEFT_HAND_M) -> bool:
+    """True if a carried object has left the hand: its distance to the finger reference changed by > tol_m.
+
+    The distance, not the world-frame offset vector: the wrist rotates during transport, which swings the
+    world-frame offset of a firmly held object by many centimetres (first GPU smoke: ~14 cm on an angled
+    grasp, distance 0.167 -> 0.177 m) while its distance to a point fixed on the hand stays put.
+    """
+    return abs(float(np.linalg.norm(offset_now)) - float(np.linalg.norm(offset_at_confirm))) > tol_m
 
 
 def damped_vertical_step(jacobian_6x7: np.ndarray, q_cmd: np.ndarray, dz: float, lower=None, upper=None,

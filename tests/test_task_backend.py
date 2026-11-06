@@ -7,7 +7,7 @@ import numpy as np
 from grasp_eval.recovery_eval import ReturnConfig
 from grasp_eval.recovery_records import TaskTrialRecord
 from grasp_eval.task_checkpoint import TaskCheckCriteria, TaskLimits, TaskStop, TaskSupervisor, Verdict
-from grasp_eval.task_recovery_eval import PHASES, TaskSimBackend, damped_vertical_step, fill_task_record
+from grasp_eval.task_recovery_eval import PHASES, TaskSimBackend, damped_vertical_step, fill_task_record, left_hand
 from tests.task_fakes import REST_Z, FakeTiptopClient, PlanningError, TaskServer, TaskToyWorld
 
 BOTH = ("reverse_approach", "vertical_ik")
@@ -155,6 +155,19 @@ class IKStepTest(unittest.TestCase):
         J[2, 0] = 1e-3  # nearly singular: a naive solve would explode
         q = damped_vertical_step(J, np.zeros(7), 0.01, lower=-0.01 * np.ones(7), upper=0.01 * np.ones(7))
         self.assertLessEqual(float(np.max(np.abs(q))), 0.01 + 1e-12)
+
+
+class CarryCheckTest(unittest.TestCase):
+    def test_wrist_rotation_is_not_a_drop(self):
+        # Offsets from the first GPU smoke (scene 1 v0 retry, vertical_ik): the wrist yawed during transport.
+        start, later = np.array([0.083, -0.031, -0.142]), np.array([-0.054, 0.022, -0.167])
+        self.assertGreater(np.linalg.norm(later - start), 0.05)  # the old world-frame check fired here
+        self.assertFalse(left_hand(start, later))
+
+    def test_object_falling_away_is_a_drop(self):
+        start = np.array([0.02, 0.03, -0.16])
+        self.assertTrue(left_hand(start, start + np.array([0.0, 0.0, -0.08])))
+        self.assertTrue(left_hand(start, np.array([0.25, 0.1, -0.2])))
 
 
 if __name__ == "__main__":
