@@ -142,6 +142,18 @@ a table with our counts next to the paper's. It also writes `paper_taxonomy.json
 Rules run in that order (Gemini → scene completion → planning → grasp → in-hand motion), and the first match wins,
 mirroring the paper's "root cause in the earliest module". Thresholds are in `PAPER_THRESHOLDS`.
 
+**Automatic labels are a first pass, not the result.** The Nov 6 baseline review ([failure_analysis.md](../results/baseline_panda_20261106_review/failure_analysis.md), Part A) found:
+
+- The shape rule runs early, so it captures any trial with an under-sized object, whatever actually failed. Test a label by
+  comparing its rate in successes vs failures of the same scene: the scene-3 banana is under-sized in every trial.
+- "Object detection failure" fires when a goal object is **out of the camera's view or behind the gripper** in the wrist
+  image, which is not a Gemini error. Check by projecting true object positions into TiPToP's saved image with
+  `metadata.json`'s `world_from_cam`.
+- Rigid grasp assumption never fired automatically in scene 3: the shape rule came first. Use in-hand rotation up to
+  first contact, together with video review.
+
+Set the reviewed category with `paper_category` in `manual_labels.csv`.
+
 Labels outside the paper's figure are kept apart so they never inflate a paper category:
 
 - `cutamp_failure/no_feasible_plan`: cuTAMP gave up for a reason other than motion planning, such as the time budget.

@@ -58,7 +58,7 @@ Per simulation step, from the object's and the hand's rise since the close:
 `grasp_eval/task_suite.py` runs one recovery trial per baseline trial (same scene, variant, seed,
 instruction, goal). **Attempt 0 replays the baseline trial's saved `tiptop_plan.json`**, so only retries
 call TiPToP and Gemini. Task success uses the **same goal check** as the baseline
-(`task_goal.check_goal`), on the final state and again on the state at the baseline's 90 s episode end
+(`task_goal.check_goal`), on the final state and again on the state at the baseline's episode end (150 s since PR #16)
 (no credit for extra time). Baseline trials without a plan count as failures in both arms.
 `grasp_eval/task_summary.py` reports rescued (fail -> success) and harmed (success -> fail) pairs, an
 exact sign test, verdict counts, and *replay fidelity* (trials without a retry that ended like their

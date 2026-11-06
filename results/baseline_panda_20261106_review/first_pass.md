@@ -1,3 +1,8 @@
+> **Superseded.** This is the first pass, kept for the record. The final labels, numbers and method are in
+> [failure_analysis.md](failure_analysis.md). Changes since: the scene 5 replays at 150 s (14/15 succeed, so
+> scene 5 is 26/28, not 19/28); 27 human video reviews; scene 4 relabeled from Gemini detection to partial
+> observability (objects out of view); corrected total 84/137, not 77/137.
+
 # Baseline first-pass review (`baseline_panda_20261106`)
 
 Done November 6, 2026 from end and grasp frames, the simulator traces and the planner outputs. No video was

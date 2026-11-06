@@ -1,5 +1,12 @@
 # TiPToP baseline execution and failure analysis — November 5, 2026
 
+> **Superseded for results.** The main baseline is `baseline_panda_20261106` (147 trials, Panda planner). Its
+> analysis is [results/baseline_panda_20261106_review/failure_analysis.md](../results/baseline_panda_20261106_review/failure_analysis.md).
+> That review found two scoring bugs that also apply to the runs below. Trials that hit the 90 s limit were
+> scored on the reset scene; the scene-3 bin check used world-axis boxes. Both were fixed in PR #16. It also
+> found that automatic "partial observability" and "Gemini detection" labels need checking (see that
+> document, Part A). Read the numbers below as historical.
+
 **Status: pilot complete; paper suite attempted but limited by Gemini quota.** The pilot returned
 and executed 15/15 plans, produced 11/15 stable lifts (73%), and completed 9/15 tasks (60%).
 The larger suite executed five plans, with three stable lifts and three completed tasks; 35 other
