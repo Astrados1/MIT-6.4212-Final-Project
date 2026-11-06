@@ -1,0 +1,280 @@
+{
+  "stage": "scenes",
+  "utc": "20261106T013541Z",
+  "args": {
+    "stage": "scenes",
+    "tiptop_dir": "/workspace/tiptop-project",
+    "out_dir": "results/stages/scenes_first",
+    "timeout_s": "1200",
+    "scene": "1",
+    "variant": "0",
+    "disk_path": "/workspace",
+    "scenes": "[1, 2, 3, 4, 5]",
+    "variants": "None",
+    "first_variants": "5",
+    "all_variants": "False",
+    "resume": "False",
+    "scenes_config": "/workspace/MIT-6.4212-Final-Project/configs/scenes.json",
+    "gripper_bodies": "['left_inner_finger', 'right_inner_finger']",
+    "no_limit_probe": "False"
+  },
+  "checks": [
+    {
+      "check": "scene1:variant0",
+      "status": "PASS",
+      "detail": "2 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_first/s1v0"
+    },
+    {
+      "check": "scene1:variant1",
+      "status": "PASS",
+      "detail": "2 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_first/s1v1"
+    },
+    {
+      "check": "scene1:variant2",
+      "status": "PASS",
+      "detail": "2 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_first/s1v2"
+    },
+    {
+      "check": "scene1:variant3",
+      "status": "PASS",
+      "detail": "2 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_first/s1v3"
+    },
+    {
+      "check": "scene1:variant4",
+      "status": "PASS",
+      "detail": "2 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_first/s1v4"
+    },
+    {
+      "check": "scene2:variant0",
+      "status": "PASS",
+      "detail": "2 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_first/s2v0"
+    },
+    {
+      "check": "scene2:variant1",
+      "status": "PASS",
+      "detail": "2 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_first/s2v1"
+    },
+    {
+      "check": "scene2:variant2",
+      "status": "PASS",
+      "detail": "2 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_first/s2v2"
+    },
+    {
+      "check": "scene2:variant3",
+      "status": "PASS",
+      "detail": "2 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_first/s2v3"
+    },
+    {
+      "check": "scene2:variant4",
+      "status": "PASS",
+      "detail": "2 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_first/s2v4"
+    },
+    {
+      "check": "scene3:variant0",
+      "status": "PASS",
+      "detail": "2 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_first/s3v0"
+    },
+    {
+      "check": "scene3:variant1",
+      "status": "PASS",
+      "detail": "2 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_first/s3v1"
+    },
+    {
+      "check": "scene3:variant2",
+      "status": "PASS",
+      "detail": "2 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_first/s3v2"
+    },
+    {
+      "check": "scene3:variant3",
+      "status": "PASS",
+      "detail": "2 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_first/s3v3"
+    },
+    {
+      "check": "scene3:variant4",
+      "status": "PASS",
+      "detail": "2 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_first/s3v4"
+    },
+    {
+      "check": "scene4:variant0",
+      "status": "PASS",
+      "detail": "8 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_first/s4v0"
+    },
+    {
+      "check": "scene4:variant1",
+      "status": "FAIL",
+      "detail": "rubiks_cube: center z = -218.381 m, below the table (expected 0.0-0.6 m); rubiks_cube still moved 7034.6 cm while the robot held still (not settled)"
+    },
+    {
+      "check": "scene4:variant2",
+      "status": "FAIL",
+      "detail": "rubiks_cube: center z = -218.381 m, below the table (expected 0.0-0.6 m); rubiks_cube still moved 7034.6 cm while the robot held still (not settled)"
+    },
+    {
+      "check": "scene4:variant3",
+      "status": "FAIL",
+      "detail": "rubiks_cube: center z = -218.381 m, below the table (expected 0.0-0.6 m); rubiks_cube still moved 7034.6 cm while the robot held still (not settled)"
+    },
+    {
+      "check": "scene4:variant4",
+      "status": "PASS",
+      "detail": "8 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_first/s4v4"
+    },
+    {
+      "check": "scene5:variant0",
+      "status": "PASS",
+      "detail": "6 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_first/s5v0"
+    },
+    {
+      "check": "scene5:variant1",
+      "status": "PASS",
+      "detail": "6 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_first/s5v1"
+    },
+    {
+      "check": "scene5:variant2",
+      "status": "PASS",
+      "detail": "6 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_first/s5v2"
+    },
+    {
+      "check": "scene5:variant3",
+      "status": "PASS",
+      "detail": "6 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_first/s5v3"
+    },
+    {
+      "check": "scene5:variant4",
+      "status": "PASS",
+      "detail": "6 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_first/s5v4"
+    }
+  ],
+  "variants": [
+    {
+      "scene": 1,
+      "variant": 0,
+      "status": "PASS"
+    },
+    {
+      "scene": 1,
+      "variant": 1,
+      "status": "PASS"
+    },
+    {
+      "scene": 1,
+      "variant": 2,
+      "status": "PASS"
+    },
+    {
+      "scene": 1,
+      "variant": 3,
+      "status": "PASS"
+    },
+    {
+      "scene": 1,
+      "variant": 4,
+      "status": "PASS"
+    },
+    {
+      "scene": 2,
+      "variant": 0,
+      "status": "PASS"
+    },
+    {
+      "scene": 2,
+      "variant": 1,
+      "status": "PASS"
+    },
+    {
+      "scene": 2,
+      "variant": 2,
+      "status": "PASS"
+    },
+    {
+      "scene": 2,
+      "variant": 3,
+      "status": "PASS"
+    },
+    {
+      "scene": 2,
+      "variant": 4,
+      "status": "PASS"
+    },
+    {
+      "scene": 3,
+      "variant": 0,
+      "status": "PASS"
+    },
+    {
+      "scene": 3,
+      "variant": 1,
+      "status": "PASS"
+    },
+    {
+      "scene": 3,
+      "variant": 2,
+      "status": "PASS"
+    },
+    {
+      "scene": 3,
+      "variant": 3,
+      "status": "PASS"
+    },
+    {
+      "scene": 3,
+      "variant": 4,
+      "status": "PASS"
+    },
+    {
+      "scene": 4,
+      "variant": 0,
+      "status": "PASS"
+    },
+    {
+      "scene": 4,
+      "variant": 1,
+      "status": "FAIL"
+    },
+    {
+      "scene": 4,
+      "variant": 2,
+      "status": "FAIL"
+    },
+    {
+      "scene": 4,
+      "variant": 3,
+      "status": "FAIL"
+    },
+    {
+      "scene": 4,
+      "variant": 4,
+      "status": "PASS"
+    },
+    {
+      "scene": 5,
+      "variant": 0,
+      "status": "PASS"
+    },
+    {
+      "scene": 5,
+      "variant": 1,
+      "status": "PASS"
+    },
+    {
+      "scene": 5,
+      "variant": 2,
+      "status": "PASS"
+    },
+    {
+      "scene": 5,
+      "variant": 3,
+      "status": "PASS"
+    },
+    {
+      "scene": 5,
+      "variant": 4,
+      "status": "PASS"
+    }
+  ],
+  "do_not_use": [
+    "s4v1",
+    "s4v2",
+    "s4v3"
+  ]
+}

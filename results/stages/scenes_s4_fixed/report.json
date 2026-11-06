@@ -1,0 +1,56 @@
+{
+  "stage": "scenes",
+  "utc": "20261106T021833Z",
+  "args": {
+    "stage": "scenes",
+    "tiptop_dir": "/workspace/tiptop-project",
+    "out_dir": "results/stages/scenes_s4_fixed",
+    "timeout_s": "1200",
+    "scene": "1",
+    "variant": "0",
+    "disk_path": "/workspace",
+    "scenes": "[4]",
+    "variants": "[1, 2, 3]",
+    "first_variants": "5",
+    "all_variants": "False",
+    "resume": "False",
+    "scenes_config": "/workspace/MIT-6.4212-Final-Project/configs/scenes.json",
+    "gripper_bodies": "['left_inner_finger', 'right_inner_finger']",
+    "no_limit_probe": "False"
+  },
+  "checks": [
+    {
+      "check": "scene4:variant1",
+      "status": "PASS",
+      "detail": "8 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_s4_fixed/s4v1"
+    },
+    {
+      "check": "scene4:variant2",
+      "status": "PASS",
+      "detail": "8 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_s4_fixed/s4v2"
+    },
+    {
+      "check": "scene4:variant3",
+      "status": "PASS",
+      "detail": "8 objects on the table and still; images in /workspace/MIT-6.4212-Final-Project/results/stages/scenes_s4_fixed/s4v3"
+    }
+  ],
+  "variants": [
+    {
+      "scene": 4,
+      "variant": 1,
+      "status": "PASS"
+    },
+    {
+      "scene": 4,
+      "variant": 2,
+      "status": "PASS"
+    },
+    {
+      "scene": 4,
+      "variant": 3,
+      "status": "PASS"
+    }
+  ],
+  "do_not_use": []
+}

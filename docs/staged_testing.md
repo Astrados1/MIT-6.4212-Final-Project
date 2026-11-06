@@ -45,7 +45,7 @@ Right after the pod starts, before installing anything heavy:
 ```bash
 cd /workspace && git clone https://github.com/Astrados1/MIT-6.4212-Final-Project.git
 cd MIT-6.4212-Final-Project
-apt-get update && apt-get install -y libegl1 libgl1 libxt6 libglu1-mesa vulkan-tools
+apt-get update && apt-get install -y libegl1 libgl1 libxt6 libglu1-mesa vulkan-tools ffmpeg unzip
 python3 -m grasp_eval.stages pod
 ```
 
@@ -57,7 +57,8 @@ to `YES` accepts NVIDIA's Omniverse license, so do that yourself once you have r
 ## Stage 1: the simulator
 
 Install the simulator first (`docs/setup.md` section B, and `docs/runpod_reproduction.md` for the asset
-archive and, on Blackwell only, the Torch override). Then:
+archive and, on Blackwell only, the Torch override). After unzipping the assets, repair scene 4
+(`scripts/fix_scene_assets.py`, see `patches/README.md`). Then:
 
 ```bash
 export TIPTOP_DIR=/opt/tiptop-project      # parent of droid-sim-evals/
@@ -98,6 +99,24 @@ at z ≈ −218 m in variants 1–3. That is exactly what this stage catches. Th
 "Do not run trials on: …" for every failed variant. Leave those out of stage 4.
 
 An interrupted run continues with `--out-dir results/stages/scenes_<utc> --resume`.
+
+On November 6 the released archive failed exactly scene 4 variants 1–3 (cube at z = −218 m). The cause is in the
+asset files: the cube's mesh offset is authored 20 cm below its body instead of 20 cm above, so it starts under the
+tabletop. `scripts/fix_scene_assets.py` repairs those three files; afterwards all 25 default variants pass.
+
+## First results (November 6, Runpod L40S, driver 550.144.03)
+
+| stage | result |
+|---|---|
+| 0 pod | PASS (an earlier RTX 5000 Ada host on driver 590 failed the new CUDA test: GPU "busy or unavailable") |
+| 1 sim | PASS: Isaac Sim 5.0 started in 69 s; scene 1 rendered both cameras |
+| 2 scenes | 22/25, then 25/25 after the scene-4 asset fix |
+| 3 arm | PASS: 28 moves within 0.0002 rad; joint 6 stops at 3.7525 rad when commanded 4.219, joint 7 at 2.8973 |
+
+Driver 550 is above Isaac Sim's reported minimum (535.129) but below the validated 580.65.06; it worked for all
+four stages. Every Runpod Secure Cloud GPU was on driver 595 that day, so the working host was Community Cloud,
+pinned with `allowedCudaVersions` ≤ 13.1. Reports are in `results/stages/`; images, logs and the arm video are
+kept locally (gitignored).
 
 ## Stage 3: the arm
 

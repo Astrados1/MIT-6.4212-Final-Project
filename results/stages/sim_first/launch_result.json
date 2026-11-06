@@ -1,0 +1,20 @@
+{
+  "mode": "launch",
+  "scene": 1,
+  "variant": 0,
+  "seed": 0,
+  "ok": true,
+  "timings_s": {
+    "total": 68.96,
+    "before_app_start": 1.42,
+    "app_started": 68.96
+  },
+  "pid": 2023,
+  "torch": {
+    "version": "2.7.0+cu126",
+    "cuda": "12.6",
+    "cuda_available": true,
+    "device": "NVIDIA L40S"
+  },
+  "app_started": true
+}

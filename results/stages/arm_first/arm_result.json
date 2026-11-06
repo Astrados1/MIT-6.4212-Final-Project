@@ -1,0 +1,1355 @@
+{
+  "mode": "arm",
+  "scene": 1,
+  "variant": 0,
+  "seed": 0,
+  "ok": true,
+  "timings_s": {
+    "total": 331.97,
+    "before_app_start": 1.38,
+    "app_started": 11.69,
+    "env_created": 25.76,
+    "settled": 43.43,
+    "frames_captured": 44.81
+  },
+  "pid": 17606,
+  "torch": {
+    "version": "2.7.0+cu126",
+    "cuda": "12.6",
+    "cuda_available": true,
+    "device": "NVIDIA L40S"
+  },
+  "app_started": true,
+  "step_dt": 0.06666666666666667,
+  "object_names": [
+    "_24_bowl",
+    "rubiks_cube"
+  ],
+  "frames": {
+    "external_cam": {
+      "shape": [
+        720,
+        1280,
+        3
+      ],
+      "dtype": "uint8",
+      "mean": 158.932,
+      "std": 58.086,
+      "min": 0.0,
+      "max": 255.0,
+      "lit_frac": 0.9999,
+      "png": "/workspace/MIT-6.4212-Final-Project/results/stages/arm_first/arm_s1v0_external_cam.png"
+    },
+    "wrist_cam": {
+      "shape": [
+        720,
+        1280,
+        3
+      ],
+      "dtype": "uint8",
+      "mean": 159.279,
+      "std": 61.482,
+      "min": 1.0,
+      "max": 246.0,
+      "lit_frac": 1.0,
+      "png": "/workspace/MIT-6.4212-Final-Project/results/stages/arm_first/arm_s1v0_wrist_cam.png"
+    }
+  },
+  "start_joint_pos": [
+    0.0,
+    -0.62832,
+    0.0,
+    -2.51327,
+    0.0,
+    1.88496,
+    0.0
+  ],
+  "sim_joint_limits_live": [
+    [
+      -2.8973,
+      2.8973
+    ],
+    [
+      -1.7628,
+      1.7628
+    ],
+    [
+      -2.8973,
+      2.8973
+    ],
+    [
+      -3.0718,
+      -0.0698
+    ],
+    [
+      -2.8973,
+      2.8973
+    ],
+    [
+      -0.0175,
+      3.7525
+    ],
+    [
+      -2.8973,
+      2.8973
+    ]
+  ],
+  "plan": [
+    {
+      "label": "home",
+      "q": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "gripper": 0.0,
+      "kind": "track"
+    },
+    {
+      "label": "joint1_plus",
+      "q": [
+        0.25,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "gripper": 0.0,
+      "kind": "track",
+      "joint": 0
+    },
+    {
+      "label": "joint1_minus",
+      "q": [
+        -0.25,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "gripper": 0.0,
+      "kind": "track",
+      "joint": 0
+    },
+    {
+      "label": "joint1_home",
+      "q": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "gripper": 0.0,
+      "kind": "track"
+    },
+    {
+      "label": "joint2_plus",
+      "q": [
+        0.0,
+        -0.378,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "gripper": 0.0,
+      "kind": "track",
+      "joint": 1
+    },
+    {
+      "label": "joint2_minus",
+      "q": [
+        0.0,
+        -0.878,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "gripper": 0.0,
+      "kind": "track",
+      "joint": 1
+    },
+    {
+      "label": "joint2_home",
+      "q": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "gripper": 0.0,
+      "kind": "track"
+    },
+    {
+      "label": "joint3_plus",
+      "q": [
+        0.0,
+        -0.628,
+        0.25,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "gripper": 0.0,
+      "kind": "track",
+      "joint": 2
+    },
+    {
+      "label": "joint3_minus",
+      "q": [
+        0.0,
+        -0.628,
+        -0.25,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "gripper": 0.0,
+      "kind": "track",
+      "joint": 2
+    },
+    {
+      "label": "joint3_home",
+      "q": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "gripper": 0.0,
+      "kind": "track"
+    },
+    {
+      "label": "joint4_plus",
+      "q": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.263,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "gripper": 0.0,
+      "kind": "track",
+      "joint": 3
+    },
+    {
+      "label": "joint4_minus",
+      "q": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.763,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "gripper": 0.0,
+      "kind": "track",
+      "joint": 3
+    },
+    {
+      "label": "joint4_home",
+      "q": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "gripper": 0.0,
+      "kind": "track"
+    },
+    {
+      "label": "joint5_plus",
+      "q": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.25,
+        1.885,
+        0.0
+      ],
+      "gripper": 0.0,
+      "kind": "track",
+      "joint": 4
+    },
+    {
+      "label": "joint5_minus",
+      "q": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        -0.25,
+        1.885,
+        0.0
+      ],
+      "gripper": 0.0,
+      "kind": "track",
+      "joint": 4
+    },
+    {
+      "label": "joint5_home",
+      "q": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "gripper": 0.0,
+      "kind": "track"
+    },
+    {
+      "label": "joint6_plus",
+      "q": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        2.135,
+        0.0
+      ],
+      "gripper": 0.0,
+      "kind": "track",
+      "joint": 5
+    },
+    {
+      "label": "joint6_minus",
+      "q": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.635,
+        0.0
+      ],
+      "gripper": 0.0,
+      "kind": "track",
+      "joint": 5
+    },
+    {
+      "label": "joint6_home",
+      "q": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "gripper": 0.0,
+      "kind": "track"
+    },
+    {
+      "label": "joint7_plus",
+      "q": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.25
+      ],
+      "gripper": 0.0,
+      "kind": "track",
+      "joint": 6
+    },
+    {
+      "label": "joint7_minus",
+      "q": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        -0.25
+      ],
+      "gripper": 0.0,
+      "kind": "track",
+      "joint": 6
+    },
+    {
+      "label": "joint7_home",
+      "q": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "gripper": 0.0,
+      "kind": "track"
+    },
+    {
+      "label": "capture",
+      "q": [
+        -0.034,
+        0.09,
+        0.08,
+        -1.319,
+        -0.003,
+        1.253,
+        0.03
+      ],
+      "gripper": 0.0,
+      "kind": "track"
+    },
+    {
+      "label": "home_again",
+      "q": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "gripper": 0.0,
+      "kind": "track"
+    },
+    {
+      "label": "gripper_close",
+      "q": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "gripper": 1.0,
+      "kind": "gripper_closed"
+    },
+    {
+      "label": "gripper_open",
+      "q": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "gripper": 0.0,
+      "kind": "gripper_open"
+    },
+    {
+      "label": "probe_joint6_to_4.219",
+      "q": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        4.219,
+        0.0
+      ],
+      "gripper": 0.0,
+      "kind": "limit_probe",
+      "joint": 5
+    },
+    {
+      "label": "probe_joint6_return",
+      "q": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "gripper": 0.0,
+      "kind": "track"
+    },
+    {
+      "label": "probe_joint7_to_3",
+      "q": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        3.0
+      ],
+      "gripper": 0.0,
+      "kind": "limit_probe",
+      "joint": 6
+    },
+    {
+      "label": "probe_joint7_return",
+      "q": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "gripper": 0.0,
+      "kind": "track"
+    }
+  ],
+  "steps": [
+    {
+      "label": "home",
+      "kind": "track",
+      "joint": null,
+      "gripper_cmd": 0.0,
+      "q_target": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "q_meas_end": [
+        0.0,
+        -0.62804,
+        0.0,
+        -2.51317,
+        -0.0,
+        1.88496,
+        0.0
+      ],
+      "gripper_obs_end": 0.0,
+      "finger_closure_end": -0.0,
+      "sim_steps": 23
+    },
+    {
+      "label": "joint1_plus",
+      "kind": "track",
+      "joint": 0,
+      "gripper_cmd": 0.0,
+      "q_target": [
+        0.25,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "q_meas_end": [
+        0.24995,
+        -0.62797,
+        1e-05,
+        -2.51311,
+        0.0,
+        1.88498,
+        -0.0
+      ],
+      "gripper_obs_end": 0.0,
+      "finger_closure_end": -0.0,
+      "sim_steps": 34
+    },
+    {
+      "label": "joint1_minus",
+      "kind": "track",
+      "joint": 0,
+      "gripper_cmd": 0.0,
+      "q_target": [
+        -0.25,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "q_meas_end": [
+        -0.24997,
+        -0.62795,
+        -1e-05,
+        -2.51309,
+        -0.0,
+        1.88501,
+        0.0
+      ],
+      "gripper_obs_end": 0.0,
+      "finger_closure_end": 0.0,
+      "sim_steps": 46
+    },
+    {
+      "label": "joint1_home",
+      "kind": "track",
+      "joint": null,
+      "gripper_cmd": 0.0,
+      "q_target": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "q_meas_end": [
+        -5e-05,
+        -0.62795,
+        1e-05,
+        -2.51309,
+        0.0,
+        1.88502,
+        -0.0
+      ],
+      "gripper_obs_end": 0.0,
+      "finger_closure_end": 0.0,
+      "sim_steps": 34
+    },
+    {
+      "label": "joint2_plus",
+      "kind": "track",
+      "joint": 1,
+      "gripper_cmd": 0.0,
+      "q_target": [
+        0.0,
+        -0.378,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "q_meas_end": [
+        0.0,
+        -0.37803,
+        0.0,
+        -2.51318,
+        -0.0,
+        1.88501,
+        0.0
+      ],
+      "gripper_obs_end": 0.0,
+      "finger_closure_end": 0.0,
+      "sim_steps": 34
+    },
+    {
+      "label": "joint2_minus",
+      "kind": "track",
+      "joint": 1,
+      "gripper_cmd": 0.0,
+      "q_target": [
+        0.0,
+        -0.878,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "q_meas_end": [
+        -0.0,
+        -0.87796,
+        -0.0,
+        -2.51282,
+        0.0,
+        1.88504,
+        -0.0
+      ],
+      "gripper_obs_end": 0.0,
+      "finger_closure_end": 0.0,
+      "sim_steps": 46
+    },
+    {
+      "label": "joint2_home",
+      "kind": "track",
+      "joint": null,
+      "gripper_cmd": 0.0,
+      "q_target": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "q_meas_end": [
+        0.0,
+        -0.62804,
+        0.0,
+        -2.51318,
+        -0.0,
+        1.88501,
+        0.0
+      ],
+      "gripper_obs_end": 0.0,
+      "finger_closure_end": 0.0,
+      "sim_steps": 34
+    },
+    {
+      "label": "joint3_plus",
+      "kind": "track",
+      "joint": 2,
+      "gripper_cmd": 0.0,
+      "q_target": [
+        0.0,
+        -0.628,
+        0.25,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "q_meas_end": [
+        1e-05,
+        -0.62803,
+        0.24996,
+        -2.51286,
+        0.0,
+        1.88501,
+        -0.0
+      ],
+      "gripper_obs_end": 0.0,
+      "finger_closure_end": 0.0,
+      "sim_steps": 34
+    },
+    {
+      "label": "joint3_minus",
+      "kind": "track",
+      "joint": 2,
+      "gripper_cmd": 0.0,
+      "q_target": [
+        0.0,
+        -0.628,
+        -0.25,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "q_meas_end": [
+        -1e-05,
+        -0.62801,
+        -0.24997,
+        -2.51282,
+        -0.0,
+        1.88501,
+        0.0
+      ],
+      "gripper_obs_end": 0.0,
+      "finger_closure_end": 0.0,
+      "sim_steps": 46
+    },
+    {
+      "label": "joint3_home",
+      "kind": "track",
+      "joint": null,
+      "gripper_cmd": 0.0,
+      "q_target": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "q_meas_end": [
+        1e-05,
+        -0.62796,
+        -4e-05,
+        -2.51284,
+        0.0,
+        1.88501,
+        -0.0
+      ],
+      "gripper_obs_end": 0.0,
+      "finger_closure_end": 0.0,
+      "sim_steps": 34
+    },
+    {
+      "label": "joint4_plus",
+      "kind": "track",
+      "joint": 3,
+      "gripper_cmd": 0.0,
+      "q_target": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.263,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "q_meas_end": [
+        -0.0,
+        -0.62804,
+        -0.0,
+        -2.26316,
+        0.0,
+        1.88509,
+        -0.0
+      ],
+      "gripper_obs_end": 0.0,
+      "finger_closure_end": -0.0,
+      "sim_steps": 34
+    },
+    {
+      "label": "joint4_minus",
+      "kind": "track",
+      "joint": 3,
+      "gripper_cmd": 0.0,
+      "q_target": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.763,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "q_meas_end": [
+        0.0,
+        -0.62796,
+        0.0,
+        -2.76284,
+        -0.0,
+        1.88493,
+        0.0
+      ],
+      "gripper_obs_end": 0.0,
+      "finger_closure_end": 0.0,
+      "sim_steps": 46
+    },
+    {
+      "label": "joint4_home",
+      "kind": "track",
+      "joint": null,
+      "gripper_cmd": 0.0,
+      "q_target": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "q_meas_end": [
+        -0.0,
+        -0.62804,
+        0.0,
+        -2.51316,
+        0.0,
+        1.88509,
+        -0.0
+      ],
+      "gripper_obs_end": 0.0,
+      "finger_closure_end": -0.0,
+      "sim_steps": 34
+    },
+    {
+      "label": "joint5_plus",
+      "kind": "track",
+      "joint": 4,
+      "gripper_cmd": 0.0,
+      "q_target": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.25,
+        1.885,
+        0.0
+      ],
+      "q_meas_end": [
+        0.0,
+        -0.62803,
+        0.0,
+        -2.51316,
+        0.24994,
+        1.88506,
+        0.0
+      ],
+      "gripper_obs_end": 0.0,
+      "finger_closure_end": 0.0,
+      "sim_steps": 34
+    },
+    {
+      "label": "joint5_minus",
+      "kind": "track",
+      "joint": 4,
+      "gripper_cmd": 0.0,
+      "q_target": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        -0.25,
+        1.885,
+        0.0
+      ],
+      "q_meas_end": [
+        -0.0,
+        -0.62803,
+        -0.0,
+        -2.51308,
+        -0.24996,
+        1.88504,
+        0.0
+      ],
+      "gripper_obs_end": 0.0,
+      "finger_closure_end": 0.0,
+      "sim_steps": 46
+    },
+    {
+      "label": "joint5_home",
+      "kind": "track",
+      "joint": null,
+      "gripper_cmd": 0.0,
+      "q_target": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "q_meas_end": [
+        0.0,
+        -0.62803,
+        0.0,
+        -2.51305,
+        -6e-05,
+        1.88503,
+        0.0
+      ],
+      "gripper_obs_end": 0.0,
+      "finger_closure_end": 0.0,
+      "sim_steps": 34
+    },
+    {
+      "label": "joint6_plus",
+      "kind": "track",
+      "joint": 5,
+      "gripper_cmd": 0.0,
+      "q_target": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        2.135,
+        0.0
+      ],
+      "q_meas_end": [
+        0.0,
+        -0.62804,
+        0.0,
+        -2.51296,
+        0.0,
+        2.13482,
+        -0.0
+      ],
+      "gripper_obs_end": 0.0,
+      "finger_closure_end": -0.0,
+      "sim_steps": 34
+    },
+    {
+      "label": "joint6_minus",
+      "kind": "track",
+      "joint": 5,
+      "gripper_cmd": 0.0,
+      "q_target": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.635,
+        0.0
+      ],
+      "q_meas_end": [
+        0.0,
+        -0.62797,
+        0.0,
+        -2.51301,
+        -0.0,
+        1.63509,
+        0.0
+      ],
+      "gripper_obs_end": 0.0,
+      "finger_closure_end": 0.0,
+      "sim_steps": 46
+    },
+    {
+      "label": "joint6_home",
+      "kind": "track",
+      "joint": null,
+      "gripper_cmd": 0.0,
+      "q_target": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "q_meas_end": [
+        0.0,
+        -0.62801,
+        0.0,
+        -2.51297,
+        0.0,
+        1.88491,
+        -0.0
+      ],
+      "gripper_obs_end": 0.0,
+      "finger_closure_end": -0.0,
+      "sim_steps": 34
+    },
+    {
+      "label": "joint7_plus",
+      "kind": "track",
+      "joint": 6,
+      "gripper_cmd": 0.0,
+      "q_target": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.25
+      ],
+      "q_meas_end": [
+        -0.0,
+        -0.62801,
+        -0.0,
+        -2.51297,
+        0.0,
+        1.88491,
+        0.24994
+      ],
+      "gripper_obs_end": 0.0,
+      "finger_closure_end": -0.0,
+      "sim_steps": 34
+    },
+    {
+      "label": "joint7_minus",
+      "kind": "track",
+      "joint": 6,
+      "gripper_cmd": 0.0,
+      "q_target": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        -0.25
+      ],
+      "q_meas_end": [
+        0.0,
+        -0.62801,
+        0.0,
+        -2.51297,
+        -0.0,
+        1.88491,
+        -0.24996
+      ],
+      "gripper_obs_end": 0.0,
+      "finger_closure_end": 0.0,
+      "sim_steps": 46
+    },
+    {
+      "label": "joint7_home",
+      "kind": "track",
+      "joint": null,
+      "gripper_cmd": 0.0,
+      "q_target": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "q_meas_end": [
+        -0.0,
+        -0.62801,
+        -0.0,
+        -2.51297,
+        0.0,
+        1.88492,
+        -6e-05
+      ],
+      "gripper_obs_end": 0.0,
+      "finger_closure_end": -0.0,
+      "sim_steps": 34
+    },
+    {
+      "label": "capture",
+      "kind": "track",
+      "joint": null,
+      "gripper_cmd": 0.0,
+      "q_target": [
+        -0.034,
+        0.09,
+        0.08,
+        -1.319,
+        -0.003,
+        1.253,
+        0.03
+      ],
+      "q_meas_end": [
+        -0.034,
+        0.08999,
+        0.07999,
+        -1.31909,
+        -0.003,
+        1.25309,
+        0.03
+      ],
+      "gripper_obs_end": 0.0,
+      "finger_closure_end": 0.0,
+      "sim_steps": 79
+    },
+    {
+      "label": "home_again",
+      "kind": "track",
+      "joint": null,
+      "gripper_cmd": 0.0,
+      "q_target": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "q_meas_end": [
+        -0.0,
+        -0.62796,
+        0.0,
+        -2.51283,
+        -0.0,
+        1.88491,
+        0.0
+      ],
+      "gripper_obs_end": 0.0,
+      "finger_closure_end": 0.0,
+      "sim_steps": 79
+    },
+    {
+      "label": "gripper_close",
+      "kind": "gripper_closed",
+      "joint": null,
+      "gripper_cmd": 1.0,
+      "q_target": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "q_meas_end": [
+        -0.0,
+        -0.62795,
+        -0.0,
+        -2.51295,
+        0.0,
+        1.88494,
+        -0.0
+      ],
+      "gripper_obs_end": 1.0,
+      "finger_closure_end": 1.0,
+      "sim_steps": 31
+    },
+    {
+      "label": "gripper_open",
+      "kind": "gripper_open",
+      "joint": null,
+      "gripper_cmd": 0.0,
+      "q_target": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "q_meas_end": [
+        0.0,
+        -0.62801,
+        0.0,
+        -2.51296,
+        -0.0,
+        1.88499,
+        0.0
+      ],
+      "gripper_obs_end": 0.0,
+      "finger_closure_end": 0.0,
+      "sim_steps": 31
+    },
+    {
+      "label": "probe_joint6_to_4.219",
+      "kind": "limit_probe",
+      "joint": 5,
+      "gripper_cmd": 0.0,
+      "q_target": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        4.219,
+        0.0
+      ],
+      "q_meas_end": [
+        -0.0,
+        -0.62804,
+        0.0,
+        -2.51284,
+        0.0,
+        3.7525,
+        -0.0
+      ],
+      "gripper_obs_end": 0.0,
+      "finger_closure_end": -0.0,
+      "sim_steps": 132
+    },
+    {
+      "label": "probe_joint6_return",
+      "kind": "track",
+      "joint": null,
+      "gripper_cmd": 0.0,
+      "q_target": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "q_meas_end": [
+        0.0,
+        -0.62798,
+        0.0,
+        -2.51292,
+        -0.0,
+        1.88509,
+        0.0
+      ],
+      "gripper_obs_end": 0.0,
+      "finger_closure_end": 0.0,
+      "sim_steps": 132
+    },
+    {
+      "label": "probe_joint7_to_3",
+      "kind": "limit_probe",
+      "joint": 6,
+      "gripper_cmd": 0.0,
+      "q_target": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        3.0
+      ],
+      "q_meas_end": [
+        0.0,
+        -0.62798,
+        0.0,
+        -2.51292,
+        0.0,
+        1.88508,
+        2.8973
+      ],
+      "gripper_obs_end": 0.0,
+      "finger_closure_end": 0.0,
+      "sim_steps": 164
+    },
+    {
+      "label": "probe_joint7_return",
+      "kind": "track",
+      "joint": null,
+      "gripper_cmd": 0.0,
+      "q_target": [
+        0.0,
+        -0.628,
+        0.0,
+        -2.513,
+        0.0,
+        1.885,
+        0.0
+      ],
+      "q_meas_end": [
+        0.0,
+        -0.62798,
+        0.0,
+        -2.51292,
+        -0.0,
+        1.88508,
+        1e-05
+      ],
+      "gripper_obs_end": 0.0,
+      "finger_closure_end": 0.0,
+      "sim_steps": 164
+    }
+  ],
+  "video": "/workspace/MIT-6.4212-Final-Project/results/stages/arm_first/arm_check.mp4",
+  "trace": "/workspace/MIT-6.4212-Final-Project/results/stages/arm_first/arm_trace.npz",
+  "limit_violations": [],
+  "object_motion_m": {
+    "_24_bowl": 0.00031,
+    "rubiks_cube": 0.0
+  },
+  "sim_duration_s": 108.87
+}

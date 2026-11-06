@@ -56,6 +56,7 @@ test -e assets && echo "assets/ already exists: do not overwrite, inspect it fir
 curl -fO https://tiptop-sim-assets.s3.us-east-1.amazonaws.com/assets.zip \
   || curl -fO https://pi-sim-assets.s3.us-east-1.amazonaws.com/assets.zip
 unzip assets.zip && ls assets/*.usd
+uv run --no-project --with usd-core python "$PROJECT/scripts/fix_scene_assets.py" --assets assets   # repairs scene 4 variants 1-3
 ```
 
 Then record provenance (and again after any reinstall):

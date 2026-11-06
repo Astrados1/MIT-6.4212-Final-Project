@@ -14,6 +14,19 @@ listed under "Behavior-changing modifications" in `docs/baseline_report.md`.
 The 0002 patch's context was rebuilt from `configs/tiptop_panda_sim.yml` (a copy of the upstream file). It applies
 cleanly to that reconstruction; `setup_upstream.sh` and preflight report whether it applied to the real checkout.
 
+## Asset repair (not a git patch)
+
+The simulation assets are a downloaded archive, not a git checkout, so their one repair is a script:
+`scripts/fix_scene_assets.py`, run once after unzipping (docs/setup.md).
+
+| file | why | change |
+|---|---|---|
+| `assets/scene4_1.usd`, `scene4_2.usd`, `scene4_3.usd` | The Rubik's cube's mesh child (`/World/rubiks_cube/RubikCube`) is offset −0.1986 m from its body, so it starts 11 cm under the tabletop and falls forever (z ≈ −218 m after settling). The other seven scene-4 variants use +0.2006 m. Found by stage 2, November 6. | Sets that z offset to +0.2006 m. x/y offsets, orientation, scale and all other objects are unchanged. Originals are kept in `assets/originals_pre_fix/`; refuses unknown files; idempotent; prints SHA-256 before and after. |
+
+Released SHA-256 (from archive `b791aef3…`): `scene4_1.usd` `b198d11b…`, `scene4_2.usd` `e50a46b8…`,
+`scene4_3.usd` `11a89205…`. Repaired: `f31121d5…`, `724b1094…`, `d139fb7f…`.
+Results from trials on scenes 4 v1–3 before this repair are invalid (the cube was never on the table).
+
 Sources: [Gemini deprecations](https://ai.google.dev/gemini-api/docs/deprecations),
 [Robotics ER overview](https://ai.google.dev/gemini-api/docs/robotics-overview),
 [thinking levels](https://ai.google.dev/gemini-api/docs/thinking). The locked `google-genai` 1.70.0 has

@@ -248,7 +248,9 @@ class StageRunnerTest(unittest.TestCase):
         todo = stages.scene_variants(cfg, [1, 2, 3, 4, 5], None, 5)
         self.assertEqual(len(todo), 25)
         self.assertIn((1, 4), todo)  # the pilot's last variant
-        self.assertEqual(len(stages.scene_variants(cfg, [1, 2, 3, 4, 5], None, None)), 51)
+        # 51 scene files; scene 4 variant 9 is excluded in the config (cube ejected on load, Nov 6)
+        self.assertEqual(len(stages.scene_variants(cfg, [1, 2, 3, 4, 5], None, None)), 50)
+        self.assertIn("9", cfg["4"]["excluded_variants"])
 
     def test_arm_stage_end_to_end(self):
         with tempfile.TemporaryDirectory() as d:
@@ -298,3 +300,122 @@ class PandaPlannerModelTest(unittest.TestCase):
         context = [ln[1:] for ln in text.splitlines() if ln.startswith(" ")]
         start = panda.index(context[0], 1)
         self.assertEqual(panda[start:start + 3], context[:3])
+
+
+class FakeCuda:
+    """Stands in for libcuda: each call returns a CUDA result code; outputs are written through byref."""
+
+    def __init__(self, fail=None, count=1):
+        self.fail, self.count, self.calls = fail or {}, count, []
+
+    def _call(self, name, *args):
+        self.calls.append(name)
+        return self.fail.get(name, 0)
+
+    def cuInit(self, flags):
+        return self._call("cuInit")
+
+    def cuDeviceGetCount(self, ref):
+        ref._obj.value = self.count
+        return self._call("cuDeviceGetCount")
+
+    def cuDeviceGet(self, ref, i):
+        return self._call("cuDeviceGet")
+
+    def cuCtxCreate_v2(self, ref, flags, dev):
+        if not self.fail.get("cuCtxCreate_v2"):
+            ref._obj.value = 1234
+        return self._call("cuCtxCreate_v2")
+
+    def cuMemAlloc_v2(self, ref, n):
+        return self._call("cuMemAlloc_v2")
+
+    def cuMemFree_v2(self, ptr):
+        return self._call("cuMemFree_v2")
+
+    def cuCtxDestroy_v2(self, ctx):
+        return self._call("cuCtxDestroy_v2")
+
+
+class Stage0CudaAndEnvTest(unittest.TestCase):
+    def test_healthy_gpu_passes(self):
+        from grasp_eval.stage_checks import cuda_driver_probe
+
+        lib = FakeCuda(count=2)
+        status, why = cuda_driver_probe(lib)
+        self.assertEqual(status, PASS)
+        self.assertIn("2 GPU(s)", why)
+        self.assertEqual(lib.calls.count("cuCtxDestroy_v2"), 2)
+
+    def test_nov6_broken_host_fails(self):
+        """RTX 5000 Ada, driver 590: nvidia-smi fine, CUDA 'busy or unavailable' (error 46)."""
+        from grasp_eval.stage_checks import cuda_driver_probe
+
+        status, why = cuda_driver_probe(FakeCuda(fail={"cuCtxCreate_v2": 46}))
+        self.assertEqual(status, FAIL)
+        self.assertIn("cuCtxCreate failed with 46 CUDA_ERROR_DEVICE_UNAVAILABLE", why)
+        self.assertEqual(cuda_driver_probe(FakeCuda(fail={"cuInit": 100}))[0], FAIL)
+        self.assertEqual(cuda_driver_probe(FakeCuda(count=0))[0], FAIL)
+        lib = FakeCuda(fail={"cuMemAlloc_v2": 2})
+        self.assertEqual(cuda_driver_probe(lib)[0], FAIL)
+        self.assertIn("cuCtxDestroy_v2", lib.calls)  # context released on failure
+
+    def test_container_env_falls_back_to_pid1(self):
+        from grasp_eval.stage_checks import container_env, driver_capabilities_verdict
+
+        with tempfile.TemporaryDirectory() as d:
+            proc = Path(d) / "environ"
+            proc.write_bytes(b"PATH=/usr/bin\0NVIDIA_DRIVER_CAPABILITIES=compute,display,graphics,utility,video\0")
+            caps = container_env("NVIDIA_DRIVER_CAPABILITIES", environ={}, proc_environ=str(proc))
+            self.assertEqual(caps, "compute,display,graphics,utility,video")
+            self.assertEqual(container_env("X", environ={"X": "1"}, proc_environ=str(proc)), "1")
+            self.assertIsNone(container_env("MISSING", environ={}, proc_environ=str(proc)))
+        self.assertEqual(driver_capabilities_verdict(caps)[0], PASS)
+        self.assertEqual(driver_capabilities_verdict("all")[0], PASS)
+        self.assertEqual(driver_capabilities_verdict("compute,utility")[0], FAIL)
+        self.assertEqual(driver_capabilities_verdict(None)[0], WARN)
+
+    def test_stage_pod_reports_the_cuda_failure(self):
+        smi = "NVIDIA RTX 5000 Ada Generation, 590.48.01, 30712 MiB, 8.9"
+
+        def sh(cmd, cwd=None, timeout=60):
+            return (0, smi) if cmd[0] == "nvidia-smi" else (0, "libEGL.so.1 libGL.so.1 libXt.so.6 libGLU.so.1")
+
+        with tempfile.TemporaryDirectory() as d, contextlib.redirect_stdout(io.StringIO()):
+            rep = Report()
+            stages.stage_pod(SimpleNamespace(disk_path=d), rep, Path(d), sh=sh,
+                             cuda_probe=lambda: (FAIL, "GPU 0: cuCtxCreate failed with 46"),
+                             env=lambda v: "all" if v == "NVIDIA_DRIVER_CAPABILITIES" else None)
+        status = {c["check"]: c["status"] for c in rep.checks}
+        self.assertEqual(status["driver:gpu0"], PASS)
+        self.assertEqual(status["cuda"], FAIL)
+        self.assertEqual(status["env:NVIDIA_DRIVER_CAPABILITIES"], PASS)
+
+
+class ArmVideoWarningTest(unittest.TestCase):
+    def test_missing_video_warns_with_the_reason(self):
+        """Nov 6: no ffmpeg on the pod, so the arm check passed but silently saved no video."""
+        with tempfile.TemporaryDirectory() as d, contextlib.redirect_stdout(io.StringIO()):
+            res = ArmRulesTest.summary(ArmRulesTest())
+            res.update(ok=True, plan=arm_test_plan(SIM), sim_duration_s=108.9,
+                       video_error="RuntimeError: Program 'ffmpeg' is not found")
+            rep = Report()
+            stages.stage_arm(args(d), rep, Path(d) / "out", run=FakeWorker({"arm:s1v0": res}))
+        self.assertFalse(rep.failed)
+        video = [c for c in rep.checks if c["check"] == "arm:video"]
+        self.assertEqual(len(video), 1)
+        self.assertEqual(video[0]["status"], WARN)
+        self.assertIn("ffmpeg", video[0]["detail"])
+
+
+class SceneAssetFixTest(unittest.TestCase):
+    def test_only_the_released_bad_offset_is_changed(self):
+        import importlib.util
+
+        spec = importlib.util.spec_from_file_location("fix_scene_assets", ROOT / "scripts" / "fix_scene_assets.py")
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        self.assertEqual(mod.plan_fix(-0.19863615566511325), "fix")
+        self.assertEqual(mod.plan_fix(0.20057768036734341), "ok")
+        self.assertEqual(mod.plan_fix(0.0), "unknown")
+        self.assertEqual(mod.FIXES, {"scene4_1.usd", "scene4_2.usd", "scene4_3.usd"})

@@ -192,7 +192,9 @@ Median executed-run wall time was 158.74 s (150.41–213.80); scheduling-to-fini
 
 Six quota-blocked scene-4 attempts (variants 1–3, both trials) also show the cube below the table
 at initialization, at approximately z = −218 m. Variant-0 inspections had not exposed this.
-These variants need an asset/placement check before a future scene survey. No valid task outcomes
+These variants need an asset/placement check before a future scene survey. (Found November 6: the released
+files author the cube's mesh 20 cm below its body in exactly these three variants, so it starts under the
+tabletop; `scripts/fix_scene_assets.py` repairs them, see `patches/README.md`.) No valid task outcomes
 are claimed for scenes 3–5. The 3/40 scheduled success count is a service-availability outcome,
 not an estimate of the robot's task competence across all five scenes.
 

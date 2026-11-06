@@ -211,7 +211,9 @@ connection/API errors are `infrastructure`; neither gets an extra budget.
 - No learning, failed-grasp memory, IIWA work or placement continuation, by design.
 - The displacement probe rotates yaw about the rigid-body origin, not the geometry center. That only matters for
   assets whose mesh is offset from the origin (scenes 4-5).
-- Scene 4 variants 1-3 initialise the cube far below the table (baseline report); exclude them until repaired.
+- Scene 4 variants 1-3 initialised the cube far below the table in the released assets; run
+  `scripts/fix_scene_assets.py` after unzipping (patches/README.md). Scenes 4 and 5 are multi-object anyway,
+  which this checkpoint code refuses (above).
 - TiPToP's default FR3 model allows more joint-6/7 range than the simulated Panda, and a plan saturated a joint
   near release (baseline pilot run 002). New runs plan for `panda_robotiq`
   (`patches/tiptop/0002-panda-robot-model.patch`). Do not compare them with the FR3 baseline as the same condition.

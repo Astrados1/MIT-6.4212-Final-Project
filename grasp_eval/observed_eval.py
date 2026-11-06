@@ -395,8 +395,10 @@ def main(argv=None) -> int:
     wall_start = time.time()
     env = client = None
     video = []
+    # plan_step: the upstream client's _current_plan_step after each action (read only), so the
+    # approach/close/retraction windows can be cut from baseline traces offline (week-two checkpoint calibration).
     trace = {k: [] for k in ("t", "objects_pos", "objects_quat", "gripper_pos", "gripper_quat", "gripper_cmd",
-                             "gripper_obs", "joint_pos", "joint_cmd")}
+                             "gripper_obs", "joint_pos", "joint_cmd", "plan_step")}
     object_names: list[str] = []
 
     try:
@@ -561,6 +563,7 @@ def main(argv=None) -> int:
                 trace["gripper_obs"].append(float(obs["policy"]["gripper_pos"][0, 0]))
                 trace["joint_pos"].append(obs["policy"]["arm_joint_pos"][0].tolist())
                 trace["joint_cmd"].append([float(v) for v in ret["action"][:7]])
+                trace["plan_step"].append(int(getattr(client, "_current_plan_step", -1) or 0))
 
                 if term or trunc:
                     rec.terminated = bool(term)

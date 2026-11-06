@@ -1,0 +1,105 @@
+{
+  "rigid_objects_after_settle": {
+    "_10_potted_meat_can": [
+      0.46073901653289795,
+      -0.1743546426296234,
+      0.08579359948635101
+    ],
+    "_25_mug": [
+      0.5155346989631653,
+      0.05266518145799637,
+      0.0870090126991272
+    ]
+  },
+  "rigid_object_quats_after_settle": {
+    "_10_potted_meat_can": [
+      0.706096887588501,
+      -0.7081119418144226,
+      -0.001515790936537087,
+      -0.0015044216997921467
+    ],
+    "_25_mug": [
+      0.7071071863174438,
+      -0.7071062922477722,
+      -9.218792911269702e-06,
+      8.501947377226315e-06
+    ]
+  },
+  "geometry_centers_after_settle": {
+    "_10_potted_meat_can": [
+      0.43816325668857825,
+      -0.17438785834948262,
+      0.07421711516823624
+    ],
+    "_25_mug": [
+      0.5155396989631638,
+      0.05266518158330093,
+      0.08700901270419614
+    ]
+  },
+  "rigid_object_local_bounds": {
+    "_10_potted_meat_can": [
+      [
+        -0.0582,
+        -0.01776,
+        -0.02016
+      ],
+      [
+        0.01295,
+        0.04072,
+        0.02016
+      ]
+    ],
+    "_25_mug": [
+      [
+        -0.05849,
+        -0.04065,
+        -0.04654
+      ],
+      [
+        0.0585,
+        0.04065,
+        0.04654
+      ]
+    ]
+  },
+  "rigid_object_bounds_notes": {},
+  "robot_body_names": [
+    "panda_link0",
+    "panda_link1",
+    "panda_link2",
+    "panda_link3",
+    "panda_link4",
+    "panda_link5",
+    "panda_link6",
+    "panda_link7",
+    "panda_link8",
+    "base_link",
+    "left_outer_knuckle",
+    "right_outer_knuckle",
+    "left_outer_finger",
+    "right_outer_finger",
+    "left_inner_finger",
+    "right_inner_finger",
+    "left_inner_knuckle",
+    "right_inner_knuckle"
+  ],
+  "robot_joint_names": [
+    "panda_joint1",
+    "panda_joint2",
+    "panda_joint3",
+    "panda_joint4",
+    "panda_joint5",
+    "panda_joint6",
+    "panda_joint7",
+    "finger_joint",
+    "right_outer_knuckle_joint",
+    "left_inner_finger_joint",
+    "right_inner_finger_joint",
+    "left_inner_finger_knuckle_joint",
+    "right_inner_finger_knuckle_joint"
+  ],
+  "scene": 2,
+  "variant": 3,
+  "step_dt": 0.06666666666666667
+}
