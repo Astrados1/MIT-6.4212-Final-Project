@@ -129,3 +129,69 @@ class RecoveryTrialRecord:
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
+
+
+TASK_TRIALS_FILE = "task_trials.jsonl"
+
+
+@dataclass
+class TaskTrialRecord:
+    """One task-level checkpoint-recovery trial (grasp_eval/task_recovery_eval.py)."""
+
+    trial_id: str
+    scene: int
+    variant: int
+    trial: int
+    instruction: str
+    goal: list[dict[str, Any]] | None = None  # configs/scenes.json goal, scored with task_goal.check_goal
+    target_object: str | None = None  # resolves "$target" in the goal (scenes 1-3)
+
+    schema_version: int = 1
+    mode: str = ""  # task_recovery_rN | task_checkpoint_only
+    lift_mode: str = ""  # reverse_approach | vertical_ik
+    detector: str = "oracle-state"
+    detector_privileged: bool = True
+    limits: dict[str, Any] = field(default_factory=dict)
+    check_criteria: dict[str, Any] = field(default_factory=dict)
+    return_config: dict[str, Any] = field(default_factory=dict)
+    probe: dict[str, Any] = field(default_factory=lambda: {"type": "baseline"})
+    seed: int | None = None
+    versions: dict[str, Any] = field(default_factory=dict)
+    paired_baseline_run: str | None = None  # run_id of the baseline trial whose plan attempt 0 replays
+    paired_baseline_dir: str | None = None
+    first_plan_source: str | None = None  # replay | server
+
+    started_utc: str = ""
+    finished_utc: str = ""
+    process_startup_s: float | None = None
+    sim_duration_s: float | None = None
+    wall_duration_s: float | None = None
+    episode_length_s: float | None = None
+
+    stop_reason: str = ""
+    stop_detail: str | None = None
+    task_success: bool | None = None  # the goal check on the final state (same function as the baseline)
+    task_success_at_baseline_limit: bool | None = None  # the same check on the state at the baseline's episode end
+    task_check: dict[str, Any] = field(default_factory=dict)
+    task_check_at_baseline_limit: dict[str, Any] = field(default_factory=dict)
+    checkpoints: list[dict[str, Any]] = field(default_factory=list)
+    plans: list[dict[str, Any]] = field(default_factory=list)  # per attempt: source, server dir, units, timing
+    num_attempts: int = 0
+    num_retries: int = 0
+    num_planning_calls: int = 0
+    first_checkpoint_verdict: str | None = None
+    recovered: bool = False  # a retry happened and the task succeeded
+    events: list[dict[str, Any]] = field(default_factory=list)  # carry drops, recovery steps, supervisor events
+
+    object_names: list[str] = field(default_factory=list)
+    object_local_bounds: dict[str, Any] = field(default_factory=dict)
+    initial_object_positions: dict[str, list[float]] = field(default_factory=dict)
+    initial_object_quats: dict[str, list[float]] = field(default_factory=dict)
+    final_object_positions: dict[str, list[float]] = field(default_factory=dict)
+    final_object_quats: dict[str, list[float]] = field(default_factory=dict)
+    final_object_centers: dict[str, list[float]] = field(default_factory=dict)
+    artifacts: dict[str, str] = field(default_factory=dict)
+    harness_exception: str | None = None
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
