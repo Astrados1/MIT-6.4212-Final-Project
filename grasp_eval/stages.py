@@ -152,6 +152,9 @@ def stage_pod(a, rep: Report, out: Path, sh=_sh, cuda_probe=cuda_driver_probe, e
         rep.add("graphics-libs", FAIL, f"missing {sorted(missing)}: apt-get install -y {' '.join(sorted(set(missing.values())))}")
     else:
         rep.add("graphics-libs", PASS, "libEGL, libGL, libXt and libGLU present")
+    ffmpeg = shutil.which("ffmpeg")
+    rep.add("ffmpeg", PASS if ffmpeg else WARN,
+            ffmpeg or "not installed: runs and the arm check save no video (apt-get install -y ffmpeg)")
 
     try:
         os_id, ver = parse_os_release(Path("/etc/os-release").read_text())
@@ -270,6 +273,9 @@ def stage_arm(a, rep: Report, out: Path, run=subprocess.run) -> dict:
         rep.add("arm", WARN, msg)
     for msg in verdict["notes"]:
         rep.add("arm:info", PASS, msg)
+    if not res.get("video"):
+        rep.add("arm:video", WARN, f"no video saved ({res.get('video_error') or 'video disabled'}); "
+                                   "the numbers above still hold. apt-get install -y ffmpeg if ffmpeg is missing")
     if not verdict["fails"]:
         rep.add("arm", PASS, f"{len(res['steps'])} moves in {res.get('sim_duration_s')} s simulated; "
                              f"watch {res.get('video', '(no video)')}")

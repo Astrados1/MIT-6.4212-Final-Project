@@ -388,3 +388,19 @@ class Stage0CudaAndEnvTest(unittest.TestCase):
         self.assertEqual(status["driver:gpu0"], PASS)
         self.assertEqual(status["cuda"], FAIL)
         self.assertEqual(status["env:NVIDIA_DRIVER_CAPABILITIES"], PASS)
+
+
+class ArmVideoWarningTest(unittest.TestCase):
+    def test_missing_video_warns_with_the_reason(self):
+        """Nov 6: no ffmpeg on the pod, so the arm check passed but silently saved no video."""
+        with tempfile.TemporaryDirectory() as d, contextlib.redirect_stdout(io.StringIO()):
+            res = ArmRulesTest.summary(ArmRulesTest())
+            res.update(ok=True, plan=arm_test_plan(SIM), sim_duration_s=108.9,
+                       video_error="RuntimeError: Program 'ffmpeg' is not found")
+            rep = Report()
+            stages.stage_arm(args(d), rep, Path(d) / "out", run=FakeWorker({"arm:s1v0": res}))
+        self.assertFalse(rep.failed)
+        video = [c for c in rep.checks if c["check"] == "arm:video"]
+        self.assertEqual(len(video), 1)
+        self.assertEqual(video[0]["status"], WARN)
+        self.assertIn("ffmpeg", video[0]["detail"])

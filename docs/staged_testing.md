@@ -45,7 +45,7 @@ Right after the pod starts, before installing anything heavy:
 ```bash
 cd /workspace && git clone https://github.com/Astrados1/MIT-6.4212-Final-Project.git
 cd MIT-6.4212-Final-Project
-apt-get update && apt-get install -y libegl1 libgl1 libxt6 libglu1-mesa vulkan-tools
+apt-get update && apt-get install -y libegl1 libgl1 libxt6 libglu1-mesa vulkan-tools ffmpeg unzip
 python3 -m grasp_eval.stages pod
 ```
 

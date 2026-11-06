@@ -292,8 +292,8 @@ def main(argv=None) -> int:  # pragma: no cover - needs Isaac Sim
                                           o["policy"]["wrist_cam"][0].cpu().numpy()], axis=1)
                     video.add(add_caption(viz, f"arm check {i + 1}/{len(plan)}: {label} | gripper "
                                                f"{'CLOSE' if g > 0.5 else 'open'}"))
-                except Exception:
-                    pass
+                except Exception as e:  # never lose the arm check over the video, but say why it is missing
+                    result.setdefault("video_error", f"{type(e).__name__}: {e}")
             return qm
 
         try:
@@ -333,8 +333,12 @@ def main(argv=None) -> int:  # pragma: no cover - needs Isaac Sim
                     break
         finally:
             if video is not None:
-                video.close()
-                result["video"] = str(out / "arm_check.mp4")
+                try:
+                    video.close()
+                except Exception as e:
+                    result.setdefault("video_error", f"{type(e).__name__}: {e}")
+                if video.frames and (out / "arm_check.mp4").exists():
+                    result["video"] = str(out / "arm_check.mp4")
             if trace["t"]:
                 np.savez_compressed(out / "arm_trace.npz", **{k: np.asarray(v) for k, v in trace.items()},
                                     step_labels=np.asarray([s["label"] for s in plan]))
