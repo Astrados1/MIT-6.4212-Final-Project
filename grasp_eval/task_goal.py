@@ -18,6 +18,13 @@ Relations, tested on the final resting state with the gripper open:
   on:  object center inside the container's xy box, and object bottom within
        ON_Z_TOL_M of the container top.
 TiPToP/Gemini express both as on(object, container); the physical check differs.
+
+A clause may set "frame": "container" (relation "in" only). The test is then made in the container's
+own frame: the object's geometry center must lie inside the container's walls and between its floor and
+its rim. Use it for a rectangular container that can be turned on the table and for long objects that
+rest tilted (scene 3, banana in bin). The default world-axis boxes misjudge both: a tilted banana's box
+dips below the bin floor, and a turned bin's box takes in the table beside it (baseline review, Nov 6
+2026: 8 false failures and 3 false successes out of 29). Round containers (bowl, mug) keep the default.
 """
 
 from __future__ import annotations
@@ -96,6 +103,28 @@ def _relation_holds(relation: str, obj_box, cont_box) -> tuple[bool, dict]:
     return in_xy and bool(z_ok), detail
 
 
+def _in_container_frame(obj: str, container: str, record: dict) -> tuple[bool, dict] | None:
+    """'in' tested in the container's frame from the final poses; None if a pose or bound is missing."""
+    bounds = record.get("object_local_bounds") or {}
+    pos, quat = record.get("final_object_positions") or {}, record.get("final_object_quats") or {}
+    if any(k not in d for k in (obj, container) for d in (bounds, pos, quat)):
+        return None
+    center = geometry_center_positions(pos[obj], quat[obj], bounds[obj])
+    rot = quat_to_matrix(quat[container])
+    local = rot.T @ (np.asarray(center, dtype=float) - np.asarray(pos[container], dtype=float))
+    lo, hi = np.asarray(bounds[container][0], dtype=float), np.asarray(bounds[container][1], dtype=float)
+    up = int(np.argmax(np.abs(rot[2, :])))  # the container axis closest to world vertical
+    sign = 1.0 if rot[2, up] > 0 else -1.0
+    floor, rim = (lo[up], hi[up]) if sign > 0 else (-hi[up], -lo[up])
+    height = float(local[up] * sign)
+    walls = [i for i in range(3) if i != up]
+    inside = bool(all(lo[i] + XY_MARGIN_M < local[i] < hi[i] - XY_MARGIN_M for i in walls))
+    ok = inside and floor - IN_Z_TOL_M <= height <= rim
+    return ok, {"frame": "container", "center_inside_walls": inside,
+                "center_height_in_container_m": round(height - float(floor), 4),
+                "container_depth_m": round(float(rim - floor), 4)}
+
+
 def check_goal(goal: list[dict] | None, record: dict, gripper_open_at_end: bool | None) -> dict[str, Any]:
     """Return {"task_success": True/False/None, "clauses": [...], "reason": str|None}."""
     if not goal:
@@ -115,6 +144,22 @@ def check_goal(goal: list[dict] | None, record: dict, gripper_open_at_end: bool 
             unchecked.append(f"no final pose/bounds for container {container!r}")
             continue
         per_obj = {}
+        if spec.get("frame") == "container":
+            if relation != "in":
+                unchecked.append(f"frame 'container' supports relation 'in' only, not {relation!r}")
+                continue
+            for o in objs:
+                res = _in_container_frame(o, container, record)
+                if res is None:
+                    unchecked.append(f"no final pose/bounds for object {o!r}")
+                    break
+                per_obj[o] = {"satisfied": res[0], **res[1]}
+            else:
+                n_ok = sum(v["satisfied"] for v in per_obj.values())
+                clauses.append({"relation": relation, "container": container, "frame": "container",
+                                "required": count, "satisfied_count": n_ok, "ok": n_ok >= count,
+                                "objects": per_obj})
+            continue
         for o in objs:
             box = object_world_aabb(o, record, "final")
             if box is None:

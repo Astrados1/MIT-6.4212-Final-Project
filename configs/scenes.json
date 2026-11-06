@@ -75,7 +75,8 @@
           "$target"
         ],
         "relation": "in",
-        "container": "small_KLT_visual_collision"
+        "container": "small_KLT_visual_collision",
+        "frame": "container"
       }
     ]
   },

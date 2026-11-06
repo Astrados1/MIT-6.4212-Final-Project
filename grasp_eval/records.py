@@ -64,7 +64,8 @@ class RunRecord:
     executed_steps: int = 0
     sim_duration_s: float | None = None
     plan_done: bool = False
-    truncated: bool = False  # hit the episode time limit
+    truncated: bool = False  # hit the episode time limit (final state is the state before the reset)
+    episode_length_s: float | None = None  # simulated episode limit used (None in records before Nov 6 2026)
     terminated: bool = False
 
     # Observation-only outcome.

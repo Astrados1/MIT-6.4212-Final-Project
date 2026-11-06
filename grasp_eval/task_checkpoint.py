@@ -218,7 +218,8 @@ class TaskLimits:
     max_planning_calls: int = 3  # includes the first plan
     max_sim_s: float = 400.0
     max_wall_s: float = 1800.0
-    baseline_episode_s: float = 90.0  # the baseline's episode length: task state is snapshotted there too
+    baseline_episode_s: float = 150.0  # the baseline's episode length (observed_eval EPISODE_LENGTH_S): task
+    # state is snapshotted there too
 
     def to_dict(self) -> dict[str, Any]:
         d = asdict(self)
