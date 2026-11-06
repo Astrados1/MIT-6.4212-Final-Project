@@ -1,0 +1,76 @@
+{
+  "stage": "pod",
+  "utc": "20261106T004121Z",
+  "args": {
+    "stage": "pod",
+    "tiptop_dir": "None",
+    "out_dir": "None",
+    "timeout_s": "1200",
+    "scene": "1",
+    "variant": "0",
+    "disk_path": "/workspace",
+    "scenes": "[1, 2, 3, 4, 5]",
+    "variants": "None",
+    "first_variants": "5",
+    "all_variants": "False",
+    "resume": "False",
+    "scenes_config": "/workspace/MIT-6.4212-Final-Project/configs/scenes.json",
+    "gripper_bodies": "['left_inner_finger', 'right_inner_finger']",
+    "no_limit_probe": "False"
+  },
+  "checks": [
+    {
+      "check": "driver:gpu0",
+      "status": "PASS",
+      "detail": "NVIDIA L40S, driver 550.144.03"
+    },
+    {
+      "check": "rt-cores:gpu0",
+      "status": "PASS",
+      "detail": "NVIDIA L40S, compute capability 8.9, 46068 MiB"
+    },
+    {
+      "check": "cuda",
+      "status": "PASS",
+      "detail": "created a CUDA context and allocated 1 MiB on 1 GPU(s)"
+    },
+    {
+      "check": "vulkan",
+      "status": "PASS",
+      "detail": "Vulkan sees the NVIDIA GPU"
+    },
+    {
+      "check": "graphics-libs",
+      "status": "PASS",
+      "detail": "libEGL, libGL, libXt and libGLU present"
+    },
+    {
+      "check": "os",
+      "status": "PASS",
+      "detail": "ubuntu 22.04"
+    },
+    {
+      "check": "disk",
+      "status": "PASS",
+      "detail": "107 GB free at /workspace"
+    },
+    {
+      "check": "env:OMNI_KIT_ACCEPT_EULA",
+      "status": "WARN",
+      "detail": "not set: Isaac Sim stops at its license prompt without it (set it yourself once you accept)"
+    },
+    {
+      "check": "env:NVIDIA_DRIVER_CAPABILITIES",
+      "status": "PASS",
+      "detail": "compute,display,graphics,utility,video"
+    }
+  ],
+  "gpus": [
+    {
+      "name": "NVIDIA L40S",
+      "driver": "550.144.03",
+      "memory": "46068 MiB",
+      "compute_cap": 8.9
+    }
+  ]
+}

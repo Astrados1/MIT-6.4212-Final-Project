@@ -1,0 +1,183 @@
+{
+  "mode": "scene",
+  "scene": 3,
+  "variant": 2,
+  "seed": 0,
+  "ok": true,
+  "timings_s": {
+    "total": 47.5,
+    "before_app_start": 1.35,
+    "app_started": 12.14,
+    "env_created": 26.16,
+    "settled": 43.78,
+    "frames_captured": 44.97
+  },
+  "pid": 10137,
+  "torch": {
+    "version": "2.7.0+cu126",
+    "cuda": "12.6",
+    "cuda_available": true,
+    "device": "NVIDIA L40S"
+  },
+  "app_started": true,
+  "step_dt": 0.06666666666666667,
+  "object_names": [
+    "_11_banana",
+    "small_KLT_visual_collision"
+  ],
+  "frames": {
+    "external_cam": {
+      "shape": [
+        720,
+        1280,
+        3
+      ],
+      "dtype": "uint8",
+      "mean": 156.017,
+      "std": 51.94,
+      "min": 0.0,
+      "max": 255.0,
+      "lit_frac": 0.9991,
+      "png": "/workspace/MIT-6.4212-Final-Project/results/stages/scenes_first/s3v2/scene_s3v2_external_cam.png"
+    },
+    "wrist_cam": {
+      "shape": [
+        720,
+        1280,
+        3
+      ],
+      "dtype": "uint8",
+      "mean": 99.545,
+      "std": 42.357,
+      "min": 0.0,
+      "max": 245.0,
+      "lit_frac": 0.9985,
+      "png": "/workspace/MIT-6.4212-Final-Project/results/stages/scenes_first/s3v2/scene_s3v2_wrist_cam.png"
+    }
+  },
+  "start_joint_pos": [
+    0.0,
+    -0.62832,
+    0.0,
+    -2.51327,
+    0.0,
+    1.88496,
+    0.0
+  ],
+  "rigid_objects_after_settle": {
+    "_11_banana": [
+      0.4792049825191498,
+      0.12731145322322845,
+      0.06295855343341827
+    ],
+    "small_KLT_visual_collision": [
+      0.4386832118034363,
+      -0.10910200327634811,
+      0.11832115054130554
+    ]
+  },
+  "rigid_object_quats_after_settle": {
+    "_11_banana": [
+      0.6707826852798462,
+      0.7415583729743958,
+      0.007924214005470276,
+      -0.008877421729266644
+    ],
+    "small_KLT_visual_collision": [
+      0.7071040272712708,
+      -3.374569530478766e-07,
+      2.2545359001924226e-07,
+      0.7071095705032349
+    ]
+  },
+  "geometry_centers_after_settle": {
+    "_11_banana": [
+      0.47920486420824976,
+      0.12731195310043736,
+      0.06295357989088735
+    ],
+    "small_KLT_visual_collision": [
+      0.4386832118034363,
+      -0.10910200327634811,
+      0.11832115054130554
+    ]
+  },
+  "rigid_object_local_bounds": {
+    "_11_banana": [
+      [
+        -0.09859,
+        -0.01933,
+        -0.03703
+      ],
+      [
+        0.09859,
+        0.01932,
+        0.03703
+      ]
+    ],
+    "small_KLT_visual_collision": [
+      [
+        -0.09892,
+        -0.14832,
+        -0.07318
+      ],
+      [
+        0.09892,
+        0.14832,
+        0.07318
+      ]
+    ]
+  },
+  "rigid_object_bounds_notes": {},
+  "robot_body_names": [
+    "panda_link0",
+    "panda_link1",
+    "panda_link2",
+    "panda_link3",
+    "panda_link4",
+    "panda_link5",
+    "panda_link6",
+    "panda_link7",
+    "panda_link8",
+    "base_link",
+    "left_outer_knuckle",
+    "right_outer_knuckle",
+    "left_outer_finger",
+    "right_outer_finger",
+    "left_inner_finger",
+    "right_inner_finger",
+    "left_inner_knuckle",
+    "right_inner_knuckle"
+  ],
+  "robot_joint_names": [
+    "panda_joint1",
+    "panda_joint2",
+    "panda_joint3",
+    "panda_joint4",
+    "panda_joint5",
+    "panda_joint6",
+    "panda_joint7",
+    "finger_joint",
+    "right_outer_knuckle_joint",
+    "left_inner_finger_joint",
+    "right_inner_finger_joint",
+    "left_inner_finger_knuckle_joint",
+    "right_inner_finger_knuckle_joint"
+  ],
+  "geometry_centers_after_hold": {
+    "_11_banana": [
+      0.479204864208707,
+      0.12731202760920618,
+      0.06295355753943246
+    ],
+    "small_KLT_visual_collision": [
+      0.4386831223964691,
+      -0.10910161584615707,
+      0.11832114309072495
+    ]
+  },
+  "settle_motion_m": {
+    "_11_banana": 0.0,
+    "small_KLT_visual_collision": 0.0
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "mode": "render",
+  "scene": 1,
+  "variant": 0,
+  "seed": 0,
+  "ok": true,
+  "timings_s": {
+    "total": 87.71,
+    "before_app_start": 1.41,
+    "app_started": 11.94,
+    "env_created": 66.71,
+    "settled": 86.14,
+    "frames_captured": 87.71
+  },
+  "pid": 2571,
+  "torch": {
+    "version": "2.7.0+cu126",
+    "cuda": "12.6",
+    "cuda_available": true,
+    "device": "NVIDIA L40S"
+  },
+  "app_started": true,
+  "step_dt": 0.06666666666666667,
+  "object_names": [
+    "_24_bowl",
+    "rubiks_cube"
+  ],
+  "frames": {
+    "external_cam": {
+      "shape": [
+        720,
+        1280,
+        3
+      ],
+      "dtype": "uint8",
+      "mean": 158.932,
+      "std": 58.085,
+      "min": 0.0,
+      "max": 255.0,
+      "lit_frac": 0.9999,
+      "png": "/workspace/MIT-6.4212-Final-Project/results/stages/sim_first/render_s1v0_external_cam.png"
+    },
+    "wrist_cam": {
+      "shape": [
+        720,
+        1280,
+        3
+      ],
+      "dtype": "uint8",
+      "mean": 159.279,
+      "std": 61.482,
+      "min": 1.0,
+      "max": 246.0,
+      "lit_frac": 1.0,
+      "png": "/workspace/MIT-6.4212-Final-Project/results/stages/sim_first/render_s1v0_wrist_cam.png"
+    }
+  }
+}

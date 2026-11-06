@@ -126,7 +126,8 @@ robot grasp failures. The November 5 key's project reported a free-tier daily re
 20 for Gemini ER 2. The first run lacked this stop condition and retained all 35 quota failures.
 
 The scene inspections covered variant 0 of each scene. Later records exposed cubes falling
-below the table in scene 4 variants 1–3. Inspect the actual variants before a future survey;
+below the table in scene 4 variants 1–3 (an authoring error in those asset files, repaired by
+`scripts/fix_scene_assets.py` since November 6). Inspect the actual variants before a future survey;
 a passing variant-0 inspection does not establish valid initial states for every variant.
 
 For the separate cached-scene Panda diagnostic, run the following in the pinned TiPToP pixi

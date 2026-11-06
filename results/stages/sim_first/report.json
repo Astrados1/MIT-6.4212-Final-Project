@@ -1,0 +1,106 @@
+{
+  "stage": "sim",
+  "utc": "20261106T010318Z",
+  "args": {
+    "stage": "sim",
+    "tiptop_dir": "/workspace/tiptop-project",
+    "out_dir": "results/stages/sim_first",
+    "timeout_s": "1200",
+    "scene": "1",
+    "variant": "0",
+    "disk_path": "/workspace",
+    "scenes": "[1, 2, 3, 4, 5]",
+    "variants": "None",
+    "first_variants": "5",
+    "all_variants": "False",
+    "resume": "False",
+    "scenes_config": "/workspace/MIT-6.4212-Final-Project/configs/scenes.json",
+    "gripper_bodies": "['left_inner_finger', 'right_inner_finger']",
+    "no_limit_probe": "False"
+  },
+  "checks": [
+    {
+      "check": "cuda",
+      "status": "PASS",
+      "detail": "CUDA_MATMUL_PASSED NVIDIA L40S"
+    },
+    {
+      "check": "launch",
+      "status": "PASS",
+      "detail": "Isaac Sim started in 68.96 s"
+    },
+    {
+      "check": "env",
+      "status": "PASS",
+      "detail": "scene 1 variant 0 built in 66.71 s, settled at 86.14 s; objects ['_24_bowl', 'rubiks_cube']"
+    },
+    {
+      "check": "camera:external_cam",
+      "status": "PASS",
+      "detail": "[720, 1280, 3], mean 158.932, std 58.085 -> /workspace/MIT-6.4212-Final-Project/results/stages/sim_first/render_s1v0_external_cam.png"
+    },
+    {
+      "check": "camera:wrist_cam",
+      "status": "PASS",
+      "detail": "[720, 1280, 3], mean 159.279, std 61.482 -> /workspace/MIT-6.4212-Final-Project/results/stages/sim_first/render_s1v0_wrist_cam.png"
+    }
+  ],
+  "render": {
+    "mode": "render",
+    "scene": 1,
+    "variant": 0,
+    "seed": 0,
+    "ok": true,
+    "timings_s": {
+      "total": 87.71,
+      "before_app_start": 1.41,
+      "app_started": 11.94,
+      "env_created": 66.71,
+      "settled": 86.14,
+      "frames_captured": 87.71
+    },
+    "pid": 2571,
+    "torch": {
+      "version": "2.7.0+cu126",
+      "cuda": "12.6",
+      "cuda_available": true,
+      "device": "NVIDIA L40S"
+    },
+    "app_started": true,
+    "step_dt": 0.06666666666666667,
+    "object_names": [
+      "_24_bowl",
+      "rubiks_cube"
+    ],
+    "frames": {
+      "external_cam": {
+        "shape": [
+          720,
+          1280,
+          3
+        ],
+        "dtype": "uint8",
+        "mean": 158.932,
+        "std": 58.085,
+        "min": 0.0,
+        "max": 255.0,
+        "lit_frac": 0.9999,
+        "png": "/workspace/MIT-6.4212-Final-Project/results/stages/sim_first/render_s1v0_external_cam.png"
+      },
+      "wrist_cam": {
+        "shape": [
+          720,
+          1280,
+          3
+        ],
+        "dtype": "uint8",
+        "mean": 159.279,
+        "std": 61.482,
+        "min": 1.0,
+        "max": 246.0,
+        "lit_frac": 1.0,
+        "png": "/workspace/MIT-6.4212-Final-Project/results/stages/sim_first/render_s1v0_wrist_cam.png"
+      }
+    }
+  }
+}

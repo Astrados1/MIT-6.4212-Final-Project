@@ -10,6 +10,9 @@ results/**/*.npz
 results/**/console.log
 results/**/observed_eval.log
 results/**/server_outputs/
+# Staged GPU checks: keep reports and JSON in git; images, logs and traces stay local
+results/stages/**/*.png
+results/stages/**/*.log
 
 # Upstream checkouts if someone puts TIPTOP_DIR inside this repo
 /tiptop/

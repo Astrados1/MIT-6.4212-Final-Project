@@ -404,3 +404,16 @@ class ArmVideoWarningTest(unittest.TestCase):
         self.assertEqual(len(video), 1)
         self.assertEqual(video[0]["status"], WARN)
         self.assertIn("ffmpeg", video[0]["detail"])
+
+
+class SceneAssetFixTest(unittest.TestCase):
+    def test_only_the_released_bad_offset_is_changed(self):
+        import importlib.util
+
+        spec = importlib.util.spec_from_file_location("fix_scene_assets", ROOT / "scripts" / "fix_scene_assets.py")
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        self.assertEqual(mod.plan_fix(-0.19863615566511325), "fix")
+        self.assertEqual(mod.plan_fix(0.20057768036734341), "ok")
+        self.assertEqual(mod.plan_fix(0.0), "unknown")
+        self.assertEqual(mod.FIXES, {"scene4_1.usd", "scene4_2.usd", "scene4_3.usd"})
