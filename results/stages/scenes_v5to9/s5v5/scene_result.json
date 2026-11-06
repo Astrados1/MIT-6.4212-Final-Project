@@ -1,0 +1,323 @@
+{
+  "mode": "scene",
+  "scene": 5,
+  "variant": 5,
+  "seed": 0,
+  "ok": true,
+  "timings_s": {
+    "total": 47.32,
+    "before_app_start": 1.34,
+    "app_started": 11.67,
+    "env_created": 25.59,
+    "settled": 43.38,
+    "frames_captured": 44.76
+  },
+  "pid": 53162,
+  "torch": {
+    "version": "2.7.0+cu126",
+    "cuda": "12.6",
+    "cuda_available": true,
+    "device": "NVIDIA L40S"
+  },
+  "app_started": true,
+  "step_dt": 0.06666666666666667,
+  "object_names": [
+    "_24_bowl",
+    "basic_block",
+    "blue_block",
+    "green_block",
+    "red_block",
+    "yellow_block"
+  ],
+  "frames": {
+    "external_cam": {
+      "shape": [
+        720,
+        1280,
+        3
+      ],
+      "dtype": "uint8",
+      "mean": 133.394,
+      "std": 63.764,
+      "min": 0.0,
+      "max": 255.0,
+      "lit_frac": 0.9999,
+      "png": "/workspace/MIT-6.4212-Final-Project/results/stages/scenes_v5to9/s5v5/scene_s5v5_external_cam.png"
+    },
+    "wrist_cam": {
+      "shape": [
+        720,
+        1280,
+        3
+      ],
+      "dtype": "uint8",
+      "mean": 86.887,
+      "std": 52.92,
+      "min": 0.0,
+      "max": 246.0,
+      "lit_frac": 1.0,
+      "png": "/workspace/MIT-6.4212-Final-Project/results/stages/scenes_v5to9/s5v5/scene_s5v5_wrist_cam.png"
+    }
+  },
+  "start_joint_pos": [
+    0.0,
+    -0.62832,
+    0.0,
+    -2.51327,
+    0.0,
+    1.88496,
+    0.0
+  ],
+  "rigid_objects_after_settle": {
+    "_24_bowl": [
+      0.7415019869804382,
+      0.2034865766763687,
+      0.060048989951610565
+    ],
+    "basic_block": [
+      0.6190741062164307,
+      -0.2297803908586502,
+      0.10765163600444794
+    ],
+    "blue_block": [
+      0.3248829245567322,
+      0.29936832189559937,
+      0.08205591887235641
+    ],
+    "green_block": [
+      0.4996071457862854,
+      0.15702787041664124,
+      0.1033109575510025
+    ],
+    "red_block": [
+      0.34579959511756897,
+      -0.27839064598083496,
+      0.1315910667181015
+    ],
+    "yellow_block": [
+      0.34139740467071533,
+      -0.30548906326293945,
+      0.0727819949388504
+    ]
+  },
+  "rigid_object_quats_after_settle": {
+    "_24_bowl": [
+      0.7071064710617065,
+      -0.7071070075035095,
+      -6.5266885940218344e-06,
+      5.45362399861915e-06
+    ],
+    "basic_block": [
+      0.9999999403953552,
+      1.2631917343242094e-06,
+      -1.2796036230611207e-07,
+      5.044018536182193e-08
+    ],
+    "blue_block": [
+      0.9999999403953552,
+      1.3139405155015993e-06,
+      -1.589691436265639e-07,
+      -1.1228084417780337e-07
+    ],
+    "green_block": [
+      0.9999999403953552,
+      1.3267763279145584e-06,
+      -1.871120076657462e-07,
+      4.916197937632205e-08
+    ],
+    "red_block": [
+      1.0,
+      1.275808472200879e-06,
+      -1.2313864772295346e-07,
+      -4.69635104138888e-08
+    ],
+    "yellow_block": [
+      0.9999999403953552,
+      1.3184996987547493e-06,
+      -1.7550331676829956e-07,
+      7.510627852980178e-08
+    ]
+  },
+  "geometry_centers_after_settle": {
+    "_24_bowl": [
+      0.4410180393623639,
+      -0.15561849849725132,
+      0.08099880638056955
+    ],
+    "basic_block": [
+      0.24110910503292474,
+      -0.11856532991600095,
+      0.06843682024719654
+    ],
+    "blue_block": [
+      0.35455278115155336,
+      -0.3585166489731293,
+      0.06843419946198631
+    ],
+    "green_block": [
+      0.44378717072821705,
+      0.03609295747130662,
+      0.06843561575452732
+    ],
+    "red_block": [
+      0.2948896433633504,
+      0.0696695199472385,
+      0.06843694229613569
+    ],
+    "yellow_block": [
+      0.4396523335047423,
+      0.17843096295222596,
+      0.06843830552385581
+    ]
+  },
+  "rigid_object_local_bounds": {
+    "_24_bowl": [
+      [
+        -0.45132,
+        -0.05529,
+        -0.51021
+      ],
+      [
+        -0.14966,
+        0.01339,
+        -0.20799
+      ]
+    ],
+    "basic_block": [
+      [
+        -0.40147,
+        0.08771,
+        -0.06272
+      ],
+      [
+        -0.35446,
+        0.13472,
+        -0.01571
+      ]
+    ],
+    "blue_block": [
+      [
+        0.00617,
+        -0.68139,
+        -0.03712
+      ],
+      [
+        0.05317,
+        -0.63438,
+        0.00988
+      ]
+    ],
+    "green_block": [
+      [
+        -0.07932,
+        -0.14444,
+        -0.05838
+      ],
+      [
+        -0.03232,
+        -0.09743,
+        -0.01137
+      ]
+    ],
+    "red_block": [
+      [
+        -0.07441,
+        0.32456,
+        -0.08666
+      ],
+      [
+        -0.02741,
+        0.37156,
+        -0.03965
+      ]
+    ],
+    "yellow_block": [
+      [
+        0.07475,
+        0.46042,
+        -0.02785
+      ],
+      [
+        0.12176,
+        0.50742,
+        0.01916
+      ]
+    ]
+  },
+  "rigid_object_bounds_notes": {},
+  "robot_body_names": [
+    "panda_link0",
+    "panda_link1",
+    "panda_link2",
+    "panda_link3",
+    "panda_link4",
+    "panda_link5",
+    "panda_link6",
+    "panda_link7",
+    "panda_link8",
+    "base_link",
+    "left_outer_knuckle",
+    "right_outer_knuckle",
+    "left_outer_finger",
+    "right_outer_finger",
+    "left_inner_finger",
+    "right_inner_finger",
+    "left_inner_knuckle",
+    "right_inner_knuckle"
+  ],
+  "robot_joint_names": [
+    "panda_joint1",
+    "panda_joint2",
+    "panda_joint3",
+    "panda_joint4",
+    "panda_joint5",
+    "panda_joint6",
+    "panda_joint7",
+    "finger_joint",
+    "right_outer_knuckle_joint",
+    "left_inner_finger_joint",
+    "right_inner_finger_joint",
+    "left_inner_finger_knuckle_joint",
+    "right_inner_finger_knuckle_joint"
+  ],
+  "geometry_centers_after_hold": {
+    "_24_bowl": [
+      0.44101804918609644,
+      -0.15561851339763308,
+      0.08099882885360304
+    ],
+    "basic_block": [
+      0.24110913000019374,
+      -0.11856531863961842,
+      0.06843682288705237
+    ],
+    "blue_block": [
+      0.3545527583474183,
+      -0.35851664216180773,
+      0.06843419857458473
+    ],
+    "green_block": [
+      0.44378716144047164,
+      0.0360929633826564,
+      0.06843561012170006
+    ],
+    "red_block": [
+      0.2948896417010846,
+      0.06966952050837101,
+      0.06843695585185612
+    ],
+    "yellow_block": [
+      0.43965231080133693,
+      0.17843095582150875,
+      0.06843830856695432
+    ]
+  },
+  "settle_motion_m": {
+    "_24_bowl": 0.0,
+    "basic_block": 0.0,
+    "blue_block": 0.0,
+    "green_block": 0.0,
+    "red_block": 0.0,
+    "yellow_block": 0.0
+  }
+}
