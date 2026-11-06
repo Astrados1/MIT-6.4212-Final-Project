@@ -1,0 +1,117 @@
+{
+  "suite": "paper",
+  "tiptop_dir": "/workspace/tiptop-project",
+  "out_name": "smoke_g3",
+  "provenance_file": null,
+  "ws_host": "localhost",
+  "ws_port": 8765,
+  "seed_base": 1000,
+  "dry_run": false,
+  "skip_attribution": false,
+  "planner_ssh_host": null,
+  "planner_ssh_config": null,
+  "resume": false,
+  "max_hours": null,
+  "shard": null,
+  "run_timeout_s": 1200,
+  "m2t2_url": "http://localhost:8123",
+  "no_health_check": false,
+  "server_wait_s": 600,
+  "require_goals": true,
+  "eval_args": [
+    "--min-rise-m",
+    "0.05",
+    "--min-hold-s",
+    "0.5",
+    "--max-obj-to-gripper-m",
+    "0.20"
+  ],
+  "scene": 1,
+  "variants": [
+    0
+  ],
+  "trials": 1,
+  "instruction": "Put the Rubik's cube in the bowl.",
+  "target_object": null,
+  "distances_cm": [
+    1,
+    2,
+    4
+  ],
+  "directions": [
+    "x+",
+    "x-",
+    "y+",
+    "y-"
+  ],
+  "yaws_deg": [
+    30
+  ],
+  "repeats": 1,
+  "conditions": null,
+  "scenes_config": "/workspace/MIT-6.4212-Final-Project/configs/scenes.json",
+  "scenes": [
+    1
+  ],
+  "variants_per_scene": 4,
+  "goals": {
+    "1": [
+      {
+        "objects": [
+          "$target"
+        ],
+        "relation": "in",
+        "container": "_24_bowl"
+      }
+    ],
+    "2": [
+      {
+        "objects": [
+          "$target"
+        ],
+        "relation": "in",
+        "container": "_25_mug"
+      }
+    ],
+    "3": [
+      {
+        "objects": [
+          "$target"
+        ],
+        "relation": "in",
+        "container": "small_KLT_visual_collision"
+      }
+    ],
+    "4": [
+      {
+        "objects": [
+          "rubiks_cube"
+        ],
+        "relation": "on",
+        "container": "_25_mug"
+      },
+      {
+        "objects": [
+          "_05_tomato_soup_can",
+          "_10_potted_meat_can"
+        ],
+        "relation": "in",
+        "container": "_24_bowl"
+      }
+    ],
+    "5": [
+      {
+        "objects": [
+          "basic_block",
+          "blue_block",
+          "green_block",
+          "red_block",
+          "yellow_block"
+        ],
+        "count": 3,
+        "relation": "in",
+        "container": "_24_bowl"
+      }
+    ]
+  }
+}

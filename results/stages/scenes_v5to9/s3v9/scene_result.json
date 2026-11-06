@@ -1,0 +1,21 @@
+{
+  "mode": "scene",
+  "scene": 3,
+  "variant": 9,
+  "seed": 0,
+  "ok": false,
+  "timings_s": {
+    "total": 11.63,
+    "before_app_start": 1.33,
+    "app_started": 11.6
+  },
+  "pid": 49904,
+  "torch": {
+    "version": "2.7.0+cu126",
+    "cuda": "12.6",
+    "cuda_available": true,
+    "device": "NVIDIA L40S"
+  },
+  "app_started": true,
+  "error": "Traceback (most recent call last):\n  File \"/workspace/MIT-6.4212-Final-Project/grasp_eval/stage_worker.py\", line 168, in main\n    env_cfg.set_scene(str(args.scene), args.variant)\n  File \"/workspace/tiptop-project/droid-sim-evals/src/sim_evals/environments/droid_environment.py\", line 402, in set_scene\n    self.scene.dynamic_scene(f\"{scene_name}_{variant}\")\n  File \"/workspace/tiptop-project/droid-sim-evals/src/sim_evals/environments/droid_environment.py\", line 102, in dynamic_scene\n    stage = Usd.Stage.Open(\n            ^^^^^^^^^^^^^^^\npxr.Tf.ErrorException: \n\tError in 'pxrInternal_v0_24__pxrReserved__::UsdStage::Open' at line 1059 in file /builds/omniverse/usd-ci/USD/pxr/usd/usd/stage.cpp : 'Failed to open layer @/workspace/tiptop-project/droid-sim-evals/src/sim_evals/environments/../../../assets/scene3_9.usd@'\n"
+}
