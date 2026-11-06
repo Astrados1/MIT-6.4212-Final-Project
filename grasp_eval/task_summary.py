@@ -5,7 +5,7 @@
 Writes summary_task.md and summary_task.json in the suite directory. Task success comes from the same
 goal check in both arms: the baseline's attribution.jsonl `task_check` (overridden by its
 manual_labels.csv `task_success` where a reviewer set one), and the recovery record's `task_success`.
-The recovery arm is reported twice: at its own end, and at the baseline's 90 s episode end
+The recovery arm is reported twice: at its own end, and at the baseline's episode end (150 s)
 (`task_success_at_baseline_limit`), which removes any advantage from the extra time a retry takes.
 Baseline trials without a plan (skipped.jsonl) count as failures in both arms.
 """
@@ -130,7 +130,7 @@ def render(s: dict, suite: str, baseline: str) -> str:
              "| scope | pairs | baseline success | recovery success | rescued (fail→success) | harmed (success→fail) "
              "| sign test p |", "|---|---|---|---|---|---|---|",
              row("overall, recovery at its end", s["overall"]),
-             row("overall, recovery at the baseline's 90 s", s["overall_at_baseline_limit"])]
+             row("overall, recovery at the baseline's episode end", s["overall_at_baseline_limit"])]
     lines += [row(f"scene {k}", v) for k, v in s["by_scene"].items()]
     rf = s["replay_fidelity"]
     lines += ["", f"- Checkpoint verdicts (all grasps): {s['checkpoint_verdicts']}",

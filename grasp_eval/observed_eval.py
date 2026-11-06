@@ -10,8 +10,10 @@ Run from the droid-sim-evals checkout, inside its uv environment:
         --out-dir $PROJECT/results/pilot_scene1
 
 Without probe flags, the control loop mirrors upstream tiptop_eval.py at SIM_SHA
-(provenance/pins.env): same app launch, env config, 90 s episode limit, double reset,
-settle_sim, client, plan execution and break conditions. What this file adds only reads
+(provenance/pins.env): same app launch, env config, double reset,
+settle_sim, client, plan execution and break conditions. One deliberate difference: the episode
+limit is --episode-length-s (default 150 s; upstream uses 90 s, which cuts off 3-block plans that need
+~100 s). What this file adds only reads
 state: all rigid-object poses, the gripper reference point and commanded/measured joints
 after each step, the server's raw JSON response, a trace, a video, and a run record.
 Differences that remain in that baseline mode:
@@ -63,7 +65,8 @@ logger = logging.getLogger("observed_eval")
 # Robotiq 2F-85 finger links; their midpoint is the gripper reference point.
 # Unverified against the flattened USD: confirm with --inspect-only.
 DEFAULT_GRIPPER_BODIES = ["left_inner_finger", "right_inner_finger"]
-EPISODE_LENGTH_S = 90.0  # upstream tiptop_eval.py override
+UPSTREAM_EPISODE_LENGTH_S = 90.0  # upstream tiptop_eval.py override
+EPISODE_LENGTH_S = 150.0  # ours: 3-block plans need ~100 s of simulated time (baseline of Nov 6 2026)
 VIDEO_FPS = 15
 FROM_PLAN = "from-plan"
 
@@ -124,6 +127,8 @@ def parse_args(argv=None):
     p.add_argument("--run-id", default=None)
     p.add_argument("--out-dir", type=Path, required=True)
     p.add_argument("--seed", type=int, default=None)
+    p.add_argument("--episode-length-s", type=float, default=EPISODE_LENGTH_S,
+                   help=f"simulated episode limit (upstream uses {UPSTREAM_EPISODE_LENGTH_S:.0f} s)")
     p.add_argument("--headless", type=lambda s: s.lower() != "false", default=True)
     p.add_argument("--ws-host", default="localhost")
     p.add_argument("--ws-port", type=int, default=8765)
@@ -404,7 +409,8 @@ def main(argv=None) -> int:
     try:
         env_cfg = parse_env_cfg("DROID", device=args_cli.device, num_envs=1, use_fabric=True)
         env_cfg.set_scene(str(args.scene), args.variant)
-        env_cfg.episode_length_s = EPISODE_LENGTH_S
+        env_cfg.episode_length_s = args.episode_length_s
+        rec.episode_length_s = args.episode_length_s
         if args.seed is not None:
             env_cfg.seed = args.seed
         env = gym.make("DROID", cfg=env_cfg)
@@ -549,7 +555,16 @@ def main(argv=None) -> int:
                 frame_idx += 1
 
                 action = torch.tensor(ret["action"])[None]
+                # The env auto-resets inside the step that ends the episode, so the state after that step is
+                # the reset scene. Keep the state before each step to score an episode that ends there.
+                pre_step = (object_positions(), object_quats())
                 obs, _, term, trunc, _ = env.step(action)
+                if term or trunc:
+                    rec.terminated = bool(term)
+                    rec.truncated = bool(trunc)
+                    frame_idx -= 1  # this step's frame shows the reset scene; it is not counted or traced
+                    video.pop()
+                    break
 
                 # Observation only, after the step.
                 trace["t"].append(frame_idx * step_dt)
@@ -565,15 +580,14 @@ def main(argv=None) -> int:
                 trace["joint_cmd"].append([float(v) for v in ret["action"][:7]])
                 trace["plan_step"].append(int(getattr(client, "_current_plan_step", -1) or 0))
 
-                if term or trunc:
-                    rec.terminated = bool(term)
-                    rec.truncated = bool(trunc)
-                    break
 
         rec.executed_steps = frame_idx
         rec.sim_duration_s = frame_idx * step_dt
-        rec.final_object_positions = object_positions()
-        rec.final_object_quats = object_quats()
+        if rec.terminated or rec.truncated:
+            rec.final_object_positions, rec.final_object_quats = pre_step
+        else:
+            rec.final_object_positions = object_positions()
+            rec.final_object_quats = object_quats()
         rec.final_object_centers = object_centers(rec.final_object_positions, rec.final_object_quats)
         if client.replay_q_init is not None:
             rec.plan_q_init_max_abs_diff_rad = float(np.max(np.abs(client.replay_q_init - q_now)))

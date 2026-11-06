@@ -13,7 +13,7 @@ The whole task runs: after every grasp the arm lifts the object slowly while a m
 Confirmed empty or slipped: open (setting a slipping object down first), go to the observation pose,
 new TiPToP plan for the same instruction, continue with that plan. Task success is scored with the
 baseline's goal check (grasp_eval/task_goal.py) on the final state, and again on the state at the
-baseline's 90 s episode end for a like-for-like paired comparison.
+baseline's episode end (150 s) for a like-for-like paired comparison.
 
 Lift modes: `reverse_approach` retraces the plan's approach toward its start pose (no new motion code;
 the plan's retraction end is on that path, so the arm rejoins the plan exactly). `vertical_ik` runs
