@@ -248,7 +248,9 @@ class StageRunnerTest(unittest.TestCase):
         todo = stages.scene_variants(cfg, [1, 2, 3, 4, 5], None, 5)
         self.assertEqual(len(todo), 25)
         self.assertIn((1, 4), todo)  # the pilot's last variant
-        self.assertEqual(len(stages.scene_variants(cfg, [1, 2, 3, 4, 5], None, None)), 51)
+        # 51 scene files; scene 4 variant 9 is excluded in the config (cube ejected on load, Nov 6)
+        self.assertEqual(len(stages.scene_variants(cfg, [1, 2, 3, 4, 5], None, None)), 50)
+        self.assertIn("9", cfg["4"]["excluded_variants"])
 
     def test_arm_stage_end_to_end(self):
         with tempfile.TemporaryDirectory() as d:
