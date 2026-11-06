@@ -1,6 +1,6 @@
 """Staged GPU checks: prove each layer works before paying for the next (docs/staged_testing.md).
 
-    python3 -m grasp_eval.stages pod                                   # 0. the pod itself, no installs needed
+    python3 -m grasp_eval.stages pod                                   # 0. the pod itself (incl. a real CUDA test), no installs
     python3 -m grasp_eval.stages sim    --tiptop-dir /opt/tiptop-project  # 1. Isaac Sim starts and renders
     python3 -m grasp_eval.stages scenes --tiptop-dir /opt/tiptop-project  # 2. every scene/variant loads sanely
     python3 -m grasp_eval.stages arm    --tiptop-dir /opt/tiptop-project  # 3. the arm and gripper obey commands
@@ -29,8 +29,9 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from grasp_eval.preflight import FAIL, PASS, WARN, Report, _sh, gpu_roles, inspection_problems, parse_os_release  # noqa: E402
 from grasp_eval.stage_checks import (  # noqa: E402
-    PLANNER_LIMITS_FILE, SIM_LIMITS_FILE, arm_problems, driver_verdict, frame_problems, load_limits,
-    missing_graphics_libs, parse_nvidia_smi_csv, scene_problems, vulkan_verdict,
+    PLANNER_LIMITS_FILE, SIM_LIMITS_FILE, arm_problems, container_env, cuda_driver_probe,
+    driver_capabilities_verdict, driver_verdict, frame_problems, load_limits, missing_graphics_libs,
+    parse_nvidia_smi_csv, scene_problems, vulkan_verdict,
 )
 
 WORKER = PROJECT_ROOT / "grasp_eval" / "stage_worker.py"
@@ -117,7 +118,7 @@ def write_report(rep: Report, out: Path, stage: str, a, extra: dict | None = Non
 
 # --------------------------------------------------------------------------- stage 0: pod
 
-def stage_pod(a, rep: Report, out: Path, sh=_sh) -> dict:
+def stage_pod(a, rep: Report, out: Path, sh=_sh, cuda_probe=cuda_driver_probe, env=container_env) -> dict:
     code, text = sh(["nvidia-smi", "--query-gpu=name,driver_version,memory.total,compute_cap",
                      "--format=csv,noheader"])
     gpus = parse_nvidia_smi_csv(text) if code == 0 else []
@@ -134,6 +135,10 @@ def stage_pod(a, rep: Report, out: Path, sh=_sh) -> dict:
                                               "(docs/runpod_reproduction.md)")
         else:
             rep.add(f"rt-cores:gpu{i}", PASS, f"{g['name']}, compute capability {g['compute_cap']:g}, {g['memory']}")
+
+    if gpus:
+        status, why = cuda_probe()
+        rep.add("cuda", status, why)
 
     vk = shutil.which("vulkaninfo")
     status, why = vulkan_verdict(sh([vk, "--summary"], timeout=60)[1] if vk else None)
@@ -159,10 +164,11 @@ def stage_pod(a, rep: Report, out: Path, sh=_sh) -> dict:
     rep.add("disk", PASS if free_gb >= 60 else WARN,
             f"{free_gb:.0f} GB free at {a.disk_path}" + ("" if free_gb >= 60 else
                                                          " (the simulator stack and assets need about 60 GB)"))
-    for var, need in (("OMNI_KIT_ACCEPT_EULA", "Isaac Sim stops at its license prompt without it"),
-                      ("NVIDIA_DRIVER_CAPABILITIES", "should be 'all' so the container gets graphics libraries")):
-        val = os.environ.get(var)
-        rep.add(f"env:{var}", PASS if val else WARN, val or f"not set: {need}")
+    eula = env("OMNI_KIT_ACCEPT_EULA")
+    rep.add("env:OMNI_KIT_ACCEPT_EULA", PASS if eula else WARN,
+            eula or "not set: Isaac Sim stops at its license prompt without it (set it yourself once you accept)")
+    status, why = driver_capabilities_verdict(env("NVIDIA_DRIVER_CAPABILITIES"))
+    rep.add("env:NVIDIA_DRIVER_CAPABILITIES", status, why)
     return {"gpus": gpus}
 
 

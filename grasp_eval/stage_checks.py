@@ -67,6 +67,84 @@ def parse_nvidia_smi_csv(text: str) -> list[dict]:
     return gpus
 
 
+CUDA_ERROR_NAMES = {46: "CUDA_ERROR_DEVICE_UNAVAILABLE (busy or unavailable)", 100: "CUDA_ERROR_NO_DEVICE",
+                    101: "CUDA_ERROR_INVALID_DEVICE", 2: "CUDA_ERROR_OUT_OF_MEMORY", 3: "CUDA_ERROR_NOT_INITIALIZED",
+                    999: "CUDA_ERROR_UNKNOWN"}
+
+
+def cuda_driver_probe(lib=None, nbytes: int = 1 << 20) -> tuple[str, str]:
+    """Create a CUDA context and allocate memory on every GPU through libcuda (standard library only).
+
+    nvidia-smi can describe a GPU that cannot run anything: on Nov 6 an RTX 5000 Ada on driver 590
+    answered every nvidia-smi query while CUDA said "busy or unavailable" and Vulkan said
+    DEVICE_LOST. This catches that host in seconds, before any install.
+    """
+    import ctypes
+
+    if lib is None:
+        try:
+            lib = ctypes.CDLL("libcuda.so.1")
+        except OSError as e:
+            return FAIL, f"libcuda.so.1 cannot be loaded ({e}): the container has no NVIDIA driver library"
+
+    def name(code: int) -> str:
+        return f"{code} {CUDA_ERROR_NAMES.get(code, '')}".strip()
+
+    rc = lib.cuInit(0)
+    if rc:
+        return FAIL, f"cuInit failed: {name(rc)}"
+    count = ctypes.c_int(0)
+    rc = lib.cuDeviceGetCount(ctypes.byref(count))
+    if rc or count.value < 1:
+        return FAIL, f"no usable CUDA device (cuDeviceGetCount: {name(rc)}, count {count.value})"
+    for i in range(count.value):
+        dev, ctx, ptr = ctypes.c_int(0), ctypes.c_void_p(), ctypes.c_uint64(0)
+        steps = (("cuDeviceGet", lambda: lib.cuDeviceGet(ctypes.byref(dev), i)),
+                 ("cuCtxCreate", lambda: lib.cuCtxCreate_v2(ctypes.byref(ctx), 0, dev)),
+                 ("cuMemAlloc", lambda: lib.cuMemAlloc_v2(ctypes.byref(ptr), ctypes.c_size_t(nbytes))))
+        for step, call in steps:
+            rc = call()
+            if rc:
+                if ctx.value:
+                    lib.cuCtxDestroy_v2(ctx)
+                return FAIL, (f"GPU {i}: {step} failed with {name(rc)}. This host's GPU cannot run CUDA (or Isaac Sim); "
+                              "stop the pod and pick another host")
+        lib.cuMemFree_v2(ptr)
+        lib.cuCtxDestroy_v2(ctx)
+    return PASS, f"created a CUDA context and allocated {nbytes >> 20} MiB on {count.value} GPU(s)"
+
+
+def container_env(var: str, environ=None, proc_environ: str = "/proc/1/environ") -> str | None:
+    """A variable from this shell, else from the container's main process.
+
+    Runpod applies pod settings (e.g. NVIDIA_DRIVER_CAPABILITIES) to the container's PID 1;
+    an SSH session does not inherit them, so reading only os.environ reports them as unset.
+    """
+    import os
+
+    val = (os.environ if environ is None else environ).get(var)
+    if val:
+        return val
+    try:
+        for item in Path(proc_environ).read_bytes().split(b"\0"):
+            key, _, value = item.partition(b"=")
+            if key.decode(errors="replace") == var:
+                return value.decode(errors="replace")
+    except OSError:
+        pass
+    return None
+
+
+def driver_capabilities_verdict(value: str | None) -> tuple[str, str]:
+    """The container needs the graphics capability for Isaac Sim's renderer."""
+    if not value:
+        return WARN, "NVIDIA_DRIVER_CAPABILITIES not set in the container: graphics libraries may be missing"
+    caps = {c.strip() for c in value.split(",")}
+    if "all" in caps or "graphics" in caps:
+        return PASS, value
+    return FAIL, f"{value}: no 'graphics' capability, so Isaac Sim cannot render. Recreate the pod with it set to 'all'"
+
+
 def vulkan_verdict(summary_text: str | None) -> tuple[str, str]:
     """Whether `vulkaninfo --summary` sees the NVIDIA GPU rather than only a CPU renderer."""
     if summary_text is None:
